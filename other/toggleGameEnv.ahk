@@ -9,6 +9,9 @@
 
 #SingleInstance Force
 
+#Include ..\common\constants.ahk
+#Include ..\common\utils.ahk
+
 
 if not A_IsAdmin
 {
@@ -28,12 +31,6 @@ if not A_IsAdmin
 }
 
 
-;;;;;;;;;; APPLICATION PATHS ;;;;;;;;;;
-
-
-leishen := "C:\Program Files (x86)\LeiGod_Acc\leigod_launcher.exe"
-
-
 ;;;;;;;;;; USER DEFINED FUNCTIONS ;;;;;;;;;;
 
 
@@ -43,8 +40,11 @@ leishen := "C:\Program Files (x86)\LeiGod_Acc\leigod_launcher.exe"
 ToggleGamingNetworkEnv() {
     ; If LeiGod is running, then close it, and turn on Clash
     if ProcessExist("leigod.exe") {
-        FocusWindowAndClick("ahk_exe leigod.exe", , , 1500, 100, "雷神关闭")
+        ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", 20)
+        SetWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h)
+        ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1500, 100, "雷神关闭")
         sleep 1600
+
         if WinExist("ahk_exe leigod.exe") {
             WinClose "ahk_exe leigod.exe"
         }
@@ -71,28 +71,9 @@ ToggleGamingNetworkEnv() {
 
         Run leishen
 
-        FocusWindowAndClick("ahk_exe leigod.exe", 20, , 1500, 100, "雷神启动")
-    }
-}
-
-
-;; Focus app window and click.
-;; Parameters:
-;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
-;;   duration: Total seconds to wait (default: 4)
-;;   ClickType: The type of click (default: "left")
-;;   ClickX: The X coordinate of the click (default: 0)
-;;   ClickY: The Y coordinate of the click (default: 0)
-;;   ClickInfo: The tooltip message to display after the click (default: "")
-;; Displays an error message box if the window is not found after all attempts.
-FocusWindowAndClick(target, duration := 4, ClickType := "left", ClickX := 0, ClickY := 0, ClickInfo := "") {
-    if WinWait(target, , duration) {
-        WinActivate
-        MouseClick ClickType, ClickX, ClickY
-        ToolTip(ClickInfo)
-        SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
-    } else {
-        MsgBox 'ERROR ' . ClickType . ' Click (' . ClickX . ', ' . ClickY . ')! The "' . target . '" window could not be found!'
+        ; Set the window position and size, then focus on the window
+        SetAndActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h, 20)
+        ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1500, 100, "雷神启动")
     }
 }
 

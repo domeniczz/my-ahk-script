@@ -81,13 +81,15 @@ docker := A_ProgramFiles . "\Docker\Docker\Docker Desktop.exe"
 
 ollama := EnvGet("LocalAppData") . "\Programs\Ollama\ollama app.exe"
 
+leishen := EnvGet("ProgramFiles(x86)") . "\LeiGod_Acc\leigod_launcher.exe"
+
 
 ; Real executable path will be set in the toggle function
 ; Because the path might change after the app is updated
 discord := ""
 
 ; script to toggle gaming network environment
-toggleGameEnv := A_ScriptDir . "\..\toggleGameEnv.ahk"
+toggleGameEnv := A_ScriptDir . "\other\toggleGameEnv.ahk"
 
 
 ;;;;;;;;;; APPLICATION WINDOW DIMENSIONS ;;;;;;;;;;
@@ -112,6 +114,8 @@ bilibiliDim := { x: 520, y: 120, w: 2800, h: 1920 }
 bilibiliVidDim := { x: 360, y: 65, w: 3120, h: 2030 }
 
 eudicDim := { x: 850, y: 210, w: 2140, h: 1740 }
+
+leishenDim := { x:1116 , y: 576, w: 1608, h: 1008 }
 
 
 ;;;;;;;;;; OTHER APPLICATION PARAMETERS ;;;;;;;;;;
