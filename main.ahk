@@ -22,6 +22,9 @@
 ;;;;;;;;;; SCHEDULED TASKS ;;;;;;;;;;
 
 
+SetTimer AutoDarkMode, autoDarkModeCheckInterval
+
+
 ;;;;;;;;;; HOTKEYS BINDINGS ;;;;;;;;;;
 
 

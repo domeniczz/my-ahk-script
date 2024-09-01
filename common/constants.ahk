@@ -23,6 +23,11 @@ scrollSpeed := 2.5
 wechatLoginBtnX := 220
 wechatLoginBtnY := 450
 
+; AutoDarkMode parameters
+morning := 0700
+evening := 1830
+autoDarkModeCheckInterval := 15 * 60 * 1000
+
 ; All custom key bindings
 keybindings := [
     ["LAlt + 1", "Toggle Notepad++"],
