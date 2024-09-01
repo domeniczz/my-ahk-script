@@ -1,0 +1,15 @@
+# ignore everything
+*
+
+# except .ahk files
+!*.ahk
+
+# except .gitignore
+!.gitignore
+
+# except .log files in the "log" folder
+!log/
+!log/*.log
+
+# navigate into subdirectories
+!*/
