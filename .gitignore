@@ -8,8 +8,8 @@
 !.gitignore
 
 # except .log files in the "log" folder
-!log/
-!log/*.log
+# !log/
+# !log/*.log
 
 # navigate into subdirectories
 !*/
