@@ -14,10 +14,9 @@ browser := A_ProgramFiles . "\Mozilla Firefox\firefox.exe"
 openWebuiUrl := "http://localhost:3333"
 dockerContainerName := "open-webui"
 
-; Threshold for right button hold duration to start infinite scrolling (milliseconds)
-rightHoldThreshold := 700
 ; Speed of infinite scrolling (* times faster than normal scroll)
-scrollSpeed := 2.5
+; It will increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
+baseScrollSpeed := 1.2
 
 ; Wechat login button X Y coordinates
 wechatLoginBtnX := 220

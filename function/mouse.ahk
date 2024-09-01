@@ -8,40 +8,35 @@ infiniteScrollActive := false
 scrollDirection := 0
 rightClickStartTime := 0
 scrollAccumulator := 0.0
+consecutiveScrollCount := 0
+lastScrollDirection := 0
 
 
 ;; Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
-RButtonHandler(*) {
+InfiniScrollHandler(*) {
     global rightClickStartTime
+
+    BeforeCleanUp()
 
     rightClickStartTime := A_TickCount
 
     ; Start listening for scroll wheel movement
-    Hotkey "WheelUp", ScrollHandler, "On"
-    Hotkey "WheelDown", ScrollHandler, "On"
+    Hotkey "WheelUp", ScrollWheelHandler, "On"
+    Hotkey "WheelDown", ScrollWheelHandler, "On"
+    ; Start listening for left button click
+    Hotkey "LButton", LButtonClickHandler, "On"
 
-    Hotkey "LButton", LeftClickHandler, "On"
-
-    ; Set a timer to check for button release
-    SetTimer CheckRButtonRelease, 2
+    ; Set a timer to check for right button release
+    SetTimer CheckRButtonRelease, 1
 }
 
 
 ;; Handle left-click to stop infinite scrolling
-LeftClickHandler(*) {
+LButtonClickHandler(*) {
     global infiniteScrollActive
 
-    if infiniteScrollActive {
-        ; Clean up
-        SetTimer InfiniteScroll, 0
-        SetTimer CheckRButtonRelease, 0
-        Hotkey "WheelUp", "Off"
-        Hotkey "WheelDown", "Off"
-        Hotkey "LButton", "Off"
-        infiniteScrollActive := false
-        scrollAccumulator := 0.0
-        scrollDirection := 0
-    }
+    AfterCleanUp()
+    infiniteScrollActive := false
 
     ; Perform the original left-click action
     Click "Left"
@@ -51,39 +46,44 @@ LeftClickHandler(*) {
 ;; Check if the right mouse button is released
 ;; If released, perform right-click action or stop infinite scrolling if active
 CheckRButtonRelease() {
-    global infiniteScrollActive, scrollDirection, rightClickStartTime, rightHoldThreshold
+    global infiniteScrollActive
 
+    ; `GetKeyState` returns 1 (true) if the key is down or 0 (false) if it is up
     if !GetKeyState("RButton", "P") {
-        SetTimer , 0  ; Stop this timer
-
-        ; Clean up
-        SetTimer InfiniteScroll, 0
-
-        Hotkey "WheelUp", "Off"
-        Hotkey "WheelDown", "Off"
-        Hotkey "LButton", "Off"
-
-        ; Perform right-click if no infinite scrolling occurred
         if !infiniteScrollActive {
+            ; Perform right-click if no infinite scrolling occurred
             Click "Right"
         }
-
-        ; Clean up
+        AfterCleanUp()
         infiniteScrollActive := false
-        scrollDirection := 0
     }
 }
 
 
 ;; Handle scrolling based on the scroll direction
-ScrollHandler(ThisHotkey) {
-    global infiniteScrollActive, scrollDirection
+ScrollWheelHandler(ThisHotkey) {
+    global infiniteScrollActive, scrollDirection, consecutiveScrollCount, lastScrollDirection
 
+    ; Get scroll direction
     if ThisHotkey == "WheelUp"
-        scrollDirection := 1
+        direction := 1
     else if ThisHotkey == "WheelDown"
-        scrollDirection := -1
+        direction := -1
 
+    ; If the scroll direction has changed, reset the consecutive scroll count
+    if direction != lastScrollDirection {
+        consecutiveScrollCount := 1
+        lastScrollDirection := direction
+        scrollDirection := direction
+    }
+    ; Otherwise, increment the consecutive scroll count
+    else {
+        ; Limit the count in case of accidental continuous increase
+        if consecutiveScrollCount < 25
+            consecutiveScrollCount++
+    }
+
+    ; Start infinite scrolling if not already
     if !infiniteScrollActive {
         infiniteScrollActive := true
         ; Start infinite scrolling
@@ -92,13 +92,21 @@ ScrollHandler(ThisHotkey) {
 }
 
 
+; Calculate speed multiplier based on consecutive scroll count
+; The speed multiplier increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
+CalculateSpeedMultiplier(count) {
+    ; 1 + (count * 0.12) ^ 3
+    return 1 + (count * 0.12) ** 3
+}
+
+
 ;; Perform infinite scrolling based on the scroll direction and speed
 InfiniteScroll() {
-    global scrollDirection, infiniteScrollActive, scrollSpeed, scrollAccumulator
+    global scrollAccumulator
 
-    ; Perform scrolling if and only if the right mouse button is pressed and the left mouse button is not pressed
     if GetKeyState("RButton", "P") and !GetKeyState("LButton", "P") {
-        scrollAccumulator += scrollSpeed
+        finalScrollSpeed := baseScrollSpeed * CalculateSpeedMultiplier(consecutiveScrollCount)
+        scrollAccumulator += finalScrollSpeed
         while (scrollAccumulator >= 1) {
             if scrollDirection > 0
                 Send "{WheelUp}"
@@ -106,9 +114,35 @@ InfiniteScroll() {
                 Send "{WheelDown}"
             scrollAccumulator -= 1
         }
+    } else {
+        AfterCleanUp()
     }
-    else{
-        SetTimer , 0  ; Stop the timer if right mouse button is released
-        scrollAccumulator := 0.0
-    }
+}
+
+
+BeforeCleanUp() {
+    global infiniteScrollActive, scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
+
+    SetTimer InfiniteScroll, 0
+    infiniteScrollActive := false
+    scrollAccumulator := 0.0
+    scrollDirection := 0
+    consecutiveScrollCount := 0
+    lastScrollDirection := 0
+}
+
+
+;; Clean up after infinite scrolling
+AfterCleanUp() {
+    global scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
+
+    SetTimer InfiniteScroll, 0
+    SetTimer CheckRButtonRelease, 0
+    Hotkey "WheelUp", ScrollWheelHandler, "Off"
+    Hotkey "WheelDown", ScrollWheelHandler, "Off"
+    Hotkey "LButton", LButtonClickHandler, "Off"
+    scrollAccumulator := 0.0
+    scrollDirection := 0
+    consecutiveScrollCount := 0
+    lastScrollDirection := 0
 }

@@ -1,4 +1,4 @@
-﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -108,4 +108,4 @@ SetTimer AutoDarkMode, autoDarkModeCheckInterval
 ; Right mouse button
 ; Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
 ; End infinite scrolling by releasing the right button or clicking the left button
-RButton::RButtonHandler()
+RButton::InfiniScrollHandler()
