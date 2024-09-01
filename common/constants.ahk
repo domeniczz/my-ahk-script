@@ -1,11 +1,11 @@
 ;; This file contains all the constants and global variables.
 
 
-;;;;;;;;;; GLOBAL VARIABLE ;;;;;;;;;;
+;;;;;;;;;; GLOBAL VARIABLES ;;;;;;;;;;
 
 
 ; Script log file path
-logfile := A_MyDocuments . "\AHK\log\main.log"
+logfile := A_ScriptDir . "\log\main.log"
 
 ; Path to the default browser executable
 browser := A_ProgramFiles . "\Mozilla Firefox\firefox.exe"
@@ -16,7 +16,7 @@ dockerContainerName := "open-webui"
 
 ; Speed of infinite scrolling (* times faster than normal scroll)
 ; It will increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
-baseScrollSpeed := 1.2
+baseScrollSpeed := 1.5
 
 ; Wechat login button X Y coordinates
 wechatLoginBtnX := 220
@@ -26,6 +26,11 @@ wechatLoginBtnY := 450
 morning := 0700
 evening := 1830
 autoDarkModeCheckInterval := 15 * 60 * 1000
+
+; List of excluded programs for triggering infinite scroll
+infiniScrollExcludedPrograms := Map()
+infiniScrollExcludedPrograms["cs2.exe"] := true
+infiniScrollExcludedPrograms["r5apex.exe"] := true
 
 ; All custom key bindings
 keybindings := [
@@ -52,7 +57,7 @@ keybindings := [
 ]
 
 
-;;;;;;;;;; APPLICATION PATH ;;;;;;;;;;
+;;;;;;;;;; APPLICATION PATHS ;;;;;;;;;;
 
 
 notepadpp := A_ProgramFiles . "\Notepad++\notepad++.exe"

@@ -12,8 +12,20 @@ consecutiveScrollCount := 0
 lastScrollDirection := 0
 
 
+;; Check if the current program is in the exclude list for infinite scrolling
+;; Returns: true if the program is excluded, false otherwise
+IsExcludedProgram() {
+    return infiniScrollExcludedPrograms.Has(WinGetProcessName("A"))
+}
+
+
 ;; Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
 InfiniScrollHandler(*) {
+    if (IsExcludedProgram()) {
+        Click "Right"
+        return
+    }
+
     global rightClickStartTime
 
     BeforeCleanUp()
@@ -96,7 +108,7 @@ ScrollWheelHandler(ThisHotkey) {
 ; The speed multiplier increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
 CalculateSpeedMultiplier(count) {
     ; 1 + (count * 0.12) ^ 3
-    return 1 + (count * 0.12) ** 3
+    return 1 + (count * 0.14) ** 3
 }
 
 
