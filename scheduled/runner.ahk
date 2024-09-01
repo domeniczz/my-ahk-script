@@ -6,6 +6,6 @@
 ;; This script is ran by Windows Task Scheduler every time the system unlock by any user
 
 
-RunWait(A_ScriptDir . "\autodarkmode.ahk", , "Hide")
+; RunWait(A_ScriptDir . "\autodarkmode.ahk", , "Hide")
 
 RunWait(A_ScriptDir . "\closerawaccel.ahk", , "Hide")

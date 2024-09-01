@@ -25,12 +25,25 @@ wechatLoginBtnY := 450
 ; AutoDarkMode parameters
 morning := 0700
 evening := 1830
-autoDarkModeCheckInterval := 15 * 60 * 1000
+autoDarkModeCheckInterval := 6 * 1000
+; autoDarkModeCheckInterval := 15 * 60 * 1000
 
 ; List of excluded programs for triggering infinite scroll
 infiniScrollExcludedPrograms := Map()
+; Counter-Strike
 infiniScrollExcludedPrograms["cs2.exe"] := true
+; Apex Legends
 infiniScrollExcludedPrograms["r5apex.exe"] := true
+; Call of Duty
+infiniScrollExcludedPrograms["cod.exe"] := true
+; Red Dead Redemption 2
+infiniScrollExcludedPrograms["RDR2.exe"] := true
+; Grand Theft Auto V
+infiniScrollExcludedPrograms["GTA5.exe"] := true
+; Black Myth: Wukong
+infiniScrollExcludedPrograms["b1.exe"] := true
+; 3DMark
+infiniScrollExcludedPrograms["3DMark.exe"] := true
 
 ; All custom key bindings
 keybindings := [
@@ -85,6 +98,8 @@ eudic := A_ProgramFiles . "\eudic\eudic.exe"
 docker := A_ProgramFiles . "\Docker\Docker\Docker Desktop.exe"
 
 ollama := EnvGet("LocalAppData") . "\Programs\Ollama\ollama app.exe"
+
+steam := EnvGet("ProgramFiles(x86)") . "\Steam\steam.exe"
 
 leishen := EnvGet("ProgramFiles(x86)") . "\LeiGod_Acc\leigod_launcher.exe"
 

@@ -14,7 +14,7 @@ ToggleRawAccel() {
     ; If it is running, toggle the window
     if ProcessExist("rawaccel.exe") {
         ; Close the window after 150ms
-        CloseWindow("ahk_exe rawaccel.exe", 6, 150)
+        CloseWindow("ahk_exe rawaccel.exe", 60, 160)
     }
     ; If it is not running, run it
     ; else {

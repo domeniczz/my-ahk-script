@@ -1,4 +1,4 @@
-;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -17,12 +17,13 @@
 #Include function\keyboard.ahk
 #Include function\mouse.ahk
 #Include function\typing.ahk
+; #Include function\autodarkmode.ahk
 
 
 ;;;;;;;;;; SCHEDULED TASKS ;;;;;;;;;;
 
 
-SetTimer AutoDarkMode, autoDarkModeCheckInterval
+; SetTimer AutoDarkMode, autoDarkModeCheckInterval
 
 
 ;;;;;;;;;; HOTKEYS BINDINGS ;;;;;;;;;;

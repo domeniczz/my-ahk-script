@@ -40,13 +40,20 @@ if not A_IsAdmin
 ToggleGamingNetworkEnv() {
     ; If LeiGod is running, then close it, and turn on Clash
     if ProcessExist("leigod.exe") {
-        ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", 20)
+        if !WinExist("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1") {
+            run leishen
+        }
+        ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1")
         SetWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h)
-        ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1500, 100, "雷神关闭")
+        ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1573, 100, "Toggle 雷神时长")
         sleep 1600
 
         if WinExist("ahk_exe leigod.exe") {
-            WinClose "ahk_exe leigod.exe"
+            ; WinClose "ahk_exe leigod.exe"
+            ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1")
+            ; Alt + F4 to exit the app
+            Send "!{F4}"
+            Send "{Alt up}"
         }
 
         sleep 200
@@ -57,7 +64,7 @@ ToggleGamingNetworkEnv() {
         SendInput "{Ctrl up}{Alt up}{Shift up}"
 
         ToolTip("Clash Turned On")
-        SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
+        SetTimer () => ToolTip(), -2500  ; Remove the tooltip after 1 seconds
     }
     ; If LeiGod is not running, then run it, and turn off Clash
     else {
@@ -67,13 +74,18 @@ ToggleGamingNetworkEnv() {
         SendInput "{Ctrl up}{Alt up}{Shift up}"
 
         ToolTip("Clash Turned Off")
-        SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
+        SetTimer () => ToolTip(), -2500  ; Remove the tooltip after 1 seconds
 
         Run leishen
 
+        if !ProcessExist("steam.exe") {
+            Run steam
+            CloseWindow("ahk_exe ahk_exe steamwebhelper.exe", 10)
+        }
+
         ; Set the window position and size, then focus on the window
         SetAndActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h, 20)
-        ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1500, 100, "雷神启动")
+        ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1573, 100, "Toggle 雷神时长")
     }
 }
 

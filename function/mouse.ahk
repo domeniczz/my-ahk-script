@@ -15,7 +15,12 @@ lastScrollDirection := 0
 ;; Check if the current program is in the exclude list for infinite scrolling
 ;; Returns: true if the program is excluded, false otherwise
 IsExcludedProgram() {
-    return infiniScrollExcludedPrograms.Has(WinGetProcessName("A"))
+    try {
+        ; Check if the current program is in the exclude list
+        return infiniScrollExcludedPrograms.Has(WinGetProcessName("A"))
+    } catch as err {
+        return false
+    }
 }
 
 
