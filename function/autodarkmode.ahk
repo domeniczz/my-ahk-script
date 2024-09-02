@@ -7,12 +7,12 @@ AutoDarkMode() {
     if (currentTime >= morning and currentTime < evening) {
         if GetWinColorMode() != "Light" {
             ToggleWinColorMode()
-            FileAppend "Changed Windows color mode to Light at " . SubStr(currentTime, 1, 2) . ":" . SubStr(currentTime, 3) . "`n", logfile
+            ; FileAppend "Changed Windows color mode to Light at " . SubStr(currentTime, 1, 2) . ":" . SubStr(currentTime, 3) . "`n", logfile
         }
     } else {
         if GetWinColorMode() != "Dark" {
             ToggleWinColorMode()
-            FileAppend "Changed Windows color mode to Dark at " . SubStr(currentTime, 1, 2) . ":" . SubStr(currentTime, 3) . "`n", logfile
+            ; FileAppend "Changed Windows color mode to Dark at " . SubStr(currentTime, 1, 2) . ":" . SubStr(currentTime, 3) . "`n", logfile
         }
     }
     ; FileAppend "Checking Windows color mode at " . SubStr(currentTime, 1, 2) . ":" . SubStr(currentTime, 3) . "`n", logfile
@@ -29,50 +29,6 @@ AutoDarkMode() {
 ;;   ToggleWinColorMode("Dark")    ; Switch to dark mode
 ;;   ToggleWinColorMode("Toggle")  ; Toggle between light and dark mode
 ;;   ToggleWinColorMode()          ; Same as "Toggle"
-; ToggleWinColorMode(mode := "Toggle") {
-;     try {
-;         ;; Change the Windows color mode
-
-;         static HKCU := "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
-;         if (mode = "Toggle") {
-;             currentTheme := RegRead(HKCU, "SystemUsesLightTheme")
-;             mode := (currentTheme = 0) ? "Light" : "Dark"
-;         }
-;         themeValue := (mode = "Light") ? 1 : 0
-;         RegWrite(themeValue, "REG_DWORD", HKCU, "SystemUsesLightTheme")
-;         RegWrite(themeValue, "REG_DWORD", HKCU, "AppsUseLightTheme")
-
-;         ;; Refresh to apply the theme changes
-
-;         Run "RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters", , "Hide"
-
-;         SendMessage(WM_SETTINGCHANGE := 0x001A, 0, StrPtr("ImmersiveColorSet"), , "ahk_id 0xFFFF")
-
-;         DllCall("user32.dll\SendNotifyMessage", "Ptr", 0xFFFF, "Uint", 0x001A, "Ptr", 0, "Ptr", 0)
-
-;         DllCall("Shell32.dll\SHChangeNotify", "Int", 0x8000000, "UInt", 0, "Ptr", 0, "Ptr", 0)
-
-;         PostMessage(0x0111, 0x0000f200, 0, , "ahk_class Shell_TrayWnd")  ; WM_COMMAND, TB_ENDTRACK
-;         SendMessage(0x001A, 0, StrPtr("ThemeChanged"), , "ahk_id 0xFFFF")
-
-;         static WM_SETTINGCHANGE := 0x001A
-;         SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ImmersiveColorSet"), , "ahk_class Shell_TrayWnd")
-
-;         try {
-;             if (DllCall("GetModuleHandle", "Str", "UxTheme.dll", "Ptr")) {
-;                 DllCall("UxTheme.dll\RefreshImmersiveColorPolicyState")
-;             }
-;         }
-
-;         try DllCall("SetSysColors", "Int", 1, "Int*", 15, "Int*", DllCall("GetSysColor", "Int", 15))
-
-;         SendMessage(0x000F, 0, 0, , "Program Manager")
-;     } catch as err {
-;         MsgBox("An error occurred while changing color mode: " . err.Message)
-;         return "Error"
-;     }
-; }
-
 ToggleWinColorMode(mode := "Toggle") {
     try {
         ; Run "ms-settings:"

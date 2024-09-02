@@ -25,8 +25,7 @@ wechatLoginBtnY := 450
 ; AutoDarkMode parameters
 morning := 0700
 evening := 1830
-autoDarkModeCheckInterval := 6 * 1000
-; autoDarkModeCheckInterval := 15 * 60 * 1000
+autoDarkModeCheckInterval := 15 * 60 * 1000
 
 ; List of excluded programs for triggering infinite scroll
 infiniScrollExcludedPrograms := Map()

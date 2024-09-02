@@ -17,13 +17,13 @@
 #Include function\keyboard.ahk
 #Include function\mouse.ahk
 #Include function\typing.ahk
-; #Include function\autodarkmode.ahk
+#Include function\autodarkmode.ahk
 
 
 ;;;;;;;;;; SCHEDULED TASKS ;;;;;;;;;;
 
 
-; SetTimer AutoDarkMode, autoDarkModeCheckInterval
+SetTimer AutoDarkMode, autoDarkModeCheckInterval
 
 
 ;;;;;;;;;; HOTKEYS BINDINGS ;;;;;;;;;;
