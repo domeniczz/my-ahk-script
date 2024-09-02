@@ -1,8 +1,6 @@
 ;; This file contains the functions related to mouse actions and interactions.
 
-
 ;;;;;;;;;; MOUSE FUNCTIONS ;;;;;;;;;;
-
 
 infiniteScrollActive := false
 scrollDirection := 0
@@ -10,7 +8,6 @@ rightClickStartTime := 0
 scrollAccumulator := 0.0
 consecutiveScrollCount := 0
 lastScrollDirection := 0
-
 
 ;; Check if the current program is in the exclude list for infinite scrolling
 ;; Returns: true if the program is excluded, false otherwise
@@ -22,7 +19,6 @@ IsExcludedProgram() {
         return false
     }
 }
-
 
 ;; Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
 InfiniScrollHandler(*) {
@@ -47,7 +43,6 @@ InfiniScrollHandler(*) {
     SetTimer CheckRButtonRelease, 1
 }
 
-
 ;; Handle left-click to stop infinite scrolling
 LButtonClickHandler(*) {
     global infiniteScrollActive
@@ -58,7 +53,6 @@ LButtonClickHandler(*) {
     ; Perform the original left-click action
     Click "Left"
 }
-
 
 ;; Check if the right mouse button is released
 ;; If released, perform right-click action or stop infinite scrolling if active
@@ -75,7 +69,6 @@ CheckRButtonRelease() {
         infiniteScrollActive := false
     }
 }
-
 
 ;; Handle scrolling based on the scroll direction
 ScrollWheelHandler(ThisHotkey) {
@@ -108,14 +101,12 @@ ScrollWheelHandler(ThisHotkey) {
     }
 }
 
-
 ; Calculate speed multiplier based on consecutive scroll count
 ; The speed multiplier increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
 CalculateSpeedMultiplier(count) {
     ; 1 + (count * 0.12) ^ 3
     return 1 + (count * 0.14) ** 3
 }
-
 
 ;; Perform infinite scrolling based on the scroll direction and speed
 InfiniteScroll() {
@@ -136,7 +127,6 @@ InfiniteScroll() {
     }
 }
 
-
 BeforeCleanUp() {
     global infiniteScrollActive, scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
 
@@ -147,7 +137,6 @@ BeforeCleanUp() {
     consecutiveScrollCount := 0
     lastScrollDirection := 0
 }
-
 
 ;; Clean up after infinite scrolling
 AfterCleanUp() {

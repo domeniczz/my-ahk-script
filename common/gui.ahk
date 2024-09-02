@@ -1,14 +1,10 @@
 ;; This file contains gui functions.
 
-
 ;;;;;;;;;; GUI WINDOW ;;;;;;;;;;
-
 
 helpWindow := DrawHelpGUI()
 
-
 ;;;;;;;;;; GUI FUNCTIONS ;;;;;;;;;;
-
 
 ; Draw the GUI of help window (displays all the keybindings)
 DrawHelpGUI() {
@@ -27,7 +23,9 @@ DrawHelpGUI() {
     lvY := (windowHeight - lvHeight) / 2
 
     ; Add ListView to display keybindings
-    lv := helpGui.Add("ListView", Format("x{} y{} w{} h{} -E0x200 -Hdr -LV0x20 +LV0x4000 +ReadOnly -TabStop", lvX, lvY, lvWidth, lvHeight), ["Hotkey", "Feature"])
+    lv := helpGui.Add("ListView", Format("x{} y{} w{} h{} -E0x200 -Hdr -LV0x20 +LV0x4000 +ReadOnly -TabStop", lvX, lvY,
+        lvWidth, lvHeight), ["Hotkey", "Feature"
+        ])
 
     for binding in keybindings {
         lv.Add(, binding*)
@@ -46,9 +44,9 @@ DrawHelpGUI() {
     ; Add Esc hotkey to close the window
     helpGui.OnEvent("Escape", (*) => helpGui.Hide())
 
-    return {gui: helpGui, lv: lv}
+    return { gui: helpGui, lv: lv
+    }
 }
-
 
 ;; Set the colors of the help window based on the Windows color mode
 SetHelpWindowColors(helpGui, lv) {

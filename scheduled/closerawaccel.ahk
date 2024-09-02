@@ -5,24 +5,24 @@
 #Include ..\common\constants.ahk
 #Include ..\common\utils.ahk
 
-
 ;; Toggle RawAccel
 ToggleRawAccel() {
-    sleep 5000
     MaxAttempts := 300
-    Loop MaxAttempts{
+    loop MaxAttempts {
         ; If it is running, toggle the window
         if ProcessExist("rawaccel.exe") {
-            ; Close the window after 200ms
-            CloseWindow("ahk_exe rawaccel.exe", , 200)
-            break
+            if WinExist("ahk_exe rawaccel.exe") {
+                ; Close the window after 300ms
+                CloseWindow("ahk_exe rawaccel.exe", , 300)
+                break
+            }
         }
         sleep 200
     }
 
     if (MaxAttempts = A_Index) {
         Run rawaccel
-        Loop MaxAttempts{
+        loop MaxAttempts {
             if ProcessExist("rawaccel.exe") {
                 CloseWindow("ahk_exe rawaccel.exe", , 200)
                 break
@@ -32,8 +32,6 @@ ToggleRawAccel() {
     }
 }
 
-
 ToggleRawAccel()
-
 
 ExitApp

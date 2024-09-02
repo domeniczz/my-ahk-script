@@ -1,6 +1,5 @@
 ;; This file contains the AutoDarkMode function which checks the current time and changes the Windows color mode accordingly
 
-
 ;; Check the current time and change the Windows color mode if needed
 AutoDarkMode() {
     currentTime := FormatTime(A_Now, "HHmm")
@@ -17,7 +16,6 @@ AutoDarkMode() {
     }
     ; FileAppend "Checking Windows color mode at " . SubStr(currentTime, 1, 2) . ":" . SubStr(currentTime, 3) . "`n", logfile
 }
-
 
 ;; Changes the Windows color mode (theme) between Light and Dark.
 ;; If no mode is specified, it toggles between the current and the opposite mode.

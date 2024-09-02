@@ -1,8 +1,6 @@
 ;; This file contains the functions related to keyboard shortcuts and hotkeys.
 
-
 ;;;;;;;;;; KEYBOARD FUNCTIONS ;;;;;;;;;;
-
 
 ;; Toggle Notepad++
 ToggleNotepadPP() {
@@ -21,7 +19,6 @@ ToggleNotepadPP() {
         SetAndActivateWindow("ahk_exe notepad++.exe", notepadppDim.x, notepadppDim.y, notepadppDim.w, notepadppDim.h)
     }
 }
-
 
 ;; Toggle Notepad2
 ToggleNotepad2() {
@@ -42,7 +39,6 @@ ToggleNotepad2() {
     }
 }
 
-
 ;; Toggle Visual Studio Code
 ToggleVSCode() {
     ; If it is running, toggle the window
@@ -60,7 +56,6 @@ ToggleVSCode() {
         SetAndActivateWindow("ahk_exe Code.exe", vscodeDim.x, vscodeDim.y, vscodeDim.w, vscodeDim.h)
     }
 }
-
 
 ;; Toggle Windows Terminal
 ToggleWindowsTerminal() {
@@ -87,9 +82,10 @@ ToggleSpotify() {
         if WinActive("ahk_exe Spotify.exe") {
             ; Window is active, close to minimize it to the system tray
             WinClose
+        } else if WinExist("ahk_exe Spotify.exe") and !WinActive("ahk_exe Spotify.exe") {
+            WinActivate "ahk_exe Spotify.exe"
         } else {
             Run spotify
-            ; ActivateWindow("ahk_exe Spotify.exe")
         }
     }
     ; If it is not running, run it
@@ -99,7 +95,6 @@ ToggleSpotify() {
     }
 }
 
-
 ;; Toggle Telegram
 ToggleTelegram() {
     ; If it is running, toggle the window
@@ -107,9 +102,10 @@ ToggleTelegram() {
         if WinActive("ahk_exe Telegram.exe") {
             ; Window is active, close to minimize it to the system tray
             WinClose
+        } else if WinExist("ahk_exe Telegram.exe") and !WinActive("ahk_exe Telegram.exe") {
+            WinActivate "ahk_exe Telegram.exe"
         } else {
             Run telegram
-            ; ActivateWindow("ahk_exe Telegram.exe")
         }
     }
     ; If it is not running, run it
@@ -118,7 +114,6 @@ ToggleTelegram() {
         SetAndActivateWindow("ahk_exe Telegram.exe", telegramDim.x, telegramDim.y, telegramDim.w, telegramDim.h)
     }
 }
-
 
 ;; Toggle Discord
 ToggleDiscord() {
@@ -129,15 +124,15 @@ ToggleDiscord() {
         if WinActive("ahk_exe Discord.exe") {
             ; Window is active, close to minimize it to the system tray
             WinClose
+        } else if WinExist("ahk_exe Discord.exe") and !WinActive("ahk_exe Discord.exe") {
+            WinActivate "ahk_exe Discord.exe"
         } else {
-            if discord !="" {
+            if discord != "" {
                 Run discord
-                ; ActivateWindow("ahk_exe Discord.exe")
             } else {
                 discord := GetExePath(EnvGet("LocalAppData") . "\Discord" . "\app-*", "Discord.exe")
                 if discord != "" {
                     Run discord
-                    ; ActivateWindow("ahk_exe Discord.exe")
                 } else {
                     MsgBox "ERROR! Discord.exe not found in the expected directory `"" . discord . "`"."
                 }
@@ -157,7 +152,6 @@ ToggleDiscord() {
     }
 }
 
-
 ;; Toggle WeChat
 ToggleWeChat() {
     ; If it is running, toggle the window
@@ -165,28 +159,30 @@ ToggleWeChat() {
         if WinActive("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC") {
             ; Window is active, close to minimize it to the system tray
             WinClose
+        } else if WinExist("ahk_exe WeChat.exe") and !WinActive("ahk_exe WeChat.exe") {
+            WinActivate "ahk_exe WeChat.exe"
         } else {
             Run wechat
-            ; ActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC")
         }
     }
     ; If it is not running, run it
     else {
         Run wechat
-        ActivateWindowAndClick("ahk_exe WeChat.exe ahk_class WeChatLoginWndForPC", , , wechatLoginBtnX, wechatLoginBtnY)
+        ActivateWindowAndClick("ahk_exe WeChat.exe ahk_class WeChatLoginWndForPC", , , wechatLoginBtnX, wechatLoginBtnY
+        )
 
         ; Show a notification
         ToolTip("WeChat Login")
         SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
 
         if WinWait("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", , 8) {
-            SetAndActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
+            SetAndActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim
+                .w, wechatDim.h)
         } else {
             MsgBox "ERROR! WeChat.exe window could not be found!"
         }
     }
 }
-
 
 ;; Toggle Eudic
 ToggleEudic() {
@@ -195,6 +191,8 @@ ToggleEudic() {
         if WinActive("ahk_exe eudic.exe") {
             ; Window is active, close to minimize it to the system tray
             WinClose "ahk_exe eudic.exe"
+        } else if WinExist("ahk_exe eudic.exe") and !WinActive("ahk_exe eudic.exe") {
+            WinActivate "ahk_exe eudic.exe"
         } else {
             Run eudic
             ; ActivateWindow("ahk_exe eudic.exe")
@@ -206,7 +204,6 @@ ToggleEudic() {
         SetAndActivateWindow("ahk_exe eudic.exe", eudicDim.x, eudicDim.y, eudicDim.w, eudicDim.h)
     }
 }
-
 
 ;; Toggle Bilibili
 ToggleBilibili() {
@@ -223,7 +220,7 @@ ToggleBilibili() {
                 if bilibiliWinId == "" {
                     bilibiliWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
                 }
-            ; Only one bilibili window, toggle the window
+                ; Only one bilibili window, toggle the window
             case 1:
                 if WinActive("ahk_id " . winList[1]) {
                     WinMinimize
@@ -233,7 +230,7 @@ ToggleBilibili() {
                 if bilibiliWinId == "" {
                     bilibiliWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
                 }
-            ; Two bilibili windows (home window & video window), activate the video window
+                ; Two bilibili windows (home window & video window), activate the video window
             case 2:
                 for win_id in winList {
                     ; Find the window that's not bilibiliWinId (video window)
@@ -241,7 +238,8 @@ ToggleBilibili() {
                         if WinActive("ahk_exe 哔哩哔哩.exe ahk_id " . win_id) {
                             WinMinimize
                         } else {
-                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
+                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y,
+                                bilibiliVidDim.w, bilibiliVidDim.h)
                         }
                         break
                     }
@@ -253,11 +251,11 @@ ToggleBilibili() {
     ; If it is not running, run it
     else {
         Run bilibili
-        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
+        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim
+            .w, bilibiliDim.h)
         bilibiliWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
     }
 }
-
 
 ;; Toggle Sandboxed Bilibili (Running in Sanboxie)
 ToggleSandboxedBilibili() {
@@ -272,9 +270,10 @@ ToggleSandboxedBilibili() {
             case 0:
                 Run bilibiliSandboxed
                 if bilibiliSandboxedWinId == "" {
-                    bilibiliSandboxedWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
+                    bilibiliSandboxedWinId := WinGetID(
+                        "ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
                 }
-            ; Only one bilibili window, toggle the window
+                ; Only one bilibili window, toggle the window
             case 1:
                 if WinActive("ahk_id " . winList[1]) {
                     WinMinimize
@@ -282,9 +281,10 @@ ToggleSandboxedBilibili() {
                     WinActivate "ahk_id " . winList[1]
                 }
                 if bilibiliSandboxedWinId == "" {
-                    bilibiliSandboxedWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
+                    bilibiliSandboxedWinId := WinGetID(
+                        "ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
                 }
-            ; Two bilibili windows (home window & video window), activate the video window
+                ; Two bilibili windows (home window & video window), activate the video window
             case 2:
                 for win_id in winList {
                     ; Find the window that's not bilibiliSandboxedWinId (video window)
@@ -292,7 +292,8 @@ ToggleSandboxedBilibili() {
                         if WinActive("ahk_exe 哔哩哔哩.exe ahk_id " . win_id) {
                             WinMinimize
                         } else {
-                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
+                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y,
+                                bilibiliVidDim.w, bilibiliVidDim.h)
                         }
                         break
                     }
@@ -304,17 +305,16 @@ ToggleSandboxedBilibili() {
     ; If it is not running, run it
     else {
         Run bilibiliSandboxed
-        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
+        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x,
+            bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
         bilibiliSandboxedWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
     }
 }
-
 
 ;; Open YouTube with browser
 OpenYouTube() {
     Run '"' . browser . '" "https://www.youtube.com"'
 }
-
 
 ;; Open YouTube with browser
 OpenYouTube2() {
@@ -323,10 +323,9 @@ OpenYouTube2() {
     Run '"' . browser . '" "ext+container:name=Dintionte&url=https://www.youtube.com"'
 }
 
-
 ;; Run Spotify and Lyricify together
 RunSpotifyAndLyricify() {
-    if not WinActive("ahk_exe Spotify.exe") {
+    if !WinActive("ahk_exe Spotify.exe") {
         ToggleSpotify()
         sleep 100
     }
@@ -336,7 +335,6 @@ RunSpotifyAndLyricify() {
         CloseWindow("ahk_exe Lyricify for Spotify.exe")
     }
 }
-
 
 ;; Start Ollama and Docker container for chat webui
 StartOllamaAndDockerWebUI() {
@@ -367,14 +365,12 @@ StartOllamaAndDockerWebUI() {
         if ProcessExist("Docker Desktop.exe") == 0 {
             ToolTip("ERROR! Docker Desktop not started")
             SetTimer () => ToolTip(), -2000
-        }
-        else if ProcessExist("ollama.exe") == 0 {
+        } else if ProcessExist("ollama.exe") == 0 {
             ToolTip("ERROR! Ollama not started")
             SetTimer () => ToolTip(), -2000
         }
     }
 }
-
 
 ;; Toggle the help window
 ToggleHelpWindow() {
@@ -400,7 +396,6 @@ ToggleHelpWindow() {
     }
 }
 
-
 ;; Close currently active window
 CloseCurrentWindow() {
     ; Close the active window
@@ -408,15 +403,16 @@ CloseCurrentWindow() {
     WinClose("A")
 }
 
-
 ;; Put the computer to sleep
-SendComputerToSleep() {
+PutComputerToSleep() {
     DllCall("PowrProf.dll\SetSuspendState", "Int", 0, "Int", 0, "Int", 0)
 }
 
-
-;; Restart the computer
-SendComputerToRestart() {
-    ; Shutdown(2)
-    DllCall("kernel32.dll\ExitWindowsEx", "UInt", 2, "UInt", 0)
+;; Restart the computer (* seconds countdown)
+PutComputerToRestart() {
+    countDownSeconds := 5
+    Run(
+        'pwsh.exe -Command "for ($i = ' . countDownSeconds .
+        '; $i -gt 0; $i--) { Write-Host \"Restarting in $i seconds...\"; Start-Sleep -Seconds 1 }; Restart-Computer"'
+    )
 }

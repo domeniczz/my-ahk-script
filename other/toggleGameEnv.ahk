@@ -4,7 +4,6 @@
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
-
 #Requires AutoHotkey v2.0
 
 #SingleInstance Force
@@ -12,27 +11,21 @@
 #Include ..\common\constants.ahk
 #Include ..\common\utils.ahk
 
-
-if not A_IsAdmin
-{
+if not A_IsAdmin {
     try
     {
         if A_IsCompiled
             Run '*RunAs "' A_ScriptFullPath '" /restart'
         else
             Run '*RunAs "' A_AhkPath '" /restart "' A_ScriptFullPath '"'
-    }
-    catch
-    {
+    } catch {
         MsgBox "Failed to restart " . A_ScriptName . " with admin privileges."
         ExitApp
     }
     ExitApp
 }
 
-
 ;;;;;;;;;; USER DEFINED FUNCTIONS ;;;;;;;;;;
-
 
 ;; Prepare the network for gaming
 ;;   Start gaming: Turn off clash, turn on leigod
@@ -44,7 +37,8 @@ ToggleGamingNetworkEnv() {
             run leishen
         }
         ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1")
-        SetWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h)
+        SetWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w,
+            leishenDim.h)
         ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1573, 100, "Toggle 雷神时长")
         sleep 1600
 
@@ -84,11 +78,11 @@ ToggleGamingNetworkEnv() {
         }
 
         ; Set the window position and size, then focus on the window
-        SetAndActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h, 20)
+        SetAndActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w,
+            leishenDim.h, 20)
         ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1573, 100, "Toggle 雷神时长")
     }
 }
-
 
 ; Run the function
 ToggleGamingNetworkEnv()

@@ -1,8 +1,6 @@
 ;; This file contains utility functions.
 
-
 ;;;;;;;;;; UTILITY FUNCTIONS ;;;;;;;;;;
-
 
 ;; Activate (focus) app window.
 ;; Parameters:
@@ -21,7 +19,6 @@ ActivateWindow(target, waitDuration := 4, sleepDuration := 0) {
     }
 }
 
-
 ;; Close app window.
 ;; Parameters:
 ;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
@@ -38,7 +35,6 @@ CloseWindow(target, waitDuration := 4, sleepDuration := 0) {
         MsgBox 'ERROR Closing! The "' . target . '" window could not be found!'
     }
 }
-
 
 ;; Activate (focus) app window and click.
 ;; Parameters:
@@ -57,10 +53,10 @@ ActivateWindowAndClick(target, waitDuration := 4, ClickType := "left", ClickX :=
         ToolTip(ClickInfo)
         SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
     } else {
-        MsgBox 'ERROR ' . ClickType . ' Click (' . ClickX . ', ' . ClickY . ')! The "' . target . '" window could not be found!'
+        MsgBox 'ERROR ' . ClickType . ' Click (' . ClickX . ', ' . ClickY . ')! The "' . target .
+            '" window could not be found!'
     }
 }
-
 
 ;; Set app window position and size.
 ;; Parameters:
@@ -96,7 +92,6 @@ SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4
         MsgBox('ERROR Setting Window! The "' . target . '" window could not be found!')
     }
 }
-
 
 ;; Set app window position and size and then activate (focus) app window.
 ;; Parameters:
@@ -135,7 +130,6 @@ SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDu
     }
 }
 
-
 ;; Get the path of the specified executable file.
 ;; Returns the path of file if found, otherwise returns an empty string
 ;; Parameters:
@@ -143,8 +137,7 @@ SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDu
 ;;   exeName: The name of the executable file to search for
 GetExePath(baseDir := "", exeName := "") {
     ; Loop through all subdirectories
-    Loop Files, baseDir, "D"
-    {
+    loop files, baseDir, "D" {
         ; Check if the executable file exists in current subdirectory
         if FileExist(A_LoopFilePath . "\" . exeName)
             return A_LoopFilePath . "\" . exeName
@@ -152,19 +145,16 @@ GetExePath(baseDir := "", exeName := "") {
     return "" ; Return empty string if not found
 }
 
-
 ;; Run specified script with administrator privileges
 ;; Parameters:
 ;;   ScriptPath: The path of the script to run
 RunAsAdmin(ScriptPath) {
     try {
         Run '*RunAs "' A_AhkPath '" /restart "' ScriptPath '"'
-    }
-    catch as e {
+    } catch as e {
         MsgBox "Error attempting to run admin script: " . e.Message
     }
 }
-
 
 ;; Get the color mode of Windows (Light or Dark)
 GetWinColorMode() {
@@ -173,7 +163,6 @@ GetWinColorMode() {
     colorMode := RegRead(regKey, regValue)
     return (colorMode == 0) ? "Dark" : "Light"
 }
-
 
 ;; Send given text
 SendText(text) {
@@ -186,7 +175,6 @@ SendText(text) {
     ; Clear the clipboard item (the sent text)
     A_Clipboard := ""
 }
-
 
 ;; Split a file path into its components and return the specified component.
 ;; Returns the requested component of the file path, or the original path string if the component is not recognized.
