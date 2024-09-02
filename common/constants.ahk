@@ -25,24 +25,37 @@ morning := 0700
 evening := 1830
 autoDarkModeCheckInterval := 15 * 60 * 1000
 
-; List of excluded programs for triggering infinite scroll
-infiniScrollExcludedPrograms := Map()
-; Counter-Strike
-infiniScrollExcludedPrograms["cs2.exe"] := true
-; Apex Legends
-infiniScrollExcludedPrograms["r5apex.exe"] := true
-; Call of Duty
-infiniScrollExcludedPrograms["cod.exe"] := true
-; Red Dead Redemption 2
-infiniScrollExcludedPrograms["RDR2.exe"] := true
-; Grand Theft Auto V
-infiniScrollExcludedPrograms["GTA5.exe"] := true
-; Black Myth: Wukong
-infiniScrollExcludedPrograms["b1.exe"] := true
-; 3DMark
-infiniScrollExcludedPrograms["3DMark.exe"] := true
+; List (Map) of excluded programs
+excludedProgramList := Map(
+    ; Counter-Strike: Global Offensive
+    "cs2.exe", true,
+    "csgo_legacy_app.exe", true,
+    "csgo.exe", true,
+    ; Apex Legends
+    "r5apex.exe", true,
+    ; Call of Duty
+    "cod.exe", true,
+    ; Overwatch
+    "Overwatch.exe", true,
+    ; Dota 2
+    "dota2.exe", true,
+    ; Red Dead Redemption 2
+    "RDR2.exe", true,
+    ; Grand Theft Auto V
+    "GTA5.exe", true,
+    ; Black Myth: Wukong
+    "b1.exe", true,
+    ; Civilization VI
+    "CivilizationVI.exe", true,
+    ; Stardew Valley
+    "Stardew Valley.exe", true,
+    ; Terraria
+    "Terraria.exe", true,
+    ; 3DMark
+    "3DMark.exe", true
+)
 
-; All custom key bindings
+; All custom hotkey bindings
 keybindings := [
     ["LAlt + 1", "Toggle Notepad++"
     ],
@@ -59,6 +72,10 @@ keybindings := [
     ["LAlt + T", "Toggle Discord"
     ],
     ["LAlt + W", "Toggle WeChat"
+    ],
+    ["LAlt + Q", "Toggle TIM"
+    ],
+    ["LAlt + E", "Toggle DingTalk"
     ],
     ["RAlt + L", "Toggle Eudic"
     ],
@@ -104,6 +121,10 @@ telegram := A_AppData . "\Telegram Desktop\Telegram.exe"
 
 wechat := A_ProgramFiles . "\Tencent\WeChat\WeChat.exe"
 
+tim := "C:\Programs\Tencent\TIM\Bin\TIM.exe"
+
+dingtalk := EnvGet("ProgramFiles(x86)") . "\DingDing\DingtalkLauncher.exe"
+
 bilibili := A_ProgramFiles . "\bilibili\哔哩哔哩.exe"
 
 bilibiliSandboxed := "C:\Sandbox\" . A_UserName . "\MultiAccount\drive\C\Program Files\bilibili\哔哩哔哩.exe"
@@ -119,6 +140,8 @@ steam := EnvGet("ProgramFiles(x86)") . "\Steam\steam.exe"
 leishen := EnvGet("ProgramFiles(x86)") . "\LeiGod_Acc\leigod_launcher.exe"
 
 rawaccel := "C:\Programs\RawAccel\rawaccel.exe"
+
+msiafterburner := EnvGet("ProgramFiles(x86)") . "\MSI Afterburner\MSIAfterburner.exe"
 
 ; Real executable path will be set in the toggle function
 ; Because the path might change after the app is updated
@@ -147,6 +170,12 @@ discordDim := { x: 600, y: 100, w: 2640, h: 1960
 }
 
 wechatDim := { x: 800, y: 180, w: 2240, h: 1800
+}
+
+timDim := { x: 720, y: 180, w: 2400, h: 1800
+}
+
+dingtalkDim := { x: 670, y: 130, w: 2500, h: 1900
 }
 
 bilibiliDim := { x: 520, y: 120, w: 2800, h: 1920

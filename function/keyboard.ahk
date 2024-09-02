@@ -83,7 +83,7 @@ ToggleSpotify() {
             ; Window is active, close to minimize it to the system tray
             WinClose
         } else if WinExist("ahk_exe Spotify.exe") and !WinActive("ahk_exe Spotify.exe") {
-            WinActivate "ahk_exe Spotify.exe"
+            WinActivate
         } else {
             Run spotify
         }
@@ -103,7 +103,7 @@ ToggleTelegram() {
             ; Window is active, close to minimize it to the system tray
             WinClose
         } else if WinExist("ahk_exe Telegram.exe") and !WinActive("ahk_exe Telegram.exe") {
-            WinActivate "ahk_exe Telegram.exe"
+            WinActivate
         } else {
             Run telegram
         }
@@ -111,7 +111,8 @@ ToggleTelegram() {
     ; If it is not running, run it
     else {
         Run telegram
-        SetAndActivateWindow("ahk_exe Telegram.exe", telegramDim.x, telegramDim.y, telegramDim.w, telegramDim.h)
+        SetWindow("ahk_exe Telegram.exe", telegramDim.x, telegramDim.y, telegramDim.w, telegramDim.h)
+        ActivateWindow("ahk_exe Telegram.exe")
     }
 }
 
@@ -125,7 +126,7 @@ ToggleDiscord() {
             ; Window is active, close to minimize it to the system tray
             WinClose
         } else if WinExist("ahk_exe Discord.exe") and !WinActive("ahk_exe Discord.exe") {
-            WinActivate "ahk_exe Discord.exe"
+            WinActivate
         } else {
             if discord != "" {
                 Run discord
@@ -160,7 +161,8 @@ ToggleWeChat() {
             ; Window is active, close to minimize it to the system tray
             WinClose
         } else if WinExist("ahk_exe WeChat.exe") and !WinActive("ahk_exe WeChat.exe") {
-            WinActivate "ahk_exe WeChat.exe"
+            Run wechat
+            WinActivate
         } else {
             Run wechat
         }
@@ -168,18 +170,93 @@ ToggleWeChat() {
     ; If it is not running, run it
     else {
         Run wechat
-        ActivateWindowAndClick("ahk_exe WeChat.exe ahk_class WeChatLoginWndForPC", , , wechatLoginBtnX, wechatLoginBtnY
-        )
+        ActivateWindowAndClick("ahk_exe WeChat.exe ahk_class WeChatLoginWndForPC", , , wechatLoginBtnX, wechatLoginBtnY)
 
         ; Show a notification
         ToolTip("WeChat Login")
         SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
 
         if WinWait("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", , 8) {
-            SetAndActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim
-                .w, wechatDim.h)
+            SetAndActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
         } else {
             MsgBox "ERROR! WeChat.exe window could not be found!"
+        }
+    }
+}
+
+; Toggle Tencent TIM
+ToggleTencentTIM() {
+    ; If it is running, toggle the window
+    if ProcessExist("TIM.exe") {
+        if WinActive("ahk_exe TIM.exe") {
+            ; Window is active, close to minimize it to the system tray
+            WinClose
+        } else {
+            Send "{LAlt down}q{LAlt up}"
+        }
+    }
+    ; If it is not running, run it
+    else {
+        Run tim
+        ; SetWindow("ahk_exe Telegram.exe", telegramDim.x, telegramDim.y, telegramDim.w, telegramDim.h)
+        ActivateWindow("ahk_exe TIM.exe")
+        loginPageId := WinGetID("ahk_exe TIM.exe")
+        MaxAttempts := 40
+        loop MaxAttempts {
+            if WinGetID("ahk_exe TIM.exe") != loginPageId {
+                SetAndActivateWindow("ahk_exe TIM.exe", timDim.x, timDim.y, timDim.w, timDim.h)
+                break
+            }
+            sleep 100
+        }
+        if MaxAttempts <= A_Index {
+            MsgBox "ERROR! TIM.exe main window could not be found!"
+        }
+    }
+}
+
+;; Toggle DingTalk
+ToggleDingTalk() {
+    ; If it is running, toggle the window
+    if ProcessExist("DingTalk.exe") {
+        if WinActive("ahk_exe DingTalk.exe") {
+            ; Window is active, close to minimize it to the system tray
+            WinClose
+            ToolTip("11111")
+            SetTimer () => ToolTip(), -1000
+        } else if WinExist("ahk_exe DingTalk.exe") and !WinActive("ahk_exe DingTalk.exe") {
+            Run dingtalk
+            WinActivate
+            ToolTip("22222")
+            SetTimer () => ToolTip(), -1000
+        } else {
+            Run dingtalk
+            ToolTip("33333")
+            SetTimer () => ToolTip(), -1000
+        }
+    }
+    ; If it is not running, run it
+    else {
+        Run dingtalk
+        MaxAttempts1 := 40
+        loop MaxAttempts1 {
+            ; Login window shows at first
+            if WinExist("ahk_exe DingTalk.exe ahk_class Qt51511QWindowIcon") {
+                MaxAttempts2 := 80
+                loop MaxAttempts2 {
+                    if WinExist("ahk_exe DingTalk.exe ahk_class StandardFrame_DingTalk") {
+                        ActivateWindow("ahk_exe DingTalk.exe ahk_class StandardFrame_DingTalk")
+                        SetWindow("ahk_exe DingTalk.exe ahk_class StandardFrame_DingTalk", dingtalkDim.x, dingtalkDim.y, dingtalkDim.w, dingtalkDim.h)
+                        break
+                    }
+                    sleep 50
+                }
+                break
+            }
+            sleep 100
+        }
+        if MaxAttempts1 <= A_Index {
+            MsgBox "ERROR! DingTalk.exe window could not be found!"
         }
     }
 }
@@ -192,7 +269,7 @@ ToggleEudic() {
             ; Window is active, close to minimize it to the system tray
             WinClose "ahk_exe eudic.exe"
         } else if WinExist("ahk_exe eudic.exe") and !WinActive("ahk_exe eudic.exe") {
-            WinActivate "ahk_exe eudic.exe"
+            WinActivate
         } else {
             Run eudic
             ; ActivateWindow("ahk_exe eudic.exe")
@@ -238,8 +315,7 @@ ToggleBilibili() {
                         if WinActive("ahk_exe 哔哩哔哩.exe ahk_id " . win_id) {
                             WinMinimize
                         } else {
-                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y,
-                                bilibiliVidDim.w, bilibiliVidDim.h)
+                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
                         }
                         break
                     }
@@ -251,8 +327,7 @@ ToggleBilibili() {
     ; If it is not running, run it
     else {
         Run bilibili
-        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim
-            .w, bilibiliDim.h)
+        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
         bilibiliWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
     }
 }
@@ -292,8 +367,7 @@ ToggleSandboxedBilibili() {
                         if WinActive("ahk_exe 哔哩哔哩.exe ahk_id " . win_id) {
                             WinMinimize
                         } else {
-                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y,
-                                bilibiliVidDim.w, bilibiliVidDim.h)
+                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
                         }
                         break
                     }
@@ -305,8 +379,7 @@ ToggleSandboxedBilibili() {
     ; If it is not running, run it
     else {
         Run bilibiliSandboxed
-        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x,
-            bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
+        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
         bilibiliSandboxedWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
     }
 }
@@ -372,6 +445,24 @@ StartOllamaAndDockerWebUI() {
     }
 }
 
+;; Toggle MSI Afterburner (it will also toggle RivaTuner Statistics Server)
+ToggleMSIAfterburner() {
+    ; If it is running, toggle the window
+    if ProcessExist("MSIAfterburner.exe") {
+        if WinExist("ahk_exe MSIAfterburner.exe") and !WinActive("ahk_exe MSIAfterburner.exe") {
+            WinActivate
+        } else {
+            Run msiafterburner
+        }
+    }
+    ; If it is not running, run it
+    else {
+        Run msiafterburner
+        ToolTip("MSI Afterburner started")
+        SetTimer () => ToolTip(), -2500
+    }
+}
+
 ;; Toggle the help window
 ToggleHelpWindow() {
     window := helpWindow.gui
@@ -411,8 +502,5 @@ PutComputerToSleep() {
 ;; Restart the computer (* seconds countdown)
 PutComputerToRestart() {
     countDownSeconds := 5
-    Run(
-        'pwsh.exe -Command "for ($i = ' . countDownSeconds .
-        '; $i -gt 0; $i--) { Write-Host \"Restarting in $i seconds...\"; Start-Sleep -Seconds 1 }; Restart-Computer"'
-    )
+    Run('pwsh.exe -Command "for ($i = ' . countDownSeconds . '; $i -gt 0; $i--) { Write-Host \"Restarting in $i seconds...\"; Start-Sleep -Seconds 1 }; Restart-Computer"')
 }

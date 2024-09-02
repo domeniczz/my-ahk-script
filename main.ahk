@@ -24,6 +24,8 @@ SetTimer AutoDarkMode, autoDarkModeCheckInterval
 
 ;;;;;;;;;; HOTKEYS BINDINGS ;;;;;;;;;;
 
+#HotIf !IsExcludedProgram()
+
 ; `LAlt + 1` to toggle Notepad++
 <!1:: ToggleNotepadPP()
 
@@ -48,6 +50,12 @@ SetTimer AutoDarkMode, autoDarkModeCheckInterval
 ; `LAlt + W` to toggle WeChat
 <!w:: ToggleWeChat()
 
+; `LAlt + Q` to toggle Tencent TIM
+<!q:: ToggleTencentTIM()
+
+; `LAlt + E` to toggle DingTalk
+<!e:: ToggleDingTalk()
+
 ; `RAlt + L` to toggle Eudic
 >!l:: ToggleEudic()
 
@@ -69,13 +77,16 @@ SetTimer AutoDarkMode, autoDarkModeCheckInterval
 ; `RAlt + C` to start Ollama and Docker container for chat webui to chat with LLMs
 >!c:: StartOllamaAndDockerWebUI()
 
+; `RAlt + O` to open MSI Afterburner
+>!o:: ToggleMSIAfterburner()
+
 ; `RAlt + K` to toggle Gaming Network Environment (Toggle the action after keys are released)
 >!k up::
 {
     KeyWait "Alt"
     KeyWait "k"
     if (A_PriorKey = "k") {
-        RunAsAdmin(toggleGameEnv)
+        RunScriptAsAdmin(toggleGameEnv)
     }
 }
 
@@ -96,6 +107,8 @@ SetTimer AutoDarkMode, autoDarkModeCheckInterval
 
 ; `LAlt + /` to toggle the help window
 <!/:: ToggleHelpWindow()
+
+#HotIf
 
 ;;;;;;;;;; MOUSE BINDINGS ;;;;;;;;;;
 

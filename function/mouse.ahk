@@ -9,17 +9,6 @@ scrollAccumulator := 0.0
 consecutiveScrollCount := 0
 lastScrollDirection := 0
 
-;; Check if the current program is in the exclude list for infinite scrolling
-;; Returns: true if the program is excluded, false otherwise
-IsExcludedProgram() {
-    try {
-        ; Check if the current program is in the exclude list
-        return infiniScrollExcludedPrograms.Has(WinGetProcessName("A"))
-    } catch as err {
-        return false
-    }
-}
-
 ;; Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
 InfiniScrollHandler(*) {
     if (IsExcludedProgram()) {

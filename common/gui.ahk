@@ -11,8 +11,8 @@ DrawHelpGUI() {
     helpGui := Gui()
     helpGui.Opt("+AlwaysOnTop -Caption")
 
-    ; Set font style (17pt, bold)
-    helpGui.SetFont("s17 bold")
+    ; Set font style size (pt) and bold
+    helpGui.SetFont("s16 bold")
 
     ; Calculate ListView dimensions and position
     windowWidth := A_ScreenWidth

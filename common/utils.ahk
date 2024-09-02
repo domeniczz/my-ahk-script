@@ -148,7 +148,7 @@ GetExePath(baseDir := "", exeName := "") {
 ;; Run specified script with administrator privileges
 ;; Parameters:
 ;;   ScriptPath: The path of the script to run
-RunAsAdmin(ScriptPath) {
+RunScriptAsAdmin(ScriptPath) {
     try {
         Run '*RunAs "' A_AhkPath '" /restart "' ScriptPath '"'
     } catch as e {
@@ -203,5 +203,19 @@ GetPathComponent(path, component := "name") {
             return drive
         default:
             return path
+    }
+}
+
+;; Check if the current program is in the exclude list
+;; Returns: true if the program is excluded, false otherwise
+IsExcludedProgram() {
+    try {
+        program := WinGetProcessName("A")
+        ; Check if the current program is in the exclude list
+        return excludedProgramList.Has(program)
+    } catch as err {
+        ToolTip("ERROR checking excluded program: " . program)
+        SetTimer () => ToolTip(), -5000
+        return false
     }
 }
