@@ -56,7 +56,7 @@ keybindings := [
     ],
     ["LAlt + R", "Toggle Telegram"
     ],
-    ["LAlt + D", "Toggle Discord"
+    ["LAlt + T", "Toggle Discord"
     ],
     ["LAlt + W", "Toggle WeChat"
     ],

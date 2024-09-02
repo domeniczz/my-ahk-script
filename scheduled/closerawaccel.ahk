@@ -20,7 +20,7 @@ ToggleRawAccel() {
         sleep 200
     }
 
-    if (MaxAttempts = A_Index) {
+    if MaxAttempts <= A_Index {
         Run rawaccel
         loop MaxAttempts {
             if ProcessExist("rawaccel.exe") {

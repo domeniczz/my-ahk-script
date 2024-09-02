@@ -327,19 +327,19 @@ OpenYouTube2() {
 RunSpotifyAndLyricify() {
     if !WinActive("ahk_exe Spotify.exe") {
         ToggleSpotify()
-        sleep 100
+        sleep 1500
     }
     ; Run Lyricify if it's not running
-    if ProcessExist("ahk_exe Lyricify for Spotify.exe") == 0 {
+    if !ProcessExist("ahk_exe Lyricify for Spotify.exe") {
         Run lyricify
-        CloseWindow("ahk_exe Lyricify for Spotify.exe")
+        CloseWindow("ahk_exe Lyricify for Spotify.exe", 10)
     }
 }
 
 ;; Start Ollama and Docker container for chat webui
 StartOllamaAndDockerWebUI() {
     ; Start Docker Desktop if it's not running
-    if ProcessExist("Docker Desktop.exe") == 0 {
+    if !ProcessExist("Docker Desktop.exe") {
         Run docker
         CloseWindow("ahk_exe Docker Desktop.exe", 5)
         Sleep 3500
@@ -349,23 +349,23 @@ StartOllamaAndDockerWebUI() {
     Run "pwsh.exe -Command " . "docker start " . dockerContainerName, , "Hide"
 
     ; Start Ollama if it's not running
-    if ProcessExist("ollama.exe") == 0 {
+    if !ProcessExist("ollama.exe") {
         Run A_ComSpec . ' /c "' . ollama . '"', , "Hide"
     }
 
     sleep 500
 
     ; Show a notification
-    if ProcessExist("Docker Desktop.exe") != 0 and ProcessExist("ollama.exe") != 0 {
+    if ProcessExist("Docker Desktop.exe") and ProcessExist("ollama.exe") {
         ToolTip("Docker & Ollama started")
         SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
         sleep 500
         Run '"' . browser . '" "' . openWebuiUrl . '"'
     } else {
-        if ProcessExist("Docker Desktop.exe") == 0 {
+        if !ProcessExist("Docker Desktop.exe") {
             ToolTip("ERROR! Docker Desktop not started")
             SetTimer () => ToolTip(), -2000
-        } else if ProcessExist("ollama.exe") == 0 {
+        } else if !ProcessExist("ollama.exe") {
             ToolTip("ERROR! Ollama not started")
             SetTimer () => ToolTip(), -2000
         }

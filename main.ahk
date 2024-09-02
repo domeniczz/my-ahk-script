@@ -43,7 +43,7 @@ SetTimer AutoDarkMode, autoDarkModeCheckInterval
 <!r:: ToggleTelegram()
 
 ; `LAlt + D` to toggle Discord
-<!d:: ToggleDiscord()
+<!t:: ToggleDiscord()
 
 ; `LAlt + W` to toggle WeChat
 <!w:: ToggleWeChat()
