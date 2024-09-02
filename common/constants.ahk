@@ -102,6 +102,8 @@ steam := EnvGet("ProgramFiles(x86)") . "\Steam\steam.exe"
 
 leishen := EnvGet("ProgramFiles(x86)") . "\LeiGod_Acc\leigod_launcher.exe"
 
+rawaccel := "C:\Programs\RawAccel\rawaccel.exe"
+
 
 ; Real executable path will be set in the toggle function
 ; Because the path might change after the app is updated
