@@ -2,8 +2,17 @@
 
 ;;;;;;;;;; GLOBAL VARIABLES ;;;;;;;;;;
 
-; Script log file path
-logfile := A_ScriptDir . "\log\main.log"
+; Format the current date as MM-dd
+CurrentMonth := FormatTime("", "MM")
+CurrentDate := FormatTime("", "MM-dd")
+
+; Log file path
+logDir := A_ScriptDir . "\log" . "\" . CurrentMonth
+; Ensure log directory exists
+DirCreate logDir
+logfile := logDir . "\" . CurrentDate . ".log"
+; Ensure the log file exists (creates it if it doesn't)
+FileAppend "", logfile
 
 ; Path to the default browser executable
 browser := A_ProgramFiles . "\Mozilla Firefox\firefox.exe"
@@ -105,8 +114,6 @@ keybindings := [
     ["LCtrl + LShift + RAlt + F12", "Computer Restart"
     ],
     ["RAlt + \", "Send LLM General Prompt"
-    ],
-    ["LCtrl + LWin + C", "Toggle Windows Grayscale"
     ]
 ]
 

@@ -494,12 +494,18 @@ Run Spotify and Lyricify together
 RunSpotifyAndLyricify() {
     if !WinActive("ahk_exe Spotify.exe") {
         ToggleSpotify()
-        sleep 1500
     }
+
+    sleep 1000
+
     ; Run Lyricify if it's not running
-    if !ProcessExist("ahk_exe Lyricify for Spotify.exe") {
+    if !ProcessExist("Lyricify for Spotify.exe") {
         Run lyricify
         CloseWindow("ahk_exe Lyricify for Spotify.exe", 10)
+    } else {
+        if WinExist("ahk_exe Lyricify for Spotify.exe") {
+            CloseWindow("ahk_exe Lyricify for Spotify.exe", 10)
+        }
     }
 }
 
