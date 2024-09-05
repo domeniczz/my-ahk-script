@@ -263,6 +263,20 @@ IsExcludedProgram() {
     }
 }
 
+isScriptSuspended := False
+
+/*
+Suspend/Resume the script
+*/
+SuspendScript() {
+    global isScriptSuspended
+    ; Toggle "Suspend Hotkeys" On/Off
+    Suspend -1
+    isScriptSuspended := !isScriptSuspended
+    ToolTip(isScriptSuspended ? "Script suspended" : "Script activated")
+    SetTimer () => ToolTip(), -3000, -1
+}
+
 /*
 Log error to file
 Parameters:

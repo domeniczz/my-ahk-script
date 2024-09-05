@@ -1,4 +1,4 @@
-;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -31,8 +31,9 @@ SendMode "InputThenPlay"
 ;;   If not found there, it will search in the user's standard library folder (usually Documents\AutoHotkey\Lib).
 ;;   If still not found, it will look in the standard library folder of AHK's installation directory.
 #Include common\constants.ahk
-#Include common\gui.ahk
 #Include common\utils.ahk
+#Include gui\help.ahk
+#Include gui\menu.ahk
 #Include function\keyboard.ahk
 #Include function\mouse.ahk
 #Include function\typing.ahk
@@ -50,17 +51,13 @@ OnError LogError
 #UseHook
 
 #SuspendExempt
-isSuspended := False
+
 ; `LCtrl + LShift + LWin + S` to toggle suspend
-<^<+<#s::
-{
-    global isSuspended
-    ; Toggle "Suspend Hotkeys" On/Off
-    Suspend -1
-    isSuspended := !isSuspended
-    ToolTip(isSuspended ? "AHK suspended" : "AHK activated")
-    SetTimer () => ToolTip(), -3000, -1
-}
+<^<+<#s:: SuspendScript()
+
+; `LWin + Z` to show the menu
+<#z:: OpenMenu()
+
 #SuspendExempt False
 
 #HotIf !IsExcludedProgram()
@@ -154,4 +151,7 @@ isSuspended := False
 ; Right mouse button
 ; Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
 ; End infinite scrolling by releasing the right button or clicking the left button
-RButton:: InfiniScrollHandler()
+RButton:: InfiniteScrollHandler()
+
+; Middle mouse button
+MButton:: MiddleButtonHandler()

@@ -568,32 +568,6 @@ ToggleMSIAfterburner() {
 }
 
 /*
-Toggle the help window
-*/
-ToggleHelpWindow() {
-    window := helpWindow.gui
-    lv := helpWindow.lv
-
-    if !WinExist("ahk_id " . window.Hwnd) {
-        ; Update colors before showing the window
-        SetHelpWindowColors(window, lv)
-
-        ; Show the help window
-        window.Show("w" . A_ScreenWidth . " h" . A_ScreenHeight)
-
-        ; Set opacity (200/255)
-        WinSetTransparent(200, window)
-
-        ; Hide the window after an interval (4 seconds)
-        ; SetTimer () => window.Hide(), -4000, -1
-    } else {
-        window.Hide()
-        ; Cancel the timer if manually hidden
-        ; SetTimer () => window.Hide(), 0, -1
-    }
-}
-
-/*
 Close currently active window
 */
 CloseCurrentWindow() {

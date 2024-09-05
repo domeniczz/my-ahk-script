@@ -1,6 +1,25 @@
 ;; This file contains the functions related to mouse actions and interactions.
 
-;;;;;;;;;; MOUSE FUNCTIONS ;;;;;;;;;;
+;;;;;;;;;; Middle Button ;;;;;;;;;;
+
+/*
+Open the menu GUI on middle button click
+*/
+MiddleButtonHandler() {
+    KeyWait "MButton", "T0.2"  ; Wait for up to 200ms
+    ; If released within 200ms
+    if A_TimeSinceThisHotkey < 200 {
+        OpenMenu()
+    }
+    ; If held for more than 200ms, trigger original middle button press-and-hold functionality
+    else {
+        Send "{MButton down}"
+        KeyWait "MButton"
+        Send "{MButton up}"
+    }
+}
+
+;;;;;;;;;; Right Button ;;;;;;;;;;
 
 infiniteScrollActive := false
 scrollDirection := 0
@@ -12,7 +31,7 @@ lastScrollDirection := 0
 /*
 Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
 */
-InfiniScrollHandler(*) {
+InfiniteScrollHandler(*) {
     ; if (IsExcludedProgram()) {
     ;     Click "Right"
     ;     return
