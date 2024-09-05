@@ -1,9 +1,5 @@
 ;;;;;;;;;; ! PLEASE RUN THIS SCRIPT AS ADMINISTRATOR ! ;;;;;;;;;;
 
-;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
-
-;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
-
 #Requires AutoHotkey v2.0
 
 #SingleInstance Force
@@ -43,9 +39,11 @@ if not A_IsAdmin {
 
 ;;;;;;;;;; USER DEFINED FUNCTIONS ;;;;;;;;;;
 
-;; Prepare the network for gaming
-;;   Start gaming: Turn off clash, turn on leigod
-;;   Stop gaming: Turn on clash, turn off leigod
+/*
+Prepare the network for gaming
+  Start gaming: Turn off clash, turn on leigod
+  Stop gaming: Turn on clash, turn off leigod
+*/
 ToggleGamingNetworkEnv() {
     ; If LeiGod is running, then close it, and turn on Clash
     if ProcessExist("leigod.exe") {
@@ -120,5 +118,4 @@ ToggleGamingNetworkEnv() {
     }
 }
 
-; Run the function
 ToggleGamingNetworkEnv()

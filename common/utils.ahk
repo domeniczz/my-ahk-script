@@ -2,12 +2,14 @@
 
 ;;;;;;;;;; UTILITY FUNCTIONS ;;;;;;;;;;
 
-;; Activate (focus) app window.
-;; Parameters:
-;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
-;;   waitDuration: Total seconds to wait before the action (default: 4)
-;;   sleepDuration: Total miliseconds to sleep before activating the window (default: 0)
-;; Displays an error message box if the window is not found after all attempts.
+/*
+Activate (focus) app window.
+Parameters:
+  target: The window identifier (e.g., "ahk_exe Spotify.exe")
+  waitDuration: Total seconds to wait before the action (default: 4)
+  sleepDuration: Total miliseconds to sleep before activating the window (default: 0)
+Displays an error message box if the window is not found after all attempts.
+*/
 ActivateWindow(target, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         if (sleepDuration > 0) {
@@ -19,12 +21,14 @@ ActivateWindow(target, waitDuration := 4, sleepDuration := 0) {
     }
 }
 
-;; Close app window.
-;; Parameters:
-;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
-;;   waitDuration: Total seconds to wait before the action (default: 4)
-;;   sleepDuration: Total miliseconds to before closing the window (default: 0)
-;; Displays an error message box if the window is not found after all attempts.
+/*
+Close app window.
+Parameters:
+  target: The window identifier (e.g., "ahk_exe Spotify.exe")
+  waitDuration: Total seconds to wait before the action (default: 4)
+  sleepDuration: Total miliseconds to before closing the window (default: 0)
+Displays an error message box if the window is not found after all attempts.
+*/
 CloseWindow(target, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         if (sleepDuration > 0) {
@@ -36,12 +40,14 @@ CloseWindow(target, waitDuration := 4, sleepDuration := 0) {
     }
 }
 
-;; Activate (focus) app window and maximize it.
-;; Parameters:
-;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
-;;   waitDuration: Total seconds to wait before the action (default: 4)
-;;   sleepDuration: Total miliseconds to sleep before activating the window (default: 0)
-;; Displays an error message box if the window is not found after all attempts.
+/*
+Activate (focus) app window and maximize it.
+Parameters:
+  target: The window identifier (e.g., "ahk_exe Spotify.exe")
+  waitDuration: Total seconds to wait before the action (default: 4)
+  sleepDuration: Total miliseconds to sleep before activating the window (default: 0)
+Displays an error message box if the window is not found after all attempts.
+*/
 ActivateAndMaximizeWindow(target, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         WinActivate
@@ -54,15 +60,17 @@ ActivateAndMaximizeWindow(target, waitDuration := 4, sleepDuration := 0) {
     }
 }
 
-;; Activate (focus) app window and click.
-;; Parameters:
-;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
-;;   waitDuration: Total seconds to wait (default: 4)
-;;   ClickType: The type of click (default: left click)
-;;   ClickX: The X coordinate of the click (default: 0)
-;;   ClickY: The Y coordinate of the click (default: 0)
-;;   ClickInfo: The tooltip message to display after the click (default: "")
-;; Displays an error message box if the window is not found after all attempts.
+/*
+Activate (focus) app window and click.
+Parameters:
+  target: The window identifier (e.g., "ahk_exe Spotify.exe")
+  waitDuration: Total seconds to wait (default: 4)
+  ClickType: The type of click (default: left click)
+  ClickX: The X coordinate of the click (default: 0)
+  ClickY: The Y coordinate of the click (default: 0)
+  ClickInfo: The tooltip message to display after the click (default: "")
+Displays an error message box if the window is not found after all attempts.
+*/
 ActivateWindowAndClick(target, waitDuration := 4, ClickType := "left", ClickX := 0, ClickY := 0, ClickInfo := "") {
     if WinWait(target, , waitDuration) {
         WinActivate
@@ -75,16 +83,18 @@ ActivateWindowAndClick(target, waitDuration := 4, ClickType := "left", ClickX :=
     }
 }
 
-;; Set app window position and size.
-;; Parameters:
-;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
-;;   x: The x-coordinate of the window (optional)
-;;   y: The y-coordinate of the window (optional)
-;;   width: The width of the window (optional)
-;;   height: The height of the window (optional)
-;;   waitDuration: Total seconds to wait before the action (default: 4)
-;;   sleepDuration: Total milliseconds to sleep before setting the window position and size (default: 0)
-;; Displays an error message box if the window is not found after all attempts.
+/*
+Set app window position and size.
+Parameters:
+  target: The window identifier (e.g., "ahk_exe Spotify.exe")
+  x: The x-coordinate of the window (optional)
+  y: The y-coordinate of the window (optional)
+  width: The width of the window (optional)
+  height: The height of the window (optional)
+  waitDuration: Total seconds to wait before the action (default: 4)
+  sleepDuration: Total milliseconds to sleep before setting the window position and size (default: 0)
+Displays an error message box if the window is not found after all attempts.
+*/
 SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         Sleep sleepDuration
@@ -110,16 +120,18 @@ SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4
     }
 }
 
-;; Set app window position and size and then activate (focus) app window.
-;; Parameters:
-;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
-;;   x: The x-coordinate of the window (optional)
-;;   y: The y-coordinate of the window (optional)
-;;   width: The width of the window (optional)
-;;   height: The height of the window (optional)
-;;   waitDuration: Total seconds to wait before the action (default: 4)
-;;   sleepDuration: Total milliseconds to sleep before setting the window position and size (default: 0)
-;; Displays an error message box if the window is not found after all attempts.
+/*
+Set app window position and size and then activate (focus) app window.
+Parameters:
+  target: The window identifier (e.g., "ahk_exe Spotify.exe")
+  x: The x-coordinate of the window (optional)
+  y: The y-coordinate of the window (optional)
+  width: The width of the window (optional)
+  height: The height of the window (optional)
+  waitDuration: Total seconds to wait before the action (default: 4)
+  sleepDuration: Total milliseconds to sleep before setting the window position and size (default: 0)
+Displays an error message box if the window is not found after all attempts.
+*/
 SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         ; Move and resize the window only if needed
@@ -147,11 +159,13 @@ SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDu
     }
 }
 
-;; Get the path of the specified executable file.
-;; Returns the path of file if found, otherwise returns an empty string
-;; Parameters:
-;;   baseDir: The base directory to search in, support wildcard
-;;   exeName: The name of the executable file to search for
+/*
+Get the path of the specified executable file.
+Returns the path of file if found, otherwise returns an empty string
+Parameters:
+  baseDir: The base directory to search in, support wildcard
+  exeName: The name of the executable file to search for
+*/
 GetExePath(baseDir := "", exeName := "") {
     ; Loop through all subdirectories
     loop files, baseDir, "D" {
@@ -162,9 +176,11 @@ GetExePath(baseDir := "", exeName := "") {
     return "" ; Return empty string if not found
 }
 
-;; Run specified script with administrator privileges
-;; Parameters:
-;;   ScriptPath: The path of the script to run
+/*
+Run specified script with administrator privileges
+Parameters:
+  ScriptPath: The path of the script to run
+*/
 RunScriptAsAdmin(ScriptPath) {
     try {
         Run '*RunAs "' A_AhkPath '" "' ScriptPath '"'
@@ -173,7 +189,9 @@ RunScriptAsAdmin(ScriptPath) {
     }
 }
 
-;; Get the color mode of Windows (Light or Dark)
+/*
+Get the color mode of Windows (Light or Dark)
+*/
 GetWinColorMode() {
     regKey := "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
     regValue := "AppsUseLightTheme"
@@ -181,7 +199,9 @@ GetWinColorMode() {
     return (colorMode == 0) ? "Dark" : "Light"
 }
 
-;; Send given text
+/*
+Send given text
+*/
 SendText(text) {
     A_Clipboard := text
     Send "^v"
@@ -193,17 +213,19 @@ SendText(text) {
     A_Clipboard := ""
 }
 
-;; Split a file path into its components and return the specified component.
-;; Returns the requested component of the file path, or the original path string if the component is not recognized.
-;; For example, GetExeName("C:\Windows\explorer.exe") returns "explorer.exe"
-;; Parameters:
-;;   path: The full file path to split
-;;   component: The component of the path to return
-;;     "name": Full filename with extension (default)
-;;     "dir": Directory path
-;;     "ext": File extension (without the dot)
-;;     "nameNoExt": Filename without extension
-;;     "drive": Drive letter or name
+/*
+Split a file path into its components and return the specified component.
+Returns the requested component of the file path, or the original path string if the component is not recognized.
+For example, GetExeName("C:\Windows\explorer.exe") returns "explorer.exe"
+Parameters:
+  path: The full file path to split
+  component: The component of the path to return
+    "name": Full filename with extension (default)
+    "dir": Directory path
+    "ext": File extension (without the dot)
+    "nameNoExt": Filename without extension
+    "drive": Drive letter or name
+*/
 GetPathComponent(path, component := "name") {
     SplitPath(path, &name, &dir, &ext, &nameNoExt, &drive)
 
@@ -223,8 +245,10 @@ GetPathComponent(path, component := "name") {
     }
 }
 
-;; Check if the current program is in the exclude list
-;; Returns: true if the program is excluded, false otherwise
+/*
+Check if the current program is in the exclude list
+Returns: true if the program is excluded, false otherwise
+*/
 IsExcludedProgram() {
     program := ""
     try {
@@ -239,7 +263,9 @@ IsExcludedProgram() {
     }
 }
 
-; Log error to file
+/*
+Log error to file
+*/
 LogError(exception, mode) {
     timestamp := FormatTime(, "yyyy-MM-dd HH:mm:ss")
     FileAppend Format("{1} - Error in {2} on line {3}: {4}`n",

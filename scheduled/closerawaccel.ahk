@@ -21,7 +21,9 @@ SendMode "InputThenPlay"
 #Include ..\common\constants.ahk
 #Include ..\common\utils.ahk
 
-;; Toggle RawAccel
+/*
+Toggle RawAccel
+*/
 ToggleRawAccel() {
     MaxAttempts := 300
     loop MaxAttempts {

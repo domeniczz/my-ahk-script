@@ -6,7 +6,9 @@ helpWindow := DrawHelpGUI()
 
 ;;;;;;;;;; GUI FUNCTIONS ;;;;;;;;;;
 
-; Draw the GUI of help window (displays all the keybindings)
+/*
+Draw the GUI of help window (displays all the keybindings)
+*/
 DrawHelpGUI() {
     helpGui := Gui()
     helpGui.Opt("+AlwaysOnTop -Caption")
@@ -48,7 +50,9 @@ DrawHelpGUI() {
     }
 }
 
-;; Set the colors of the help window based on the Windows color mode
+/*
+Set the colors of the help window based on the Windows color mode
+*/
 SetHelpWindowColors(helpGui, lv) {
     colorMode := GetWinColorMode()
     if (colorMode == "Dark") {

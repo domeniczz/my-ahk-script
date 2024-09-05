@@ -2,7 +2,9 @@
 
 ;;;;;;;;;; TYPING FUNCTIONS ;;;;;;;;;;
 
-;; Send predefined text
+/*
+Send predefined text
+*/
 SendTextLLMGeneralPrompt() {
     SendText("
     (

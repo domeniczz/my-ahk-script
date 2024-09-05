@@ -1,6 +1,8 @@
 ;; This file contains the AutoDarkMode function which checks the current time and changes the Windows color mode accordingly
 
-;; Check the current time and change the Windows color mode if needed
+/*
+Check the current time and change the Windows color mode if needed
+*/
 AutoDarkMode() {
     currentTime := FormatTime(A_Now, "HHmm")
     if (currentTime >= morning and currentTime < evening) {
@@ -17,16 +19,18 @@ AutoDarkMode() {
     ; FileAppend "Checking Windows color mode at " . SubStr(currentTime, 1, 2) . ":" . SubStr(currentTime, 3) . "`n", logfile
 }
 
-;; Changes the Windows color mode (theme) between Light and Dark.
-;; If no mode is specified, it toggles between the current and the opposite mode.
-;; Parameters:
-;;   mode: The desired color mode. Accepts "Light", "Dark", or "Toggle" (default).
-;;         Any other value or omitting the parameter will result in a toggle.
-;; Usage:
-;;   ToggleWinColorMode("Light")   ; Switch to light mode
-;;   ToggleWinColorMode("Dark")    ; Switch to dark mode
-;;   ToggleWinColorMode("Toggle")  ; Toggle between light and dark mode
-;;   ToggleWinColorMode()          ; Same as "Toggle"
+/*
+Changes the Windows color mode (theme) between Light and Dark.
+If no mode is specified, it toggles between the current and the opposite mode.
+Parameters:
+  mode: The desired color mode. Accepts "Light", "Dark", or "Toggle" (default).
+        Any other value or omitting the parameter will result in a toggle.
+Usage:
+  ToggleWinColorMode("Light")   ; Switch to light mode
+  ToggleWinColorMode("Dark")    ; Switch to dark mode
+  ToggleWinColorMode("Toggle")  ; Toggle between light and dark mode
+  ToggleWinColorMode()          ; Same as "Toggle"
+*/
 ToggleWinColorMode(mode := "Toggle") {
     try {
         ; Run "ms-settings:"

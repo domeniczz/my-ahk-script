@@ -9,7 +9,9 @@ scrollAccumulator := 0.0
 consecutiveScrollCount := 0
 lastScrollDirection := 0
 
-;; Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
+/*
+Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
+*/
 InfiniScrollHandler(*) {
     if (IsExcludedProgram()) {
         Click "Right"
@@ -32,7 +34,9 @@ InfiniScrollHandler(*) {
     SetTimer CheckRButtonRelease, 1
 }
 
-;; Handle left-click to stop infinite scrolling
+/*
+Handle left-click to stop infinite scrolling
+*/
 LButtonClickHandler(*) {
     global infiniteScrollActive
 
@@ -59,7 +63,9 @@ CheckRButtonRelease() {
     }
 }
 
-;; Handle scrolling based on the scroll direction
+/*
+Handle scrolling based on the scroll direction
+*/
 ScrollWheelHandler(ThisHotkey) {
     global infiniteScrollActive, scrollDirection, consecutiveScrollCount, lastScrollDirection
 
@@ -90,14 +96,18 @@ ScrollWheelHandler(ThisHotkey) {
     }
 }
 
-; Calculate speed multiplier based on consecutive scroll count
-; The speed multiplier increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
+/*
+Calculate speed multiplier based on consecutive scroll count
+The speed multiplier increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
+*/
 CalculateSpeedMultiplier(count) {
     ; 1 + (count * 0.12) ^ 3
     return 1 + (count * 0.14) ** 3
 }
 
-;; Perform infinite scrolling based on the scroll direction and speed
+/*
+Perform infinite scrolling based on the scroll direction and speed
+*/
 InfiniteScroll() {
     global scrollAccumulator
 
@@ -116,6 +126,9 @@ InfiniteScroll() {
     }
 }
 
+/*
+Clean up actions before infinite scrolling
+*/
 BeforeCleanUp() {
     global infiniteScrollActive, scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
 
@@ -127,7 +140,9 @@ BeforeCleanUp() {
     lastScrollDirection := 0
 }
 
-;; Clean up after infinite scrolling
+/*
+Clean up actions after infinite scrolling
+*/
 AfterCleanUp() {
     global scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
 

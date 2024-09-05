@@ -2,7 +2,9 @@
 
 ;;;;;;;;;; KEYBOARD FUNCTIONS ;;;;;;;;;;
 
-;; Toggle Notepad++
+/*
+Toggle Notepad++
+*/
 ToggleNotepadPP() {
     ; If it is running, toggle the window
     if ProcessExist("notepad++.exe") {
@@ -20,7 +22,9 @@ ToggleNotepadPP() {
     }
 }
 
-;; Toggle Notepad2
+/*
+Toggle Notepad2
+*/
 ToggleNotepad2() {
     ; If it is running, toggle the window
     if ProcessExist("Notepad2.exe") {
@@ -39,7 +43,9 @@ ToggleNotepad2() {
     }
 }
 
-;; Toggle Visual Studio Code
+/*
+Toggle Visual Studio Code
+*/
 ToggleVSCode() {
     ; If it is running, toggle the window
     if ProcessExist("Code.exe") {
@@ -57,7 +63,9 @@ ToggleVSCode() {
     }
 }
 
-;; Toggle Windows Terminal
+/*
+Toggle Windows Terminal
+*/
 ToggleWindowsTerminal() {
     ; If it is running, toggle the window
     if ProcessExist("WindowsTerminal.exe") {
@@ -78,9 +86,11 @@ ToggleWindowsTerminal() {
 firefoxWinId := ""
 firefoxPrivateWinId := ""
 
-;; Toggle Firefox
-;; Parameters:
-;; isPrivate: boolean, whether to toggle the private window (default: false)
+/*
+Toggle Firefox
+Parameters:
+  isPrivate: boolean, whether to toggle the private window (default: false)
+*/
 ToggleFirefox(isPrivate := false) {
     global firefoxWinId, firefoxPrivateWinId
 
@@ -150,7 +160,9 @@ ToggleFirefox(isPrivate := false) {
     }
 }
 
-;; Toggle Spotify
+/*
+Toggle Spotify
+*/
 ToggleSpotify() {
     ; If it is running, toggle the window
     if ProcessExist("Spotify.exe") {
@@ -170,7 +182,9 @@ ToggleSpotify() {
     }
 }
 
-;; Toggle Telegram
+/*
+Toggle Telegram
+*/
 ToggleTelegram() {
     ; If it is running, toggle the window
     if ProcessExist("Telegram.exe") {
@@ -191,7 +205,9 @@ ToggleTelegram() {
     }
 }
 
-;; Toggle Discord
+/*
+Toggle Discord
+*/
 ToggleDiscord() {
     global discord
 
@@ -228,7 +244,9 @@ ToggleDiscord() {
     }
 }
 
-;; Toggle WeChat
+/*
+Toggle WeChat
+*/
 ToggleWeChat() {
     ; If it is running, toggle the window
     if ProcessExist("WeChat.exe") {
@@ -258,7 +276,9 @@ ToggleWeChat() {
     }
 }
 
-; Toggle Tencent TIM
+/*
+Toggle Tencent TIM
+*/
 ToggleTencentTIM() {
     ; If it is running, toggle the window
     if ProcessExist("TIM.exe") {
@@ -289,7 +309,9 @@ ToggleTencentTIM() {
     }
 }
 
-;; Toggle DingTalk
+/*
+Toggle DingTalk
+*/
 ToggleDingTalk() {
     ; If it is running, toggle the window
     if ProcessExist("DingTalk.exe") {
@@ -335,7 +357,9 @@ ToggleDingTalk() {
     }
 }
 
-;; Toggle Eudic
+/*
+Toggle Eudic
+*/
 ToggleEudic() {
     ; If it is running, toggle the window
     if ProcessExist("eudic.exe") {
@@ -359,8 +383,10 @@ ToggleEudic() {
 ; ahk_id of bilibili home page window
 bilibiliWinId := ""
 
-;; Toggle Bilibili
-;; When there are two windows, home window and video window, then toggle the video window
+/*
+Toggle Bilibili
+When there are two windows, home window and video window, then toggle the video window
+*/
 ToggleBilibili() {
     global bilibiliWinId
 
@@ -414,8 +440,10 @@ ToggleBilibili() {
 ; ahk_id of bilibili (sandboxed) home page window
 bilibiliSandboxedWinId := ""
 
-;; Toggle Sandboxed Bilibili (Running in Sanboxie)
-;; When there are two windows, home window and video window, then toggle the video window
+/*
+Toggle Sandboxed Bilibili (Running in Sanboxie)
+When there are two windows, home window and video window, then toggle the video window
+*/
 ToggleSandboxedBilibili() {
     global bilibiliSandboxedWinId
 
@@ -466,19 +494,25 @@ ToggleSandboxedBilibili() {
     }
 }
 
-;; Open YouTube with browser
+/*
+Open YouTube with browser
+*/
 OpenYouTube() {
     Run '"' . browser . '" "https://www.youtube.com"'
 }
 
-;; Open YouTube with browser
+/*
+Open YouTube with browser
+*/
 OpenYouTube2() {
     ; With the help of browser extension "Open external links in a container"
     ; Extension Repo: https://github.com/honsiorovskyi/open-url-in-container
     Run '"' . browser . '" "ext+container:name=Dintionte&url=https://www.youtube.com"'
 }
 
-;; Run Spotify and Lyricify together
+/*
+Run Spotify and Lyricify together
+*/
 RunSpotifyAndLyricify() {
     if !WinActive("ahk_exe Spotify.exe") {
         ToggleSpotify()
@@ -491,7 +525,9 @@ RunSpotifyAndLyricify() {
     }
 }
 
-;; Start Ollama and Docker container for chat webui
+/*
+Start Ollama and Docker container for chat webui
+*/
 StartOllamaAndDockerWebUI() {
     ; Start Docker Desktop if it's not running
     if !ProcessExist("Docker Desktop.exe") {
@@ -527,7 +563,9 @@ StartOllamaAndDockerWebUI() {
     }
 }
 
-;; Toggle MSI Afterburner (it will also toggle RivaTuner Statistics Server)
+/*
+Toggle MSI Afterburner (it will also toggle RivaTuner Statistics Server)
+*/
 ToggleMSIAfterburner() {
     ; If it is running, toggle the window
     if ProcessExist("MSIAfterburner.exe") {
@@ -545,7 +583,9 @@ ToggleMSIAfterburner() {
     }
 }
 
-;; Toggle the help window
+/*
+Toggle the help window
+*/
 ToggleHelpWindow() {
     window := helpWindow.gui
     lv := helpWindow.lv
@@ -569,19 +609,25 @@ ToggleHelpWindow() {
     }
 }
 
-;; Close currently active window
+/*
+Close currently active window
+*/
 CloseCurrentWindow() {
     ; Close the active window
     ; "A" is a special value in AHK v2 that always refers to the active window
     WinClose("A")
 }
 
-;; Put the computer to sleep
+/*
+Put the computer to sleep
+*/
 PutComputerToSleep() {
     DllCall("PowrProf.dll\SetSuspendState", "Int", 0, "Int", 0, "Int", 0)
 }
 
-;; Restart the computer (* seconds countdown)
+/*
+Restart the computer (* seconds countdown)
+*/
 PutComputerToRestart() {
     countDownSeconds := 5
     Run('pwsh.exe -Command "for ($i = ' . countDownSeconds . '; $i -gt 0; $i--) { Write-Host \"Restarting in $i seconds...\"; Start-Sleep -Seconds 1 }; Restart-Computer"')
