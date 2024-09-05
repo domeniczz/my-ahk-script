@@ -80,14 +80,9 @@ isSuspended := False
 <#1:: ToggleFirefox()
 
 ; `LWin + LShift + 1` to toggle Private Firefox
-<#<+1::
-{
-    ; Wait for Win key to release
-    ; For blocking default windows behavior, which will launch firefox in safe (diagnose) mode with `Win + Shift + number`
-    KeyWait "LWin"
-    ; KeyWait "LShift"
-    ToggleFirefox(true)
-}
+; By default, `Win + Shift + number` will launch firefox in safe (diagnose) mode
+; Disable launch in safe mode: [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Mozilla\Firefox] "DisableSafeMode"=dword:00000001
+<#<+1:: ToggleFirefox(true)
 
 ; `RAlt + P` to toggle Spotify
 >!p:: ToggleSpotify()

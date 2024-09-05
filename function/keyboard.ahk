@@ -109,11 +109,6 @@ ToggleFirefox(isPrivate := false) {
         if winList.Length == 0 {
             Run !isPrivate ? firefox : firefoxPrivate
             ActivateWindow("ahk_exe firefox.exe")
-            if !isPrivate {
-                firefoxWinId := WinGetID("ahk_exe firefox.exe")
-            } else {
-                firefoxPrivateWinId := WinGetID("ahk_exe firefox.exe")
-            }
         }
         ; Only one expected window, toggle it
         else if winList.Length == 1 {
@@ -122,22 +117,11 @@ ToggleFirefox(isPrivate := false) {
             } else {
                 WinActivate "ahk_id " . winList[1]
             }
-            if firefoxWinId == "" {
-                firefoxWinId := winList[1]
-            }
         }
-        ; More than one expected window, toggle the oldest one
+        ; More than one expected window, cycle through them
         else if winList.Length > 1 {
-            ; Use the oldest window
-            if !isPrivate {
-                firefoxWinId := winList[winList.Length]
-            } else {
-                firefoxPrivateWinId := winList[winList.Length]
-            }
-            ; Toggle the window
-            winToToggle := isPrivate ? firefoxPrivateWinId : firefoxWinId
             for win_id in winList {
-                if win_id == winToToggle {
+                if win_id == winList[winList.Length] {
                     if WinActive("ahk_id " . win_id) {
                         WinMinimize
                     } else {
@@ -152,11 +136,6 @@ ToggleFirefox(isPrivate := false) {
     else {
         Run !isPrivate ? firefox : firefoxPrivate
         ActivateWindow("ahk_exe firefox.exe")
-        if !isPrivate {
-            firefoxWinId := WinGetID("ahk_exe firefox.exe")
-        } else {
-            firefoxPrivateWinId := WinGetID("ahk_exe firefox.exe")
-        }
     }
 }
 
