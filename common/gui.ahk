@@ -18,7 +18,7 @@ DrawHelpGUI() {
     windowWidth := A_ScreenWidth
     windowHeight := A_ScreenHeight
     lvWidth := 1000  ; Adjust this value to change the width of the centered ListView
-    lvHeight := 1100
+    lvHeight := 1200
     lvX := (windowWidth - lvWidth) / 2
     lvY := (windowHeight - lvHeight) / 2
 

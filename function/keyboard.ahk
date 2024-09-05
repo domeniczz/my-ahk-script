@@ -75,6 +75,81 @@ ToggleWindowsTerminal() {
     }
 }
 
+firefoxWinId := ""
+firefoxPrivateWinId := ""
+
+;; Toggle Firefox
+;; Parameters:
+;; isPrivate: boolean, whether to toggle the private window (default: false)
+ToggleFirefox(isPrivate := false) {
+    global firefoxWinId, firefoxPrivateWinId
+
+    ; If it is running, toggle the window
+    if ProcessExist("firefox.exe") {
+        allWinList := WinGetList("ahk_exe firefox.exe")
+        winList := []
+        for windowId in allWinList {
+            winTitleToExclude := isPrivate ? "Mozilla Firefox$" : "Mozilla Firefox Private Browsing$"
+            if !RegExMatch(WinGetTitle("ahk_id " windowId), winTitleToExclude) {
+                winList.Push(windowId)
+            }
+        }
+
+        ; No expected window, run it
+        if winList.Length == 0 {
+            Run !isPrivate ? firefox : firefoxPrivate
+            ActivateWindow("ahk_exe firefox.exe")
+            if !isPrivate {
+                firefoxWinId := WinGetID("ahk_exe firefox.exe")
+            } else {
+                firefoxPrivateWinId := WinGetID("ahk_exe firefox.exe")
+            }
+        }
+        ; Only one expected window, toggle it
+        else if winList.Length == 1 {
+            if WinActive("ahk_id " . winList[1]) {
+                WinMinimize
+            } else {
+                WinActivate "ahk_id " . winList[1]
+            }
+            if firefoxWinId == "" {
+                firefoxWinId := winList[1]
+            }
+        }
+        ; More than one expected window, toggle the oldest one
+        else if winList.Length > 1 {
+            ; Use the oldest window
+            if !isPrivate {
+                firefoxWinId := winList[winList.Length]
+            } else {
+                firefoxPrivateWinId := winList[winList.Length]
+            }
+            ; Toggle the window
+            winToToggle := isPrivate ? firefoxPrivateWinId : firefoxWinId
+            for win_id in winList {
+                if win_id == winToToggle {
+                    if WinActive("ahk_id " . win_id) {
+                        WinMinimize
+                    } else {
+                        WinActivate "ahk_id " . win_id
+                    }
+                    break
+                }
+            }
+        }
+    }
+    ; If it is not running, run it
+    else {
+        Run !isPrivate ? firefox : firefoxPrivate
+        ActivateWindow("ahk_exe firefox.exe")
+        if !isPrivate {
+            firefoxWinId := WinGetID("ahk_exe firefox.exe")
+        } else {
+            firefoxPrivateWinId := WinGetID("ahk_exe firefox.exe")
+        }
+    }
+}
+
 ;; Toggle Spotify
 ToggleSpotify() {
     ; If it is running, toggle the window
@@ -172,9 +247,8 @@ ToggleWeChat() {
         Run wechat
         ActivateWindowAndClick("ahk_exe WeChat.exe ahk_class WeChatLoginWndForPC", , , wechatLoginBtnX, wechatLoginBtnY)
 
-        ; Show a notification
         ToolTip("WeChat Login")
-        SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
+        SetTimer () => ToolTip(), -1000
 
         if WinWait("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", , 8) {
             SetAndActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
@@ -272,7 +346,7 @@ ToggleEudic() {
             WinActivate
         } else {
             Run eudic
-            ; ActivateWindow("ahk_exe eudic.exe")
+            ActivateWindow("ahk_exe eudic.exe")
         }
     }
     ; If it is not running, run it
@@ -282,46 +356,51 @@ ToggleEudic() {
     }
 }
 
+; ahk_id of bilibili home page window
+bilibiliWinId := ""
+
 ;; Toggle Bilibili
+;; When there are two windows, home window and video window, then toggle the video window
 ToggleBilibili() {
     global bilibiliWinId
 
     ; If it is running, toggle the window
     if ProcessExist("哔哩哔哩.exe") {
-        winList := WinGetList("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
+        allWinList := WinGetList("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
 
-        switch winList.Length {
-            ; No bilibili window, run it
+        switch allWinList.Length {
             case 0:
+                ; No window, run it
                 Run bilibili
-                if bilibiliWinId == "" {
+                if bilibiliWinId == "" and WinWait("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", , 10) {
+                    SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
                     bilibiliWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
                 }
-                ; Only one bilibili window, toggle the window
             case 1:
-                if WinActive("ahk_id " . winList[1]) {
+                ; Only one window, toggle the window
+                if WinActive("ahk_id " . allWinList[1]) {
                     WinMinimize
                 } else {
-                    WinActivate "ahk_id " . winList[1]
+                    WinActivate "ahk_id " . allWinList[1]
                 }
                 if bilibiliWinId == "" {
-                    bilibiliWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
+                    bilibiliWinId := allWinList[1]
                 }
-                ; Two bilibili windows (home window & video window), activate the video window
             case 2:
-                for win_id in winList {
-                    ; Find the window that's not bilibiliWinId (video window)
+                ; Two windows (home window & video window), activate the video window
+                for win_id in allWinList {
+                    ; Find the video window (bilibiliWinId represents the home window)
                     if win_id != bilibiliWinId {
-                        if WinActive("ahk_exe 哔哩哔哩.exe ahk_id " . win_id) {
+                        if WinActive("ahk_id " . win_id) {
                             WinMinimize
                         } else {
-                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
+                            SetAndActivateWindow("ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
                         }
                         break
                     }
                 }
             default:
-                MsgBox "ERROR! Unexpected number of bilibili windows: " . winList.Length
+                MsgBox "ERROR! Unexpected number of bilibili windows: " . allWinList.Length
         }
     }
     ; If it is not running, run it
@@ -332,48 +411,51 @@ ToggleBilibili() {
     }
 }
 
+; ahk_id of bilibili (sandboxed) home page window
+bilibiliSandboxedWinId := ""
+
 ;; Toggle Sandboxed Bilibili (Running in Sanboxie)
+;; When there are two windows, home window and video window, then toggle the video window
 ToggleSandboxedBilibili() {
     global bilibiliSandboxedWinId
 
     ; If it is running, toggle the window
     if ProcessExist("哔哩哔哩.exe") {
-        winList := WinGetList("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
+        allWinList := WinGetList("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
 
-        switch winList.Length {
-            ; No bilibili window, run it
+        switch allWinList.Length {
             case 0:
+                ; No window, run it
                 Run bilibiliSandboxed
-                if bilibiliSandboxedWinId == "" {
-                    bilibiliSandboxedWinId := WinGetID(
-                        "ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
+                if bilibiliSandboxedWinId == "" and WinWait("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", , 10) {
+                    SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
+                    bilibiliSandboxedWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
                 }
-                ; Only one bilibili window, toggle the window
             case 1:
-                if WinActive("ahk_id " . winList[1]) {
+                ; Only one window, toggle the window
+                if WinActive("ahk_id " . allWinList[1]) {
                     WinMinimize
                 } else {
-                    WinActivate "ahk_id " . winList[1]
+                    WinActivate "ahk_id " . allWinList[1]
                 }
                 if bilibiliSandboxedWinId == "" {
-                    bilibiliSandboxedWinId := WinGetID(
-                        "ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
+                    bilibiliSandboxedWinId := allWinList[1]
                 }
-                ; Two bilibili windows (home window & video window), activate the video window
             case 2:
-                for win_id in winList {
-                    ; Find the window that's not bilibiliSandboxedWinId (video window)
+                ; Two windows (home window & video window), activate the video window
+                for win_id in allWinList {
+                    ; Find the video window (bilibiliWinId represents the home window)
                     if win_id != bilibiliSandboxedWinId {
-                        if WinActive("ahk_exe 哔哩哔哩.exe ahk_id " . win_id) {
+                        if WinActive("ahk_id " . win_id) {
                             WinMinimize
                         } else {
-                            SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
+                            SetAndActivateWindow("ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
                         }
                         break
                     }
                 }
             default:
-                MsgBox "ERROR! Unexpected number of bilibili (sandboxed) windows: " . winList.Length
+                MsgBox "ERROR! Unexpected number of bilibili (sandboxed) windows: " . allWinList.Length
         }
     }
     ; If it is not running, run it
@@ -431,7 +513,7 @@ StartOllamaAndDockerWebUI() {
     ; Show a notification
     if ProcessExist("Docker Desktop.exe") and ProcessExist("ollama.exe") {
         ToolTip("Docker & Ollama started")
-        SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
+        SetTimer () => ToolTip(), -1000
         sleep 500
         Run '"' . browser . '" "' . openWebuiUrl . '"'
     } else {

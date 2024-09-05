@@ -36,6 +36,24 @@ CloseWindow(target, waitDuration := 4, sleepDuration := 0) {
     }
 }
 
+;; Activate (focus) app window and maximize it.
+;; Parameters:
+;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
+;;   waitDuration: Total seconds to wait before the action (default: 4)
+;;   sleepDuration: Total miliseconds to sleep before activating the window (default: 0)
+;; Displays an error message box if the window is not found after all attempts.
+ActivateAndMaximizeWindow(target, waitDuration := 4, sleepDuration := 0) {
+    if WinWait(target, , waitDuration) {
+        WinActivate
+        if (sleepDuration > 0) {
+            Sleep sleepDuration
+        }
+        WinMaximize
+    } else {
+        MsgBox 'ERROR Activating! The "' . target . '" window could not be found!'
+    }
+}
+
 ;; Activate (focus) app window and click.
 ;; Parameters:
 ;;   target: The window identifier (e.g., "ahk_exe Spotify.exe")
@@ -49,9 +67,8 @@ ActivateWindowAndClick(target, waitDuration := 4, ClickType := "left", ClickX :=
     if WinWait(target, , waitDuration) {
         WinActivate
         MouseClick ClickType, ClickX, ClickY
-        ; Show a notification
         ToolTip(ClickInfo)
-        SetTimer () => ToolTip(), -1000  ; Remove the tooltip after 1 seconds
+        SetTimer () => ToolTip(), -1000
     } else {
         MsgBox 'ERROR ' . ClickType . ' Click (' . ClickX . ', ' . ClickY . ')! The "' . target .
             '" window could not be found!'
@@ -105,9 +122,6 @@ SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4
 ;; Displays an error message box if the window is not found after all attempts.
 SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
-        if (sleepDuration > 0) {
-            Sleep sleepDuration
-        }
         ; Move and resize the window only if needed
         ; Use provided values or current values if not provided
         if (x != -1 or y != -1 or width != -1 or height != -1) {
@@ -123,6 +137,9 @@ SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDu
                 height != -1 ? height : currentHeight,
                 target
             )
+        }
+        if (sleepDuration > 0) {
+            Sleep sleepDuration
         }
         WinActivate
     } else {
@@ -150,7 +167,7 @@ GetExePath(baseDir := "", exeName := "") {
 ;;   ScriptPath: The path of the script to run
 RunScriptAsAdmin(ScriptPath) {
     try {
-        Run '*RunAs "' A_AhkPath '" /restart "' ScriptPath '"'
+        Run '*RunAs "' A_AhkPath '" "' ScriptPath '"'
     } catch as e {
         MsgBox "Error attempting to run admin script: " . e.Message
     }
@@ -209,13 +226,27 @@ GetPathComponent(path, component := "name") {
 ;; Check if the current program is in the exclude list
 ;; Returns: true if the program is excluded, false otherwise
 IsExcludedProgram() {
+    program := ""
     try {
         program := WinGetProcessName("A")
         ; Check if the current program is in the exclude list
-        return excludedProgramList.Has(program)
+        ; If `WinGetProcessName` fails to get the process name and returns an empty string, return true
+        return program != "" ? excludedProgramList.Has(program) : true
     } catch as err {
-        ToolTip("ERROR checking excluded program: " . program)
-        SetTimer () => ToolTip(), -5000
+        ; ToolTip("ERROR checking excluded program: " . (program != "" ? program : "Unknown"))
+        ; SetTimer () => ToolTip(), -5000
         return false
     }
+}
+
+; Log error to file
+LogError(exception, mode) {
+    timestamp := FormatTime(, "yyyy-MM-dd HH:mm:ss")
+    FileAppend Format("{1} - Error in {2} on line {3}: {4}`n",
+        timestamp,
+        exception.What,
+        exception.Line,
+        exception.Message),
+        logfile
+    return true
 }

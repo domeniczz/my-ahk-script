@@ -8,6 +8,22 @@
 
 #SingleInstance Force
 
+#WinActivateForce
+
+A_MaxHotkeysPerInterval := 99999999
+A_HotkeyInterval := 99999999
+
+KeyHistory 0
+ListLines False
+
+SetKeyDelay -1, -1
+SetMouseDelay -1
+SetDefaultMouseSpeed 0
+SetWinDelay 0
+SetControlDelay 0
+
+; SendMode "InputThenPlay"
+
 #Include ..\common\constants.ahk
 #Include ..\common\utils.ahk
 
@@ -39,46 +55,68 @@ ToggleGamingNetworkEnv() {
         ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1")
         SetWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h)
         ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1573, 100, "Toggle 雷神时长")
-        sleep 1600
+        sleep 2000
 
         if WinExist("ahk_exe leigod.exe") {
             ; WinClose "ahk_exe leigod.exe"
             ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1")
             ; Alt + F4 to exit the app
-            Send "!{F4}"
-            Send "{Alt up}"
+            Send "{LAlt down}{F4}{LAlt up}"
         }
 
         sleep 200
 
         ; Turn on Clash
-        SendInput "{Ctrl down}{Alt down}{Shift down}"
-        SendInput "pmt"
-        SendInput "{Ctrl up}{Alt up}{Shift up}"
+        Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
 
         ToolTip("Clash Turned On")
-        SetTimer () => ToolTip(), -2500  ; Remove the tooltip after 1 seconds
+        SetTimer () => ToolTip(), -1000
+
+        ; Move the cursor to the center
+        centerX := A_ScreenWidth // 2
+        centerY := A_ScreenHeight // 2
+        MouseMove(centerX, centerY)
+
+        sleep 1500
+        ToolTip("Remember to un-suspend AHK!")
+        SetTimer () => ToolTip(), -2000
     }
     ; If LeiGod is not running, then run it, and turn off Clash
     else {
         ; Turn off Clash
-        SendInput "{Ctrl down}{Alt down}{Shift down}"
-        SendInput "pmt"
-        SendInput "{Ctrl up}{Alt up}{Shift up}"
+        Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
 
         ToolTip("Clash Turned Off")
-        SetTimer () => ToolTip(), -2500  ; Remove the tooltip after 1 seconds
+        SetTimer () => ToolTip(), -1000
 
         Run leishen
-
-        if !ProcessExist("steam.exe") {
-            Run steam
-            CloseWindow("ahk_exe ahk_exe steamwebhelper.exe", 10)
-        }
-
         ; Set the window position and size, then focus on the window
         SetAndActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h, 20)
         ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1573, 100, "Toggle 雷神时长")
+
+        ; if !ProcessExist("steam.exe") {
+        ;     steamLoginWinID := ""
+        ;     Run steam
+        ;     if WinWait("ahk_exe ahk_exe steamwebhelper.exe", , 10) {
+        ;         steamLoginWinID := WinGetID("ahk_exe steamwebhelper.exe")
+        ;         MaxAttempts := 100
+        ;         loop MaxAttempts {
+        ;             if WinGetID("ahk_exe steamwebhelper.exe") != steamLoginWinID {
+        ;                 CloseWindow(steamLoginWinID, , 200)
+        ;             }
+        ;             sleep 200
+        ;         }
+        ;     }
+        ; }
+
+        ; Move the cursor to the center
+        centerX := A_ScreenWidth // 2
+        centerY := A_ScreenHeight // 2
+        MouseMove(centerX, centerY)
+
+        sleep 1500
+        ToolTip("Remember to suspend AHK!")
+        SetTimer () => ToolTip(), -2000
     }
 }
 

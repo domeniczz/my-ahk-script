@@ -48,41 +48,26 @@ ToggleWinColorMode(mode := "Toggle") {
 
         ; broadcast system messages
         static WM_SETTINGCHANGE := 0x001A
+        DllCall("user32.dll\SendNotifyMessage", "Ptr", 0xFFFF, "Uint", WM_SETTINGCHANGE, "Ptr", 0, "Ptr", 0)
+        DllCall("Shell32.dll\SHChangeNotify", "Int", 0x8000000, "UInt", 0, "Ptr", 0, "Ptr", 0)
+
         SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ImmersiveColorSet"), , "ahk_id 0xFFFF")
         SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ThemeChanged"), , "ahk_id 0xFFFF")
         SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ImmersiveColorSet"), , "ahk_class Shell_TrayWnd")
-        DllCall("user32.dll\SendNotifyMessage", "Ptr", 0xFFFF, "Uint", WM_SETTINGCHANGE, "Ptr", 0, "Ptr", 0)
-        DllCall("Shell32.dll\SHChangeNotify", "Int", 0x8000000, "UInt", 0, "Ptr", 0, "Ptr", 0)
-        ; Broadcast additional messages
         SendMessage(0x0319, 0, 0x2003, , "ahk_id 0xFFFF")  ; WM_DWMCOLORIZATIONCOLORCHANGED
         SendMessage(0x0319, 0, 0x2007, , "ahk_id 0xFFFF")  ; WM_DWMCOMPOSITIONCHANGED
         SendMessage(0x0096, 0, 0, , "ahk_id 0xFFFF")  ; WM_CHANGEUISTATE
         SendMessage(0x02B1, 0, 0, , "ahk_id 0xFFFF")  ; WM_THEMECHANGED
+        SendMessage(0x000F, 0, 0, , "Program Manager")
+
         try {
             if (DllCall("GetModuleHandle", "Str", "UxTheme.dll", "Ptr")) {
                 DllCall("UxTheme.dll\RefreshImmersiveColorPolicyState")
             }
         }
         try DllCall("SetSysColors", "Int", 1, "Int*", 15, "Int*", DllCall("GetSysColor", "Int", 15))
-        SendMessage(0x000F, 0, 0, , "Program Manager")
     } catch as err {
         MsgBox("An error occurred while changing color mode: " . err.Message)
         return "Error"
     }
-}
-
-BroadcastSystemMessages() {
-    static WM_SETTINGCHANGE := 0x001A
-
-    ; Broadcast to all windows
-    SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ImmersiveColorSet"), , "ahk_id 0xFFFF")
-    DllCall("user32.dll\SendNotifyMessage", "Ptr", 0xFFFF, "Uint", WM_SETTINGCHANGE, "Ptr", 0, "Ptr", 0)
-
-    ; Notify Shell about the change
-    DllCall("Shell32.dll\SHChangeNotify", "Int", 0x8000000, "UInt", 0, "Ptr", 0, "Ptr", 0)
-
-    ; Additional broadcasts
-    PostMessage(0x0111, 0x0000f200, 0, , "ahk_class Shell_TrayWnd")  ; WM_COMMAND, TB_ENDTRACK
-    SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ThemeChanged"), , "ahk_id 0xFFFF")
-    SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ImmersiveColorSet"), , "ahk_class Shell_TrayWnd")
 }

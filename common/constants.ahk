@@ -23,6 +23,7 @@ wechatLoginBtnY := 450
 ; AutoDarkMode parameters
 morning := 0700
 evening := 1830
+; Check interval (seconds)
 autoDarkModeCheckInterval := 15 * 60 * 1000
 
 ; List (Map) of excluded programs
@@ -65,6 +66,8 @@ keybindings := [
     ],
     ["LAlt + 4", "Toggle Windows Terminal"
     ],
+    ["LWin (+ LShift) + 1", "Toggle Firefox (Private)"
+    ],
     ["RAlt + P", "Toggle Spotify"
     ],
     ["LAlt + R", "Toggle Telegram"
@@ -93,6 +96,8 @@ keybindings := [
     ],
     ["RAlt + C", "Start Ollama & Docker container for LLM"
     ],
+    ["RAlt + O", "Open MSI Afterburner"
+    ],
     ["LAlt + ``", "Close current window"
     ],
     ["RAlt + F12", "Computer Sleep"
@@ -100,8 +105,18 @@ keybindings := [
     ["LCtrl + LShift + RAlt + F12", "Computer Restart"
     ],
     ["RAlt + \", "Send LLM General Prompt"
+    ],
+    ["LCtrl + LWin + C", "Toggle Windows Grayscale"
     ]
 ]
+
+;;;;;;;;;; SCRIPT PATHS ;;;;;;;;;;
+
+; script to toggle gaming network environment
+toggleGameEnv := A_ScriptDir . "\other\toggleGameEnv.ahk"
+
+; script to toggle windows color mode
+toggleAutoDarkMode := A_ScriptDir . "\function\autodarkmode.ahk"
 
 ;;;;;;;;;; APPLICATION PATHS ;;;;;;;;;;
 
@@ -112,6 +127,10 @@ notepad2 := A_ProgramFiles . "\Notepad2\Notepad2.exe"
 vscode := EnvGet("LocalAppData") . "\Programs\Microsoft VS Code\Code.exe"
 
 terminal := EnvGet("LocalAppData") . "\Microsoft\WindowsApps\wt.exe"
+
+firefox := A_ProgramFiles . "\Mozilla Firefox\firefox.exe"
+
+firefoxPrivate := A_ProgramFiles . "\Mozilla Firefox\private_browsing.exe"
 
 spotify := A_AppData . "\Spotify\Spotify.exe"
 
@@ -146,9 +165,6 @@ msiafterburner := EnvGet("ProgramFiles(x86)") . "\MSI Afterburner\MSIAfterburner
 ; Real executable path will be set in the toggle function
 ; Because the path might change after the app is updated
 discord := ""
-
-; script to toggle gaming network environment
-toggleGameEnv := A_ScriptDir . "\other\toggleGameEnv.ahk"
 
 ;;;;;;;;;; APPLICATION WINDOW DIMENSIONS ;;;;;;;;;;
 
@@ -189,11 +205,3 @@ eudicDim := { x: 850, y: 210, w: 2140, h: 1740
 
 leishenDim := { x: 1116, y: 576, w: 1608, h: 1008
 }
-
-;;;;;;;;;; OTHER APPLICATION PARAMETERS ;;;;;;;;;;
-
-; ahk_id of bilibili home page window
-bilibiliWinId := ""
-
-; ahk_id of bilibili (sandboxed) home page window
-bilibiliSandboxedWinId := ""

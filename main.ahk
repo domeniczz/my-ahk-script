@@ -6,6 +6,26 @@
 
 #SingleInstance Force
 
+; #NoTrayIcon
+
+#WinActivateForce
+
+ProcessSetPriority "High"
+
+A_MaxHotkeysPerInterval := 99999999
+A_HotkeyInterval := 99999999
+
+KeyHistory 0
+ListLines False
+
+SetKeyDelay -1, -1
+SetMouseDelay -1
+SetDefaultMouseSpeed 0
+SetWinDelay 0
+SetControlDelay 0
+
+SendMode "InputThenPlay"
+
 ;; Use `#Include` without any path:
 ;;   AHK will first look for the ahk script in the same directory as the script that contains the #Include directive.
 ;;   If not found there, it will search in the user's standard library folder (usually Documents\AutoHotkey\Lib).
@@ -18,11 +38,29 @@
 #Include function\typing.ahk
 #Include function\autodarkmode.ahk
 
-;;;;;;;;;; SCHEDULED TASKS ;;;;;;;;;;
+;;;;;;;;;; AUTOMATIC TASKS ;;;;;;;;;;
 
 SetTimer AutoDarkMode, autoDarkModeCheckInterval
 
+OnError LogError
+
 ;;;;;;;;;; HOTKEYS BINDINGS ;;;;;;;;;;
+
+#UseHook
+
+#SuspendExempt
+isSuspended := False
+; `LCtrl + LShift + LWin + S` to toggle suspend
+<^<+<#s::
+{
+    global isSuspended
+    ; Toggle "Suspend Hotkeys" On/Off
+    Suspend -1
+    isSuspended := !isSuspended
+    ToolTip(isSuspended ? "AHK suspended" : "AHK activated")
+    SetTimer(() => ToolTip(), -3000)
+}
+#SuspendExempt False
 
 #HotIf !IsExcludedProgram()
 
@@ -37,6 +75,19 @@ SetTimer AutoDarkMode, autoDarkModeCheckInterval
 
 ; `LAlt + 4` to toggle Windows Terminal
 <!4:: ToggleWindowsTerminal()
+
+; `LWin + 1` to toggle Firefox
+<#1:: ToggleFirefox()
+
+; `LWin + LShift + 1` to toggle Private Firefox
+<#<+1::
+{
+    ; Wait for Win key to release
+    ; For blocking default windows behavior, which will launch firefox in safe (diagnose) mode with `Win + Shift + number`
+    KeyWait "LWin"
+    ; KeyWait "LShift"
+    ToggleFirefox(true)
+}
 
 ; `RAlt + P` to toggle Spotify
 >!p:: ToggleSpotify()
@@ -80,19 +131,11 @@ SetTimer AutoDarkMode, autoDarkModeCheckInterval
 ; `RAlt + O` to open MSI Afterburner
 >!o:: ToggleMSIAfterburner()
 
-; `RAlt + K` to toggle Gaming Network Environment (Toggle the action after keys are released)
->!k up::
-{
-    KeyWait "Alt"
-    KeyWait "k"
-    if (A_PriorKey = "k") {
-        RunScriptAsAdmin(toggleGameEnv)
-    }
-}
+; `RAlt + K` to toggle Gaming Network Environment
+>!k up:: RunScriptAsAdmin(toggleGameEnv)
 
 ; `RAlt + \` to send text
-#HotIf WinActive("ahk_exe firefox.exe") or WinActive("ahk_exe chrome.exe") or WinActive("ahk_exe msedge.exe") or
-    WinActive("ahk_exe brave.exe")
+#HotIf WinActive("ahk_exe firefox.exe") or WinActive("ahk_exe chrome.exe") or WinActive("ahk_exe msedge.exe") or WinActive("ahk_exe brave.exe")
 >!\:: SendTextLLMGeneralPrompt()
 #HotIf
 
