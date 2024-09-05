@@ -76,7 +76,7 @@ ActivateWindowAndClick(target, waitDuration := 4, ClickType := "left", ClickX :=
         WinActivate
         MouseClick ClickType, ClickX, ClickY
         ToolTip(ClickInfo)
-        SetTimer () => ToolTip(), -1000
+        SetTimer () => ToolTip(), -1000, -1
     } else {
         MsgBox 'ERROR ' . ClickType . ' Click (' . ClickX . ', ' . ClickY . ')! The "' . target .
             '" window could not be found!'
@@ -258,7 +258,7 @@ IsExcludedProgram() {
         return program != "" ? excludedProgramList.Has(program) : true
     } catch as err {
         ; ToolTip("ERROR checking excluded program: " . (program != "" ? program : "Unknown"))
-        ; SetTimer () => ToolTip(), -5000
+        ; SetTimer () => ToolTip(), -5000, -1
         return false
     }
 }

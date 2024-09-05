@@ -108,7 +108,6 @@ ToggleFirefox(isPrivate := false) {
         ; No expected window, run it
         if winList.Length == 0 {
             Run !isPrivate ? firefox : firefoxPrivate
-            ActivateWindow("ahk_exe firefox.exe")
         }
         ; Only one expected window, toggle it
         else if winList.Length == 1 {
@@ -245,7 +244,7 @@ ToggleWeChat() {
         ActivateWindowAndClick("ahk_exe WeChat.exe ahk_class WeChatLoginWndForPC", , , wechatLoginBtnX, wechatLoginBtnY)
 
         ToolTip("WeChat Login")
-        SetTimer () => ToolTip(), -1000
+        SetTimer () => ToolTip(), -1000, -1
 
         if WinWait("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", , 8) {
             SetAndActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
@@ -298,16 +297,16 @@ ToggleDingTalk() {
             ; Window is active, close to minimize it to the system tray
             WinClose
             ToolTip("11111")
-            SetTimer () => ToolTip(), -1000
+            SetTimer () => ToolTip(), -1000, -1
         } else if WinExist("ahk_exe DingTalk.exe") and !WinActive("ahk_exe DingTalk.exe") {
             Run dingtalk
             WinActivate
             ToolTip("22222")
-            SetTimer () => ToolTip(), -1000
+            SetTimer () => ToolTip(), -1000, -1
         } else {
             Run dingtalk
             ToolTip("33333")
-            SetTimer () => ToolTip(), -1000
+            SetTimer () => ToolTip(), -1000, -1
         }
     }
     ; If it is not running, run it
@@ -528,16 +527,16 @@ StartOllamaAndDockerWebUI() {
     ; Show a notification
     if ProcessExist("Docker Desktop.exe") and ProcessExist("ollama.exe") {
         ToolTip("Docker & Ollama started")
-        SetTimer () => ToolTip(), -1000
+        SetTimer () => ToolTip(), -1000, -1
         sleep 500
         Run '"' . browser . '" "' . openWebuiUrl . '"'
     } else {
         if !ProcessExist("Docker Desktop.exe") {
             ToolTip("ERROR! Docker Desktop not started")
-            SetTimer () => ToolTip(), -2000
+            SetTimer () => ToolTip(), -2000, -1
         } else if !ProcessExist("ollama.exe") {
             ToolTip("ERROR! Ollama not started")
-            SetTimer () => ToolTip(), -2000
+            SetTimer () => ToolTip(), -2000, -1
         }
     }
 }
@@ -558,7 +557,7 @@ ToggleMSIAfterburner() {
     else {
         Run msiafterburner
         ToolTip("MSI Afterburner started")
-        SetTimer () => ToolTip(), -2500
+        SetTimer () => ToolTip(), -2500, -1
     }
 }
 
@@ -580,11 +579,11 @@ ToggleHelpWindow() {
         WinSetTransparent(200, window)
 
         ; Hide the window after an interval (4 seconds)
-        ; SetTimer(() => window.Hide(), -4000)
+        ; SetTimer () => window.Hide(), -4000, -1
     } else {
         window.Hide()
         ; Cancel the timer if manually hidden
-        ; SetTimer(() => window.Hide(), 0)
+        ; SetTimer () => window.Hide(), 0, -1
     }
 }
 

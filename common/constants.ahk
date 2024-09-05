@@ -179,7 +179,7 @@ vscodeDim := { x: 250, y: 40, w: 3340, h: 2080
 spotifyDim := { x: 450, y: 100, w: 2940, h: 1960
 }
 
-telegramDim := { x: 711, y: 130, w: 2418, h: 1909
+telegramDim := { x: 620, y: 130, w: 2600, h: 1900
 }
 
 discordDim := { x: 600, y: 100, w: 2640, h: 1960

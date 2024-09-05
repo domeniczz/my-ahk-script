@@ -13,14 +13,14 @@ lastScrollDirection := 0
 Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
 */
 InfiniScrollHandler(*) {
-    if (IsExcludedProgram()) {
-        Click "Right"
-        return
-    }
+    ; if (IsExcludedProgram()) {
+    ;     Click "Right"
+    ;     return
+    ; }
 
     global rightClickStartTime
 
-    BeforeCleanUp()
+    ; BeforeCleanUp()
 
     rightClickStartTime := A_TickCount
 
@@ -31,7 +31,8 @@ InfiniScrollHandler(*) {
     Hotkey "LButton", LButtonClickHandler, "On"
 
     ; Set a timer to check for right button release
-    SetTimer CheckRButtonRelease, 1
+    ; The priority is set to 100, which is higher than the default priority of 0
+    SetTimer CheckRButtonRelease, 1, 100
 }
 
 /*
@@ -41,7 +42,6 @@ LButtonClickHandler(*) {
     global infiniteScrollActive
 
     AfterCleanUp()
-    infiniteScrollActive := false
 
     ; Perform the original left-click action
     Click "Left"
@@ -59,7 +59,6 @@ CheckRButtonRelease() {
             Click "Right"
         }
         AfterCleanUp()
-        infiniteScrollActive := false
     }
 }
 
@@ -92,7 +91,8 @@ ScrollWheelHandler(ThisHotkey) {
     if !infiniteScrollActive {
         infiniteScrollActive := true
         ; Start infinite scrolling
-        SetTimer InfiniteScroll, 10
+        ; The priority is set to 100, which is higher than the default priority of 0
+        SetTimer InfiniteScroll, 10, 100
     }
 }
 
@@ -132,7 +132,7 @@ Clean up actions before infinite scrolling
 BeforeCleanUp() {
     global infiniteScrollActive, scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
 
-    SetTimer InfiniteScroll, 0
+    SetTimer InfiniteScroll, 0, 100
     infiniteScrollActive := false
     scrollAccumulator := 0.0
     scrollDirection := 0
@@ -144,13 +144,14 @@ BeforeCleanUp() {
 Clean up actions after infinite scrolling
 */
 AfterCleanUp() {
-    global scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
+    global infiniteScrollActive := false, scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
 
-    SetTimer InfiniteScroll, 0
-    SetTimer CheckRButtonRelease, 0
+    SetTimer InfiniteScroll, 0, 100
+    SetTimer CheckRButtonRelease, 0, 100
     Hotkey "WheelUp", ScrollWheelHandler, "Off"
     Hotkey "WheelDown", ScrollWheelHandler, "Off"
     Hotkey "LButton", LButtonClickHandler, "Off"
+    infiniteScrollActive := false
     scrollAccumulator := 0.0
     scrollDirection := 0
     consecutiveScrollCount := 0

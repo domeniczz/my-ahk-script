@@ -1,4 +1,4 @@
-﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -40,7 +40,8 @@ SendMode "InputThenPlay"
 
 ;;;;;;;;;; AUTOMATIC TASKS ;;;;;;;;;;
 
-SetTimer AutoDarkMode, autoDarkModeCheckInterval
+; Setting a negative priority makes this timer run only when the script is idle
+SetTimer AutoDarkMode, autoDarkModeCheckInterval, -1
 
 OnError LogError
 
@@ -58,7 +59,7 @@ isSuspended := False
     Suspend -1
     isSuspended := !isSuspended
     ToolTip(isSuspended ? "AHK suspended" : "AHK activated")
-    SetTimer(() => ToolTip(), -3000)
+    SetTimer () => ToolTip(), -3000, -1
 }
 #SuspendExempt False
 

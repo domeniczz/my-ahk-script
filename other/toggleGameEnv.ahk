@@ -68,7 +68,7 @@ ToggleGamingNetworkEnv() {
         Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
 
         ToolTip("Clash Turned On")
-        SetTimer () => ToolTip(), -1000
+        SetTimer () => ToolTip(), -1000, -1
 
         ; Move the cursor to the center
         centerX := A_ScreenWidth // 2
@@ -77,7 +77,7 @@ ToggleGamingNetworkEnv() {
 
         sleep 1500
         ToolTip("Remember to un-suspend AHK!")
-        SetTimer () => ToolTip(), -2000
+        SetTimer () => ToolTip(), -2000, -1
     }
     ; If LeiGod is not running, then run it, and turn off Clash
     else {
@@ -85,11 +85,11 @@ ToggleGamingNetworkEnv() {
         Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
 
         ToolTip("Clash Turned Off")
-        SetTimer () => ToolTip(), -1000
+        SetTimer () => ToolTip(), -1000, -1
 
         Run leishen
         ; Set the window position and size, then focus on the window
-        SetAndActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h, 20)
+        SetAndActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h, 60)
         ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1573, 100, "Toggle 雷神时长")
 
         ; if !ProcessExist("steam.exe") {
@@ -114,7 +114,7 @@ ToggleGamingNetworkEnv() {
 
         sleep 1500
         ToolTip("Remember to suspend AHK!")
-        SetTimer () => ToolTip(), -2000
+        SetTimer () => ToolTip(), -2000, -1
     }
 }
 
