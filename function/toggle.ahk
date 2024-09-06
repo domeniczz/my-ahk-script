@@ -1,6 +1,6 @@
 ;; This file contains the functions related to keyboard shortcuts and hotkeys.
 
-;;;;;;;;;; KEYBOARD FUNCTIONS ;;;;;;;;;;
+;;;;;;;;;; TOGGLE FUNCTIONS ;;;;;;;;;;
 
 /*
 Toggle Notepad++
@@ -28,11 +28,27 @@ Toggle Notepad2
 ToggleNotepad2() {
     ; If it is running, toggle the window
     if ProcessExist("Notepad2.exe") {
-        if WinActive("ahk_exe Notepad2.exe") {
-            ; Window is active, minimize it to taskbar
-            WinMinimize
-        } else {
-            WinActivate "ahk_exe Notepad2.exe"
+        winList := WinGetList("ahk_exe Notepad2.exe")
+        if winList.Length == 1 {
+            if WinActive("ahk_id " . winList[1]) {
+                ; Window is active, minimize it to taskbar
+                WinMinimize
+            } else {
+                WinActivate "ahk_id " . winList[1]
+            }
+        }
+        ; More than one expected window, cycle through them
+        else if winList.Length > 1 {
+            for win_id in winList {
+                if win_id == winList[winList.Length] {
+                    if WinActive("ahk_id " . win_id) {
+                        WinMinimize
+                    } else {
+                        WinActivate "ahk_id " . win_id
+                    }
+                    break
+                }
+            }
         }
     }
     ; If it is not running, run it
@@ -49,11 +65,27 @@ Toggle Visual Studio Code
 ToggleVSCode() {
     ; If it is running, toggle the window
     if ProcessExist("Code.exe") {
-        if WinActive("ahk_exe Code.exe") {
-            ; Window is active, minimize it to taskbar
-            WinMinimize
-        } else {
-            WinActivate "ahk_exe Code.exe"
+        winList := WinGetList("ahk_exe Code.exe")
+        if winList.Length == 1 {
+            if WinActive("ahk_id " . winList[1]) {
+                ; Window is active, minimize it to taskbar
+                WinMinimize
+            } else {
+                WinActivate "ahk_id " . winList[1]
+            }
+        }
+        ; More than one expected window, cycle through them
+        else if winList.Length > 1 {
+            for win_id in winList {
+                if win_id == winList[winList.Length] {
+                    if WinActive("ahk_id " . win_id) {
+                        WinMinimize
+                    } else {
+                        WinActivate "ahk_id " . win_id
+                    }
+                    break
+                }
+            }
         }
     }
     ; If it is not running, run it
@@ -370,9 +402,9 @@ ToggleBilibili() {
 
     ; If it is running, toggle the window
     if ProcessExist("哔哩哔哩.exe") {
-        allWinList := WinGetList("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
+        winList := WinGetList("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
 
-        switch allWinList.Length {
+        switch winList.Length {
             case 0:
                 ; No window, run it
                 Run bilibili
@@ -382,17 +414,20 @@ ToggleBilibili() {
                 }
             case 1:
                 ; Only one window, toggle the window
-                if WinActive("ahk_id " . allWinList[1]) {
+                if WinActive("ahk_id " . winList[1]) {
                     WinMinimize
                 } else {
-                    WinActivate "ahk_id " . allWinList[1]
+                    WinActivate "ahk_id " . winList[1]
                 }
                 if bilibiliWinId == "" {
-                    bilibiliWinId := allWinList[1]
+                    bilibiliWinId := winList[1]
                 }
             case 2:
+                if bilibiliWinId == "" {
+                    bilibiliWinId := WinGetList("哔哩哔哩 (゜-゜)つロ 干杯~-bilibili ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")[1]
+                }
                 ; Two windows (home window & video window), activate the video window
-                for win_id in allWinList {
+                for win_id in winList {
                     ; Find the video window (bilibiliWinId represents the home window)
                     if win_id != bilibiliWinId {
                         if WinActive("ahk_id " . win_id) {
@@ -404,7 +439,7 @@ ToggleBilibili() {
                     }
                 }
             default:
-                MsgBox "ERROR! Unexpected number of bilibili windows: " . allWinList.Length
+                MsgBox "ERROR! Unexpected number of bilibili windows: " . winList.Length
         }
     }
     ; If it is not running, run it
@@ -427,9 +462,9 @@ ToggleSandboxedBilibili() {
 
     ; If it is running, toggle the window
     if ProcessExist("哔哩哔哩.exe") {
-        allWinList := WinGetList("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
+        winList := WinGetList("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
 
-        switch allWinList.Length {
+        switch winList.Length {
             case 0:
                 ; No window, run it
                 Run bilibiliSandboxed
@@ -439,17 +474,20 @@ ToggleSandboxedBilibili() {
                 }
             case 1:
                 ; Only one window, toggle the window
-                if WinActive("ahk_id " . allWinList[1]) {
+                if WinActive("ahk_id " . winList[1]) {
                     WinMinimize
                 } else {
-                    WinActivate "ahk_id " . allWinList[1]
+                    WinActivate "ahk_id " . winList[1]
                 }
                 if bilibiliSandboxedWinId == "" {
-                    bilibiliSandboxedWinId := allWinList[1]
+                    bilibiliSandboxedWinId := winList[1]
                 }
             case 2:
                 ; Two windows (home window & video window), activate the video window
-                for win_id in allWinList {
+                for win_id in winList {
+                    if bilibiliSandboxedWinId == "" {
+                        bilibiliSandboxedWinId := WinGetList("哔哩哔哩 (゜-゜)つロ 干杯~-bilibili ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")[1]
+                    }
                     ; Find the video window (bilibiliWinId represents the home window)
                     if win_id != bilibiliSandboxedWinId {
                         if WinActive("ahk_id " . win_id) {
@@ -461,7 +499,7 @@ ToggleSandboxedBilibili() {
                     }
                 }
             default:
-                MsgBox "ERROR! Unexpected number of bilibili (sandboxed) windows: " . allWinList.Length
+                MsgBox "ERROR! Unexpected number of bilibili (sandboxed) windows: " . winList.Length
         }
     }
     ; If it is not running, run it

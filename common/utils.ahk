@@ -160,6 +160,15 @@ SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDu
 }
 
 /*
+Open a folder in Windows Explorer
+  path: The path of the folder to open (default: A_MyDocuments)
+  explorer: The explorer to program to open the folder (default: "explorer.exe ")
+*/
+OpenFolder(path := A_MyDocuments, explorer := "explorer.exe ") {
+    Run(explorer . path)
+}
+
+/*
 Get the path of the specified executable file.
 Returns the path of file if found, otherwise returns an empty string
 Parameters:
@@ -230,18 +239,12 @@ GetPathComponent(path, component := "name") {
     SplitPath(path, &name, &dir, &ext, &nameNoExt, &drive)
 
     switch component {
-        case "name":
-            return name
-        case "dir":
-            return dir
-        case "ext":
-            return ext
-        case "nameNoExt":
-            return nameNoExt
-        case "drive":
-            return drive
-        default:
-            return path
+        case "name": return name
+        case "dir": return dir
+        case "ext": return ext
+        case "nameNoExt": return nameNoExt
+        case "drive": return drive
+        default: return path
     }
 }
 
@@ -285,11 +288,11 @@ Parameters:
 */
 LogError(err, mode) {
     timestamp := FormatTime(, "yyyy-MM-dd HH:mm:ss")
-    FileAppend Format('{1} - Error in "{2}" on line {3}: {4}`nCallStack: {5}`n`n',
+    FileAppend Format('{1} - Error in "{2}" on line {3}: {4}`nCallStack: `n{5}`n',
         timestamp,
         err.File,
         err.Line,
-        err.Message
+        err.Message,
         err.Stack),
         logfile
     return true

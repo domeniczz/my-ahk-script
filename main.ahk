@@ -32,12 +32,13 @@ SendMode "InputThenPlay"
 ;;   If still not found, it will look in the standard library folder of AHK's installation directory.
 #Include common\constants.ahk
 #Include common\utils.ahk
-#Include gui\help.ahk
-#Include gui\menu.ahk
-#Include function\keyboard.ahk
+#Include function\toggle.ahk
 #Include function\mouse.ahk
 #Include function\typing.ahk
 #Include function\autodarkmode.ahk
+#Include function\folder.ahk
+#Include gui\help.ahk
+#Include gui\menu.ahk
 
 ;;;;;;;;;; AUTOMATIC TASKS ;;;;;;;;;;
 
