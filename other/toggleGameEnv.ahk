@@ -1,10 +1,18 @@
 ;;;;;;;;;; ! PLEASE RUN THIS SCRIPT AS ADMINISTRATOR ! ;;;;;;;;;;
 
+/*
+Toggle the gaming network environment
+  Start gaming: Turn off clash, turn on leigod
+  Stop gaming: Turn on clash, turn off leigod
+*/
+
 #Requires AutoHotkey v2.0
 
 #SingleInstance Force
 
 #WinActivateForce
+
+ProcessSetPriority "High"
 
 A_MaxHotkeysPerInterval := 99999999
 A_HotkeyInterval := 99999999
@@ -20,7 +28,6 @@ SetControlDelay 0
 
 ; SendMode "InputThenPlay"
 
-#Include ..\common\constants.ahk
 #Include ..\common\utils.ahk
 
 if not A_IsAdmin {
@@ -35,6 +42,11 @@ if not A_IsAdmin {
         ExitApp
     }
     ExitApp
+}
+
+leishen := EnvGet("ProgramFiles(x86)") . "\LeiGod_Acc\leigod_launcher.exe"
+
+leishenDim := { x: 1116, y: 576, w: 1608, h: 1008
 }
 
 ;;;;;;;;;; USER DEFINED FUNCTIONS ;;;;;;;;;;

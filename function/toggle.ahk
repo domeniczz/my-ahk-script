@@ -91,7 +91,7 @@ ToggleVSCode() {
     ; If it is not running, run it
     else {
         Run vscode
-        SetAndActivateWindow("ahk_exe Code.exe", vscodeDim.x, vscodeDim.y, vscodeDim.w, vscodeDim.h)
+        SetAndActivateWindow("ahk_exe Code.exe", vscodeDim.x, vscodeDim.y, vscodeDim.w, vscodeDim.h, , 10)
     }
 }
 

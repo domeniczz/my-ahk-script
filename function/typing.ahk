@@ -8,9 +8,10 @@ Send predefined text
 SendTextLLMGeneralPrompt() {
     SendText("
     (
-    You are an expert. Please be reliable, neutral and formal.
+    You are an expert. Be reliable, neutral and formal.
     Provide multiple perspectives and solutions if possible. Cite sources with links if there are any.
-    Think step by step carefully and logically. Your answer should be correct, clear and easy to understand.
+    Think step-by-step carefully and logically. Derive a step-by-step plan to solve the problem and then handle the task based on the plan.
+    Your answer should be correct, clear and easy to understand.
     Thank you in advance.
     )"
     )
