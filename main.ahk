@@ -136,6 +136,14 @@ OnError LogError
 ; `LAlt + `` to close currently active window
 <!`:: CloseCurrentWindow()
 
+; `LWin + E` to toggle File Explorer
+<#e::
+{
+    ; Wait Win key release to avoid toggling Windows start menu
+    KeyWait("LWin")
+    RunScriptAsAdmin(toggleFileExplorer)
+}
+
 ; `RAlt + F12` to put the computer to sleep
 >!F12:: PutComputerToSleep()
 

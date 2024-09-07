@@ -122,8 +122,8 @@ keybindings := [
 ; script to toggle gaming network environment
 toggleGameEnv := A_ScriptDir . "\other\toggleGameEnv.ahk"
 
-; script to toggle windows color mode
-toggleAutoDarkMode := A_ScriptDir . "\function\autodarkmode.ahk"
+; script to toggle windows file explorer
+toggleFileExplorer := A_ScriptDir . "\other\toggleFileExplorer.ahk"
 
 ;;;;;;;;;; APPLICATION PATHS ;;;;;;;;;;
 
