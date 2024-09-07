@@ -6,7 +6,7 @@ myMenu := DrawMenu()
 Show the menu
 */
 OpenMenu() {
-    myMenu.Rename("Suspend Script", A_IsSuspended ? "Resume Script" : "Suspend Script")
+    ; RefreshItems()
     myMenu.Show()
 }
 
@@ -17,69 +17,100 @@ DrawMenu() {
     Main := Menu()
     Main.Name := "Main"
 
-    Main.Add("Spotify && Lyricify", MenuHandler)
-    Main.Add("Ollama Chat", MenuHandler)
-    Main.Add("MSI Afterburner", MenuHandler)
-    Main.Add("Game Environment", MenuHandler)
-    Main.Add("Suspend Script", MenuHandler)
+    Main.Add "Spotify && Lyricify", MenuHandler
+    Main.SetIcon "Spotify && Lyricify", "imageres.dll", 104
+    Main.Add "Ollama Chat", MenuHandler
+    Main.SetIcon "Ollama Chat", "imageres.dll", 244
+    Main.Add "MSI Afterburner", MenuHandler
+    Main.SetIcon "MSI Afterburner", "DDORes.dll", 35
+    Main.Add "Gaming Environment", MenuHandler
+    Main.SetIcon "Gaming Environment", "DDORes.dll", 30
+    Main.Add "Suspend Script", MenuHandler
+    Main.SetIcon "Suspend Script", "imageres.dll", 229
 
     Main.Add()  ; Add a separator line.
 
     Sandboxie := Menu()
     Sandboxie.Name := "Sandboxie"
     for key in sandboxieContainers {
-        Sandboxie.Add(key, MenuHandler)
+        Sandboxie.Add key, MenuHandler
+        Sandboxie.SetIcon key, "imageres.dll", 4
     }
-    Sandboxie.Add("Refresh List", MenuHandler)
+    Sandboxie.Add "Refresh List", MenuHandler
+    Sandboxie.SetIcon "Refresh List", "imageres.dll", 230
 
-    Main.Add("Sandboxie", Sandboxie)
+    Main.Add "Sandboxie", Sandboxie
+    Main.SetIcon "Sandboxie", "imageres.dll", 166
 
-    Main.Add()  ; Add a separator line.
+    Main.Add  ; Add a separator line.
 
     Tool := Menu()
     Tool.Name := "Tool"
-    Tool.Add("Notepad++", MenuHandler)
-    Tool.Add("Notepad2", MenuHandler)
-    Tool.Add("VSCode", MenuHandler)
-    Tool.Add("Terminal", MenuHandler)
-    Tool.Add("Firefox", MenuHandler)
-    Tool.Add("Firefox P", MenuHandler)
-    Tool.Add("Eudic", MenuHandler)
+    Tool.Add "Notepad++", MenuHandler
+    Tool.SetIcon "Notepad++", "imageres.dll", 248
+    Tool.Add "Notepad2", MenuHandler
+    Tool.SetIcon "Notepad2", "imageres.dll", 248
+    Tool.Add "VSCode", MenuHandler
+    Tool.SetIcon "VSCode", "imageres.dll", 291
+    Tool.Add "Terminal", MenuHandler
+    Tool.SetIcon "Terminal", "imageres.dll", 313
+    Tool.Add "Firefox", MenuHandler
+    Tool.SetIcon "Firefox", "imageres.dll", 222
+    Tool.Add "Firefox P", MenuHandler
+    Tool.SetIcon "Firefox P", "imageres.dll", 233
+    Tool.Add "Eudic", MenuHandler
+    Tool.SetIcon "Eudic", "shell32.dll", 219
 
-    Main.Add("Tool", Tool)
+    Main.Add "Tool", Tool
+    Main.SetIcon "Tool", "imageres.dll", 188
 
-    Main.Add()  ; Add a separator line.
+    Main.Add  ; Add a separator line.
 
     Chat := Menu()
     Chat.Name := "Chat"
-    Chat.Add("Telegram", MenuHandler)
-    Chat.Add("Discord", MenuHandler)
-    Chat.Add("WeChat", MenuHandler)
-    Chat.Add("TIM", MenuHandler)
-    Chat.Add("DingTalk", MenuHandler)
+    Chat.Add "Telegram", MenuHandler
+    Chat.SetIcon "Telegram", "imageres.dll", 210
+    Chat.Add "Discord", MenuHandler
+    Chat.SetIcon "Discord", "imageres.dll", 210
+    Chat.Add "WeChat", MenuHandler
+    Chat.SetIcon "WeChat", "imageres.dll", 210
+    Chat.Add "TIM", MenuHandler
+    Chat.SetIcon "TIM", "imageres.dll", 210
+    Chat.Add "DingTalk", MenuHandler
+    Chat.SetIcon "DingTalk", "imageres.dll", 210
 
-    Main.Add("Chat", Chat)
+    Main.Add "Chat", Chat
+    Main.SetIcon "Chat", "imageres.dll", 75
 
-    Main.Add()  ; Add a separator line.
+    Main.Add  ; Add a separator line.
 
     Media := Menu()
     Media.Name := "Media"
-    Media.Add("Spotify", MenuHandler)
-    Media.Add("Bilibili", MenuHandler)
-    Media.Add("Bilibili S", MenuHandler)
-    Media.Add("YouTube", MenuHandler)
-    Media.Add("YouTube 2", MenuHandler)
+    Media.Add "Spotify", MenuHandler
+    Media.SetIcon "Spotify", "imageres.dll", 192
+    Media.Add "Bilibili", MenuHandler
+    Media.SetIcon "Bilibili", "imageres.dll", 193
+    Media.Add "Bilibili S", MenuHandler
+    Media.SetIcon "Bilibili S", "imageres.dll", 193
+    Media.Add "YouTube", MenuHandler
+    Media.SetIcon "YouTube", "imageres.dll", 193
+    Media.Add "YouTube 2", MenuHandler
+    Media.SetIcon "YouTube 2", "imageres.dll", 193
 
-    Main.Add("Media", Media)
+    Main.Add "Media", Media
+    Main.SetIcon "Media", "shell32.dll", 131
 
-    Main.Add()  ; Add a separator line.
+    Main.Add  ; Add a separator line.
 
     Power := Menu()
     Power.Name := "Power"
-    Power.Add("Sleep", MenuHandler)
-    Power.Add("Restart", MenuHandler)
+    Power.Add "Sleep", MenuHandler
+    Power.SetIcon "Sleep", "imageres.dll", 97
+    Power.Add "Restart", MenuHandler
+    Power.SetIcon "Restart", "imageres.dll", 270
 
-    Main.Add("Power", Power)
+    Main.Add "Power", Power
+    Main.SetIcon "Power", "imageres.dll", 103
 
     return Main
 }
@@ -103,8 +134,13 @@ MainHandler(itemName, itemPos, menuObj) {
         case 1: RunSpotifyAndLyricify()
         case 2: StartOllamaAndDockerWebUI()
         case 3: ToggleMSIAfterburner()
-        case 4: RunScriptAsAdmin(toggleGameEnv)
-        case 5: SuspendScript()
+        case 4:
+            RunScriptAsAdmin(toggleGameEnv)
+        case 5:
+            SuspendScript()
+            ; Refresh the menu item
+            myMenu.Rename(A_IsSuspended ? "Suspend Script" : "Resume Script", A_IsSuspended ? "Resume Script" : "Suspend Script")
+            myMenu.SetIcon(A_IsSuspended ? "Resume Script" : "Suspend Script", "imageres.dll", A_IsSuspended ? 231 : 229)
         default: MsgBox("ERROR! Unknown item: " . itemName . " at position " . itemPos)
     }
 }
@@ -112,14 +148,14 @@ MainHandler(itemName, itemPos, menuObj) {
 SandboxieHandler(itemName, itemPos, menuObj) {
     if (itemName == "Refresh List") {
         ; Delete all items
-        menuObj.Delete()
+        menuObj.Delete
         ; Refresh the sandboxie containers list
         updateContainerList()
         ; Add the updated items
         for key in sandboxieContainers {
-            menuObj.Add(key, MenuHandler)
+            menuObj.Add key, MenuHandler
         }
-        menuObj.Add("Refresh List", MenuHandler)
+        menuObj.Add "Refresh List", MenuHandler
         return
     }
     OpenFolder(sandboxieContainers[itemName])
