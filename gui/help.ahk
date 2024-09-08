@@ -16,7 +16,7 @@ ToggleHelpWindow() {
         ; Show the help window
         window.Show("w" . A_ScreenWidth . " h" . A_ScreenHeight)
 
-        ; Set opacity (200/255)
+        ; Set opacity (200/255), 255 is fully opaque
         WinSetTransparent(200, window)
 
         ; Hide the window after an interval (4 seconds)
@@ -33,7 +33,7 @@ Draw the GUI of help window (displays all the keybindings)
 */
 DrawHelpGUI() {
     helpGui := Gui()
-    helpGui.Opt("+AlwaysOnTop -Caption")
+    helpGui.Opt("+AlwaysOnTop -Caption +E0x20")  ; E0x20 means click-through
 
     ; Set font style size (pt) and bold
     helpGui.SetFont("s16 bold")
@@ -76,7 +76,7 @@ DrawHelpGUI() {
 Set the background colors of the help window based on the Windows color mode
 */
 SetHelpWindowColors(helpGui, lv) {
-    colorMode := GetWinColorMode()
+    colorMode := GetWindowsColorMode()
     if (colorMode == "Dark") {
         color := "4c4a48"
         helpGui.BackColor := color

@@ -26,9 +26,7 @@ SetDefaultMouseSpeed 0
 SetWinDelay 0
 SetControlDelay 0
 
-; SendMode "InputThenPlay"
-
-#Include ..\common\utils.ahk
+SendMode "Input"
 
 if not A_IsAdmin {
     try
@@ -43,6 +41,15 @@ if not A_IsAdmin {
     }
     ExitApp
 }
+
+#Include ..\common\utils\windowutils.ahk
+#Include ..\common\utils\logutils.ahk
+
+OnError LogError
+
+;;;;;;;;;; GLOBAL VARIABLES ;;;;;;;;;;
+
+logfile := A_ScriptDir . "\log\other.log"
 
 leishen := EnvGet("ProgramFiles(x86)") . "\LeiGod_Acc\leigod_launcher.exe"
 

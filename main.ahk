@@ -1,4 +1,4 @@
-﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -24,14 +24,23 @@ SetDefaultMouseSpeed 0
 SetWinDelay 0
 SetControlDelay 0
 
-SendMode "InputThenPlay"
+SendMode "Input"
 
 ;; Use `#Include` without any path:
 ;;   AHK will first look for the ahk script in the same directory as the script that contains the #Include directive.
 ;;   If not found there, it will search in the user's standard library folder (usually Documents\AutoHotkey\Lib).
 ;;   If still not found, it will look in the standard library folder of AHK's installation directory.
-#Include common\constants.ahk
-#Include common\utils.ahk
+#Include common\constants\applications.ahk
+#Include common\constants\settings.ahk
+#Include common\constants\autodarkmode.ahk
+#Include common\constants\keybindings.ahk
+#Include common\constants\scripts.ahk
+#Include common\utils\windowutils.ahk
+#Include common\utils\pathutils.ahk
+#Include common\utils\scriptutils.ahk
+#Include common\utils\systemutils.ahk
+#Include common\utils\textutils.ahk
+#Include common\utils\logutils.ahk
 #Include function\toggle.ahk
 #Include function\mouse.ahk
 #Include function\typing.ahk

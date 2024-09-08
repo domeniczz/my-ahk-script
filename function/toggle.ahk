@@ -555,7 +555,6 @@ StartOllamaAndDockerWebUI() {
     if !ProcessExist("Docker Desktop.exe") {
         Run docker
         CloseWindow("ahk_exe Docker Desktop.exe", 5)
-        Sleep 3500
     }
 
     ; Start open-webui container
@@ -566,22 +565,19 @@ StartOllamaAndDockerWebUI() {
         Run A_ComSpec . ' /c "' . ollama . '"', , "Hide"
     }
 
-    sleep 500
+    sleep 1000
 
     ; Show a notification
     if ProcessExist("Docker Desktop.exe") and ProcessExist("ollama.exe") {
         ToolTip("Docker & Ollama started")
-        SetTimer () => ToolTip(), -1000, -1
-        sleep 500
-        Run '"' . browser . '" "' . openWebuiUrl . '"'
+        SetTimer () => ToolTip(), -2000, -1
+        ; sleep 5000
+        ; Run '"' . browser . '" "' . openWebuiUrl . '"'
     } else {
-        if !ProcessExist("Docker Desktop.exe") {
-            ToolTip("ERROR! Docker Desktop not started")
-            SetTimer () => ToolTip(), -2000, -1
-        } else if !ProcessExist("ollama.exe") {
-            ToolTip("ERROR! Ollama not started")
-            SetTimer () => ToolTip(), -2000, -1
-        }
+        msg := !ProcessExist("Docker Desktop.exe") ? "Docker Desktop &" : ""
+        msg .= !ProcessExist("ollama.exe") ? " Ollama" : ""
+        ToolTip("ERROR! " . msg . " not started")
+        SetTimer () => ToolTip(), -2000, -1
     }
 }
 

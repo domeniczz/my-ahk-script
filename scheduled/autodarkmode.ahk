@@ -18,9 +18,14 @@ SetControlDelay 0
 
 SendMode "InputThenPlay"
 
-#Include ..\common\constants.ahk
-#Include ..\common\utils.ahk
+OnError LogError
+
+logfile := A_ScriptDir . "\logs\scheduled.log"
+
+#Include ..\common\constants\autodarkmode.ahk
+#Include ..\common\utils\systemutils.ahk
 #Include ..\function\autodarkmode.ahk
+#Include ..\common\utils\logutils.ahk
 
 ;;;;;;;;;;  This script is ran by Windows Task Scheduler every time the system unlock  ;;;;;;;;;;
 ;;;;;;;;;;  Function `AutoDarkMode` is called to change the color mode based on time   ;;;;;;;;;;

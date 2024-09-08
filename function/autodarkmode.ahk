@@ -6,12 +6,12 @@ Check the current time and change the Windows color mode if needed
 AutoDarkMode() {
     currentTime := FormatTime(A_Now, "HHmm")
     if (currentTime >= morning and currentTime < evening) {
-        if GetWinColorMode() != "Light" {
+        if GetWindowsColorMode() != "Light" {
             ToggleWinColorMode()
             ; FileAppend "Changed Windows color mode to Light at " . SubStr(currentTime, 1, 2) . ":" . SubStr(currentTime, 3) . "`n", logfile
         }
     } else {
-        if GetWinColorMode() != "Dark" {
+        if GetWindowsColorMode() != "Dark" {
             ToggleWinColorMode()
             ; FileAppend "Changed Windows color mode to Dark at " . SubStr(currentTime, 1, 2) . ":" . SubStr(currentTime, 3) . "`n", logfile
         }
@@ -47,14 +47,12 @@ ToggleWinColorMode(mode := "Toggle") {
         ; WinClose "ahk_exe ApplicationFrameHost.exe"
 
         ;; Refresh to apply the theme changes
-
-        Run "RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters 2, True", , "Hide"
-
-        ; broadcast system messages
         static WM_SETTINGCHANGE := 0x001A
+        Run "RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters 2, True", , "Hide"
         DllCall("user32.dll\SendNotifyMessage", "Ptr", 0xFFFF, "Uint", WM_SETTINGCHANGE, "Ptr", 0, "Ptr", 0)
         DllCall("Shell32.dll\SHChangeNotify", "Int", 0x8000000, "UInt", 0, "Ptr", 0, "Ptr", 0)
 
+        ; broadcast system messages
         SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ImmersiveColorSet"), , "ahk_id 0xFFFF")
         SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ThemeChanged"), , "ahk_id 0xFFFF")
         SendMessage(WM_SETTINGCHANGE, 0, StrPtr("ImmersiveColorSet"), , "ahk_class Shell_TrayWnd")
@@ -71,7 +69,8 @@ ToggleWinColorMode(mode := "Toggle") {
         }
         try DllCall("SetSysColors", "Int", 1, "Int*", 15, "Int*", DllCall("GetSysColor", "Int", 15))
     } catch as err {
-        MsgBox("An error occurred while changing color mode: " . err.Message)
+        ; MsgBox("An error occurred while changing color mode: " . err.Message)
+        LogError(err, "Return")
         return "Error"
     }
 }

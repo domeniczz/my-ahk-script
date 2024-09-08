@@ -6,6 +6,12 @@ Toggle Windows File Explorer
   Already Running: Toggle Windows File Explorer
 */
 
+#Requires AutoHotkey v2.0
+
+#SingleInstance Force
+
+#NoTrayIcon
+
 #WinActivateForce
 
 ProcessSetPriority "High"
@@ -22,7 +28,7 @@ SetDefaultMouseSpeed 0
 SetWinDelay 0
 SetControlDelay 0
 
-SendMode "InputThenPlay"
+SendMode "Input"
 
 if not A_IsAdmin {
     try
@@ -38,9 +44,17 @@ if not A_IsAdmin {
     ExitApp
 }
 
+#Include ..\common\utils\logutils.ahk
+
+;;;;;;;;;; GLOBAL VARIABLES ;;;;;;;;;;
+
+OnError LogError
+
+logfile := A_ScriptDir . "\log\other.log"
+
 explorer := A_WinDir . "\explorer.exe"
 
-explorerDim := { x: 920, y: 430, w: 2000, h: 1300
+explorerDim := { x: 920, y: 380, w: 2000, h: 1400
 }
 
 ToggleFileExplorer() {
@@ -51,16 +65,18 @@ ToggleFileExplorer() {
             WinMinimize
         } else {
             WinActivate "ahk_exe explorer.exe ahk_class CabinetWClass"
+            SetWindow("ahk_exe explorer.exe ahk_class CabinetWClass", explorerDim.x, explorerDim.y, explorerDim.w, explorerDim.h)
         }
     }
     ; If it is not running, run it
     else {
         Run explorer
-        SetAndActivateWindow("ahk_exe explorer.exe ahk_class CabinetWClass", explorerDim.x, explorerDim.y, explorerDim.w, explorerDim.h)
+        SetWindow("ahk_exe explorer.exe ahk_class CabinetWClass", explorerDim.x, explorerDim.y, explorerDim.w, explorerDim.h)
+        WinActivate "ahk_exe explorer.exe ahk_class CabinetWClass"
     }
 }
 
-SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4, sleepDuration := 0) {
+SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         ; Move and resize the window only if needed
         ; Use provided values or current values if not provided
@@ -78,10 +94,6 @@ SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDu
                 target
             )
         }
-        if (sleepDuration > 0) {
-            Sleep sleepDuration
-        }
-        WinActivate
     } else {
         MsgBox('ERROR Setting Window! The "' . target . '" window could not be found!')
     }

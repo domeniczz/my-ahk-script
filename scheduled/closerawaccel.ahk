@@ -18,14 +18,19 @@ SetControlDelay 0
 
 SendMode "InputThenPlay"
 
-#Include ..\common\constants.ahk
-#Include ..\common\utils.ahk
+OnError LogError
+
+logfile := A_ScriptDir . "\logs\scheduled.log"
+
+#Include ..\common\constants\applications.ahk
+#Include ..\common\utils\windowutils.ahk
+#Include ..\common\utils\logutils.ahk
 
 /*
 Toggle RawAccel
 */
 ToggleRawAccel() {
-    MaxAttempts := 300
+    MaxAttempts := 400
     loop MaxAttempts {
         ; If it is running, toggle the window
         if ProcessExist("rawaccel.exe") {
@@ -38,11 +43,12 @@ ToggleRawAccel() {
         sleep 200
     }
 
+    ; If it is not running, run it
     if MaxAttempts <= A_Index {
         Run rawaccel
         loop MaxAttempts {
             if ProcessExist("rawaccel.exe") {
-                CloseWindow("ahk_exe rawaccel.exe", , 200)
+                CloseWindow("ahk_exe rawaccel.exe", , 300)
                 break
             }
             sleep 200
