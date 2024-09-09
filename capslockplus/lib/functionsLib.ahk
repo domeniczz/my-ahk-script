@@ -1,11 +1,12 @@
-/*
-Change the case of selected text.
-Parameters:
-  Mode: The type of case conversion to perform.
-    "L": lowercase
-    "U": uppercase
-    "T": titlecase (first letter of each word capitalized)
-*/
+/**
+ * Changes the case of selected text.
+ * 
+ * @param {String} Mode - The type of case conversion to perform.
+ * 
+ * - "L": Convert to lowercase
+ * - "U": Convert to uppercase
+ * - "T": Convert to titlecase (capitalize the first letter of each word)
+ */
 SwitchTextCase(Mode) {
     ; Copy the text
     Send "^c"
@@ -35,9 +36,9 @@ SwitchTextCase(Mode) {
     A_Clipboard := ""
 }
 
-/*
-Toggle the Always On Top for the currently active window
-*/
+/**
+ * Toggle the Always On Top for the currently active window
+ */
 SetWindowAlwaysOnTop() {
     ; Uses AlwaysOnTop in Powertoys
     Send "{LCtrl Down}{LWin Down}t{LCtrl Up}{LWin Up}"
@@ -60,9 +61,9 @@ SetWindowAlwaysOnTop() {
     ; }
 }
 
-/*
-Display the information of the topmost visible window: title, ahk_id, ahk_class, ahk_exe
-*/
+/**
+ * Display the information of the topmost visible window: title, ahk_id, ahk_class, ahk_exe
+ */
 DisplayTopmostWindowInfo() {
     info := GetTopmostWindowInfo()
     if (info) {
@@ -76,9 +77,9 @@ DisplayTopmostWindowInfo() {
     }
 }
 
-/*
-Activate the topmost visible window
-*/
+/**
+ * Activate the topmost visible window
+ */
 ActivateTopmostWindow() {
     info := GetTopmostWindowInfo()
     if (info) {
@@ -86,9 +87,9 @@ ActivateTopmostWindow() {
     }
 }
 
-/*
-Eject all removable drives
-*/
+/**
+ * Eject all removable drives
+ */
 EjectAllRemovableDrives() {
     loop parse DriveGetList("REMOVABLE") {
         DriveEject(A_LoopField)

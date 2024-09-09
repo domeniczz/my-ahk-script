@@ -1,9 +1,9 @@
 sandboxieContainers := GetSandboxieContainerList()
 
-/*
-Get all the sandboxie containers for the current user
-Returns a map of container names and their paths
-*/
+/**
+ * Get all the sandboxie containers for the current user
+ * Returns a map of container names and their paths
+ */
 GetSandboxieContainerList() {
     baseDir := "C:\Sandbox\" . A_UserName . "\"
     containers := Map()
@@ -15,9 +15,9 @@ GetSandboxieContainerList() {
     return containers
 }
 
-/*
-Update the container list
-*/
+/**
+ * Update the container list
+ */
 updateContainerList() {
     sandboxieContainers := GetSandboxieContainerList()
 }

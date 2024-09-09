@@ -1,9 +1,9 @@
-/*
-Log error to file
-Parameters:
-  err: The error object
-  mode: The mode of the error (default: "Error")
-*/
+/**
+ * Log error to file.
+ * 
+ * @param {String} err - The error object
+ * @param {String} mode - The mode of the error (default: "Error")
+ */
 LogError(err, mode) {
     timestamp := FormatTime(, "yyyy-MM-dd HH:mm:ss")
     FileAppend Format('{1} - Error in "{2}" on line {3}: {4}`nCallStack: `n{5}`n',

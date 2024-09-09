@@ -26,9 +26,9 @@ logfile := A_ScriptDir . "\logs\scheduled.log"
 #Include ..\common\utils\windowutils.ahk
 #Include ..\common\utils\logutils.ahk
 
-/*
-Run and then close RawAccel
-*/
+/**
+ * Run and then close RawAccel
+ */
 ApplyRawAccel() {
     Run rawaccel
     MaxAttempts := 300

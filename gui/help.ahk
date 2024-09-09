@@ -2,9 +2,9 @@
 
 helpWindow := DrawHelpGUI()
 
-/*
-Toggle the help window
-*/
+/**
+ * Toggle the help window
+ */
 ToggleHelpWindow() {
     window := helpWindow.gui
     lv := helpWindow.lv
@@ -28,9 +28,9 @@ ToggleHelpWindow() {
     }
 }
 
-/*
-Draw the GUI of help window (displays all the keybindings)
-*/
+/**
+ * Draw the GUI of help window (displays all the keybindings)
+ */
 DrawHelpGUI() {
     helpGui := Gui()
     helpGui.Opt("+AlwaysOnTop -Caption +E0x20")  ; E0x20 means click-through
@@ -72,9 +72,12 @@ DrawHelpGUI() {
     }
 }
 
-/*
-Set the background colors of the help window based on the Windows color mode
-*/
+/**
+ * Set the background colors of the help window based on the Windows color mode
+ * 
+ * @param helpGui - help window GUI object
+ * @param lv - ListView object
+ */
 SetHelpWindowColors(helpGui, lv) {
     colorMode := GetWindowsColorMode()
     if (colorMode == "Dark") {

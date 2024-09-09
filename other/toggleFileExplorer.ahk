@@ -1,11 +1,5 @@
 ;;;;;;;;;; ! PLEASE RUN THIS SCRIPT AS ADMINISTRATOR ! ;;;;;;;;;;
 
-/*
-Toggle Windows File Explorer
-  Not running: Open Windows File Explorer and set windows position and size
-  Already Running: Toggle Windows File Explorer
-*/
-
 #Requires AutoHotkey v2.0
 
 #SingleInstance Force
@@ -57,6 +51,11 @@ explorer := A_WinDir . "\explorer.exe"
 explorerDim := { x: 920, y: 380, w: 2000, h: 1400
 }
 
+/**
+ * Toggle Windows File Explorer
+ * - Not running: Open Windows File Explorer and set windows position and size
+ * - Already Running: Toggle Windows File Explorer and set windows position and size
+ */
 ToggleFileExplorer() {
     ; If it is running, toggle the window
     if WinExist("ahk_exe explorer.exe ahk_class CabinetWClass") {
@@ -76,6 +75,19 @@ ToggleFileExplorer() {
     }
 }
 
+/**
+ * Set app window position and size.
+ * 
+ * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
+ * @param {Number} x - The x-coordinate of the window (optional)
+ * @param {Number} y - The y-coordinate of the window (optional)
+ * @param {Number} width - The width of the window (optional)
+ * @param {Number} height - The height of the window (optional)
+ * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} sleepDuration - Total milliseconds to sleep before setting the window position and size (default: 0)
+ * 
+ * Displays an error message box if the window is not found after all attempts.
+ */
 SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         ; Move and resize the window only if needed

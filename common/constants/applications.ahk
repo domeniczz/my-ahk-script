@@ -3,7 +3,7 @@ browser := A_ProgramFiles . "\Mozilla Firefox\firefox.exe"
 
 ; URL for the open-webui website
 openWebuiUrl := "http://localhost:3333"
-dockerContainerName := "open-webui"
+openWebuiDockerContainerName := "open-webui"
 
 ; Wechat login button X Y coordinates
 wechatLoginBtnX := 220

@@ -12,7 +12,7 @@ FileAppend "", logfile
 
 ; Speed of infinite scrolling (* times faster than normal scroll)
 ; It will increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
-baseScrollSpeed := 1.2
+baseScrollSpeed := 1.4
 
 ; List (Map) of excluded programs
 excludedProgramList := Map(

@@ -2,17 +2,17 @@
 
 myMenu := DrawMenu()
 
-/*
-Show the menu
-*/
+/**
+ * Show the menu
+ */
 OpenMenu() {
     ; RefreshItems()
     myMenu.Show()
 }
 
-/*
-Draw the menu GUI
-*/
+/**
+ * Draw the menu GUI
+ */
 DrawMenu() {
     Main := Menu()
     Main.Name := "Main"
@@ -115,9 +115,13 @@ DrawMenu() {
     return Main
 }
 
-/*
-Handle menu item selection
-*/
+/**
+ * Handler for menu items
+ * 
+ * @param itemName - The name of the selected item
+ * @param itemPos - The position of the selected item (index starts at 1)
+ * @param menuObj - The menu object
+ */
 MenuHandler(itemName, itemPos, menuObj) {
     switch menuObj.Name {
         case "Main": MainHandler(itemName, itemPos, menuObj)

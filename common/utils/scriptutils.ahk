@@ -1,7 +1,8 @@
-/*
-Check if the current program is in the exclude list
-Returns: true if the program is excluded, false otherwise
-*/
+/**
+ * Check if the current program is in the exclude list.
+ * 
+ * @returns {Boolean} true if the program is excluded, false otherwise
+ */
 IsExcludedProgram() {
     program := ""
     try {
@@ -16,11 +17,11 @@ IsExcludedProgram() {
     }
 }
 
-/*
-Run specified script with administrator privileges
-Parameters:
-  ScriptPath: The path of the script to run
-*/
+/**
+ * Run specified script with administrator privileges.
+ * 
+ * @param {String} ScriptPath - The path of the script to run
+ */
 RunScriptAsAdmin(ScriptPath) {
     try {
         Run '*RunAs "' A_AhkPath '" "' ScriptPath '"'
@@ -29,9 +30,9 @@ RunScriptAsAdmin(ScriptPath) {
     }
 }
 
-/*
-Suspend/Resume the script
-*/
+/**
+ * Suspend/Resume the script.
+ */
 SuspendScript() {
     ; Toggle "Suspend Hotkeys" On/Off
     Suspend -1

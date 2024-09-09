@@ -1,11 +1,5 @@
 ;;;;;;;;;; ! PLEASE RUN THIS SCRIPT AS ADMINISTRATOR ! ;;;;;;;;;;
 
-/*
-Toggle the gaming network environment
-  Start gaming: Turn off clash, turn on leigod
-  Stop gaming: Turn on clash, turn off leigod
-*/
-
 #Requires AutoHotkey v2.0
 
 #SingleInstance Force
@@ -58,11 +52,11 @@ leishenDim := { x: 1116, y: 576, w: 1608, h: 1008
 
 ;;;;;;;;;; USER DEFINED FUNCTIONS ;;;;;;;;;;
 
-/*
-Prepare the network for gaming
-  Start gaming: Turn off clash, turn on leigod
-  Stop gaming: Turn on clash, turn off leigod
-*/
+/**
+ * Toggle the gaming network environment
+ * - Start gaming: Turn off clash, turn on leigod
+ * - Stop gaming: Turn on clash, turn off leigod
+ */
 ToggleGamingNetworkEnv() {
     ; If LeiGod is running, then close it, and turn on Clash
     if ProcessExist("leigod.exe") {

@@ -6,9 +6,9 @@
 
 #SingleInstance Force
 
-; #NoTrayIcon
-
 #WinActivateForce
+
+; #NoTrayIcon
 
 ProcessSetPriority "High"
 
@@ -26,10 +26,14 @@ SetControlDelay 0
 
 SendMode "Input"
 
+; The keyboard hook will be used to implement all keyboard hotkeys
+; If this directive is unspecified in the script, it will behave as though set to False, meaning the windows API function RegisterHotkey() is used to implement a keyboard hotkey whenever possible.
+#UseHook true
+
 ;; Use `#Include` without any path:
-;;   AHK will first look for the ahk script in the same directory as the script that contains the #Include directive.
-;;   If not found there, it will search in the user's standard library folder (usually Documents\AutoHotkey\Lib).
-;;   If still not found, it will look in the standard library folder of AHK's installation directory.
+;; - AHK will first look for the ahk script in the same directory as the script that contains the #Include directive.
+;; - If still not found, it will look in the standard library folder of AHK's installation directory.
+;; - If not found there, it will search in the user's standard library folder (usually Documents\AutoHotkey\Lib).
 #Include common\constants\applications.ahk
 #Include common\constants\settings.ahk
 #Include common\constants\autodarkmode.ahk
@@ -39,6 +43,7 @@ SendMode "Input"
 #Include common\utils\pathutils.ahk
 #Include common\utils\scriptutils.ahk
 #Include common\utils\systemutils.ahk
+#Include common\utils\commandutils.ahk
 #Include common\utils\textutils.ahk
 #Include common\utils\logutils.ahk
 #Include function\toggle.ahk
@@ -53,13 +58,12 @@ SendMode "Input"
 ;;;;;;;;;; AUTOMATIC TASKS ;;;;;;;;;;
 
 ; Setting a negative priority makes this timer run only when the script is idle
+; -1 represents a priority level that is lower than the default level of 0
 SetTimer AutoDarkMode, autoDarkModeCheckInterval, -1
 
 OnError LogError
 
 ;;;;;;;;;; HOTKEYS BINDINGS ;;;;;;;;;;
-
-#UseHook
 
 #SuspendExempt
 

@@ -1,6 +1,6 @@
-/*
-Get the color mode of Windows (Light or Dark)
-*/
+/**
+ * Get the color mode of Windows (Light or Dark)
+ */
 GetWindowsColorMode() {
     regKey := "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
     regValue := "AppsUseLightTheme"
@@ -8,11 +8,11 @@ GetWindowsColorMode() {
     return (colorMode == 0) ? "Dark" : "Light"
 }
 
-/*
-Get the accent color of Windows
-Parameters:
-  offset: The offset to get different colors (default: 1)
-*/
+/**
+ * Get the accent color of Windows.
+ * 
+ * @param {Integer} offset - The offset to get different colors (default: 1)
+ */
 GetWindowsAccentColor(offset := 1) {
     ; Read the AccentPalette from the Registry
     accentPalette := RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent", "AccentPalette")

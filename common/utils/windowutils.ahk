@@ -2,14 +2,15 @@
 
 ;;;;;;;;;; UTILITY FUNCTIONS ;;;;;;;;;;
 
-/*
-Activate (focus) app window.
-Parameters:
-  target: The window identifier (e.g., "ahk_exe Spotify.exe")
-  waitDuration: Total seconds to wait before the action (default: 4)
-  sleepDuration: Total miliseconds to sleep before activating the window (default: 0)
-Displays an error message box if the window is not found after all attempts.
-*/
+/**
+ * Activate (focus) app window.
+ * 
+ * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
+ * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} sleepDuration - Total miliseconds to sleep before activating the window (default: 0)
+ * 
+ * Displays an error message box if the window is not found after all attempts.
+ */
 ActivateWindow(target, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         if (sleepDuration > 0) {
@@ -21,14 +22,15 @@ ActivateWindow(target, waitDuration := 4, sleepDuration := 0) {
     }
 }
 
-/*
-Close app window.
-Parameters:
-  target: The window identifier (e.g., "ahk_exe Spotify.exe")
-  waitDuration: Total seconds to wait before the action (default: 4)
-  sleepDuration: Total miliseconds to before closing the window (default: 0)
-Displays an error message box if the window is not found after all attempts.
-*/
+/**
+ * Close app window.
+ * 
+ * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
+ * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} sleepDuration - Total miliseconds to before closing the window (default: 0)
+ * 
+ * Displays an error message box if the window is not found after all attempts.
+ */
 CloseWindow(target, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         if (sleepDuration > 0) {
@@ -40,14 +42,15 @@ CloseWindow(target, waitDuration := 4, sleepDuration := 0) {
     }
 }
 
-/*
-Activate (focus) app window and maximize it.
-Parameters:
-  target: The window identifier (e.g., "ahk_exe Spotify.exe")
-  waitDuration: Total seconds to wait before the action (default: 4)
-  sleepDuration: Total miliseconds to sleep before activating the window (default: 0)
-Displays an error message box if the window is not found after all attempts.
-*/
+/**
+ * Activate (focus) app window and maximize it.
+ * 
+ * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
+ * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} sleepDuration - Total miliseconds to sleep before activating the window (default: 0)
+ * 
+ * Displays an error message box if the window is not found after all attempts.
+ */
 ActivateAndMaximizeWindow(target, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         WinActivate
@@ -60,17 +63,18 @@ ActivateAndMaximizeWindow(target, waitDuration := 4, sleepDuration := 0) {
     }
 }
 
-/*
-Activate (focus) app window and click.
-Parameters:
-  target: The window identifier (e.g., "ahk_exe Spotify.exe")
-  waitDuration: Total seconds to wait (default: 4)
-  ClickType: The type of click (default: left click)
-  ClickX: The X coordinate of the click (default: 0)
-  ClickY: The Y coordinate of the click (default: 0)
-  ClickInfo: The tooltip message to display after the click (default: "")
-Displays an error message box if the window is not found after all attempts.
-*/
+/**
+ * Activate (focus) app window and click.
+ * 
+ * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
+ * @param {Integer} waitDuration - Total seconds to wait (default: 4)
+ * @param {String} ClickType - The type of click (default: left click)
+ * @param {Integer} ClickX - The X coordinate of the click (default: 0)
+ * @param {Integer} ClickY - The Y coordinate of the click (default: 0)
+ * @param {String} ClickInfo - The tooltip message to display after the click (default: "")
+ * 
+ * Displays an error message box if the window is not found after all attempts.
+ */
 ActivateWindowAndClick(target, waitDuration := 4, ClickType := "left", ClickX := 0, ClickY := 0, ClickInfo := "") {
     if WinWait(target, , waitDuration) {
         WinActivate
@@ -83,18 +87,19 @@ ActivateWindowAndClick(target, waitDuration := 4, ClickType := "left", ClickX :=
     }
 }
 
-/*
-Set app window position and size.
-Parameters:
-  target: The window identifier (e.g., "ahk_exe Spotify.exe")
-  x: The x-coordinate of the window (optional)
-  y: The y-coordinate of the window (optional)
-  width: The width of the window (optional)
-  height: The height of the window (optional)
-  waitDuration: Total seconds to wait before the action (default: 4)
-  sleepDuration: Total milliseconds to sleep before setting the window position and size (default: 0)
-Displays an error message box if the window is not found after all attempts.
-*/
+/**
+ * Set app window position and size.
+ * 
+ * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
+ * @param {Number} x - The x-coordinate of the window (optional)
+ * @param {Number} y - The y-coordinate of the window (optional)
+ * @param {Number} width - The width of the window (optional)
+ * @param {Number} height - The height of the window (optional)
+ * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} sleepDuration - Total milliseconds to sleep before setting the window position and size (default: 0)
+ * 
+ * Displays an error message box if the window is not found after all attempts.
+ */
 SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         Sleep sleepDuration
@@ -120,18 +125,19 @@ SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4
     }
 }
 
-/*
-Set app window position and size and then activate (focus) app window.
-Parameters:
-  target: The window identifier (e.g., "ahk_exe Spotify.exe")
-  x: The x-coordinate of the window (optional)
-  y: The y-coordinate of the window (optional)
-  width: The width of the window (optional)
-  height: The height of the window (optional)
-  waitDuration: Total seconds to wait before the action (default: 4)
-  sleepDuration: Total milliseconds to sleep before setting the window position and size (default: 0)
-Displays an error message box if the window is not found after all attempts.
-*/
+/**
+ * Set app window position and size and then activate (focus) app window.
+ * 
+ * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
+ * @param {Number} x - The x-coordinate of the window (optional)
+ * @param {Number} y - The y-coordinate of the window (optional)
+ * @param {Number} width - The width of the window (optional)
+ * @param {Number} height - The height of the window (optional)
+ * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} sleepDuration - Total milliseconds to sleep before setting the window position and size (default: 0)
+ * 
+ * Displays an error message box if the window is not found after all attempts.
+ */
 SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4, sleepDuration := 0) {
     if WinWait(target, , waitDuration) {
         ; Move and resize the window only if needed
@@ -159,17 +165,19 @@ SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDu
     }
 }
 
-/*
-Retrieves information of the topmost visible window: title, ahk_id, ahk_class, ahk_exe
-Returns false if no suitable window is found.
-Example successful return value:
-{
-    title: "Mozilla Firefox",
-    id: "ahk_id 394026",
-    class: "ahk_class MozillaWindowClass",
-    exe: "ahk_exe firefox.exe"
-}
-*/
+/**
+ * Retrieves information of the topmost visible window: title, ahk_id, ahk_class, ahk_exe
+ * Returns false if no suitable window is found.
+ * 
+ * @returns {Object | Boolean} - The information of the topmost visible window or false if no suitable window is found
+ * @example
+ * {
+ *     title: "Mozilla Firefox",
+ *     id: "ahk_id 394026",
+ *     class: "ahk_class MozillaWindowClass",
+ *     exe: "ahk_exe firefox.exe"
+ * }
+ */
 GetTopmostWindowInfo() {
     try {
         windowList := WinGetList()
@@ -191,7 +199,6 @@ GetTopmostWindowInfo() {
             if (winExe = "AutoHotkey64.exe")
                 continue
 
-            ; Get window info
             winTitle := WinGetTitle(window)
             winId := WinGetID(window)
 

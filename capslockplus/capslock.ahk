@@ -25,9 +25,9 @@ CapsLockGui.Hide()
 CapsLockState := 0
 
 ; ;; Activation approach 1: Actiavte CapsLock on click and deactivate on second click
-; /*
-; Checks the state of the CapsLock key and updates the GUI accordingly
-; */
+; /**
+;  * Checks the state of the CapsLock key and updates the GUI accordingly.
+;  */
 ; CheckCapsLockState() {
 ;     if CapsLockState
 ;         CapsLockGui.Show("NoActivate")
@@ -368,21 +368,25 @@ CapsLockState := 0
 
 #HotIf
 
-/*
-Executes function dynamically based on the provided function name (optional: and parameters)
-Handle function calls with or without parameters, and supports up to 3 explicit parameters or an arbitrary number of parameters using variadic syntax.
-Parameters:
-  funcName: A string containing the name of the function to be called, optionally with parameters
-            Examples: "MyFunction", "MyFunction()", "MyFunction(param1)", "MyFunction(param1, param2)"
-Behavior:
-  1. If funcName doesn't end with ')', it calls the function without parameters.
-  2. If funcName includes parameters, it parses them and calls the function accordingly:
-     - No parameters: Calls the function as-is
-     - 1 to 3 parameters: Calls the function with the specified number of parameters
-     - More than 3 parameters: Uses variadic syntax to pass all parameters
-Note: This function assumes that the target functions exist in the global scope.
-      Ensure all referenced functions are defined before calling RunHotkeyFunc.
-*/
+/**
+ * Executes function dynamically based on the provided function name and optional parameters.
+ * 
+ * @param {string} funcName - A string containing the name of the function to be called, optionally with parameters.
+ *                            Examples: "MyFunction", "MyFunction()", "MyFunction(param1)", "MyFunction(param1, param2)"
+ * 
+ * Handles function calls with or without parameters, and supports up to 3 explicit parameters 
+ * or an arbitrary number of parameters using variadic syntax.
+ * 
+ * Behavior:
+ *   1. If funcName doesn't end with ')', it calls the function without parameters.
+ *   2. If funcName includes parameters, it parses them and calls the function accordingly:
+ *      - No parameters: Calls the function as-is
+ *      - 1 to 3 parameters: Calls the function with the specified number of parameters
+ *      - More than 3 parameters: Uses variadic syntax to pass all parameters
+ * 
+ * Note: This function assumes that the target functions exist in the global scope.
+ *       Ensure all referenced functions are defined before calling RunHotkeyFunction.
+ */
 RunHotkeyFunction(funcName) {
     if !RegExMatch(Trim(funcName), "\)$") {
         %funcName%()

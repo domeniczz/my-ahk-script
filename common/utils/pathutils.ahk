@@ -1,19 +1,20 @@
-/*
-Open a folder in Windows Explorer
-  path: The path of the folder to open (default: A_MyDocuments)
-  explorer: The explorer to program to open the folder (default: "explorer.exe ")
-*/
+/**
+ * Opens a folder in Windows Explorer.
+ * 
+ * @param {String} path - The path of the folder to open
+ * @param {String} explorer - The explorer program to open the folder
+ */
 OpenFolder(path := A_MyDocuments, explorer := "explorer.exe ") {
     Run(explorer . path)
 }
 
-/*
-Get the path of the specified executable file.
-Returns the path of file if found, otherwise returns an empty string
-Parameters:
-  baseDir: The base directory to search in, support wildcard
-  exeName: The name of the executable file to search for
-*/
+/**
+ * Gets the path of the specified executable file.
+ * 
+ * @param {String} baseDir - The base directory to search in, supports wildcard. Default is "".
+ * @param {String} exeName - The name of the executable file to search for. Default is "".
+ * @returns {String} The path of the file if found, otherwise an empty string.
+ */
 GetExePath(baseDir := "", exeName := "") {
     ; Loop through all subdirectories
     loop files, baseDir, "D" {
@@ -24,19 +25,21 @@ GetExePath(baseDir := "", exeName := "") {
     return "" ; Return empty string if not found
 }
 
-/*
-Split a file path into its components and return the specified component.
-Returns the requested component of the file path, or the original path string if the component is not recognized.
-For example, GetExeName("C:\Windows\explorer.exe") returns "explorer.exe"
-Parameters:
-  path: The full file path to split
-  component: The component of the path to return
-    "name": Full filename with extension (default)
-    "dir": Directory path
-    "ext": File extension (without the dot)
-    "nameNoExt": Filename without extension
-    "drive": Drive letter or name
-*/
+/**
+ * Splits a file path into its components and returns the specified component.
+ * 
+ * @param {String} path - The full file path to split
+ * @param {String} component - The component of the path to return
+ * 
+ * - "name": Full filename with extension (default)
+ * - "dir": Directory path
+ * - "ext": File extension (without the dot)
+ * - "nameNoExt": Filename without extension
+ * - "drive": Drive letter or name
+ * 
+ * @returns {String} The requested component of the file path, or the original path string if the component is not recognized
+ * @example GetPathComponent("C:\Windows\explorer.exe", "name") returns "explorer.exe"
+ */
 GetPathComponent(path, component := "name") {
     SplitPath(path, &name, &dir, &ext, &nameNoExt, &drive)
 
