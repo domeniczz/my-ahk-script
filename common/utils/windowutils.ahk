@@ -158,3 +158,61 @@ SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDu
         MsgBox('ERROR Setting Window! The "' . target . '" window could not be found!')
     }
 }
+
+/*
+Retrieves information of the topmost visible window: title, ahk_id, ahk_class, ahk_exe
+Returns false if no suitable window is found.
+Example successful return value:
+{
+    title: "Mozilla Firefox",
+    id: "ahk_id 394026",
+    class: "ahk_class MozillaWindowClass",
+    exe: "ahk_exe firefox.exe"
+}
+*/
+GetTopmostWindowInfo() {
+    try {
+        windowList := WinGetList()
+
+        ; Iterate through all windows
+        for window in windowList {
+            ; Skip if window doesn't exist
+            if !WinExist(window)
+                continue
+
+            winExe := WinGetProcessName(window)
+            winClass := WinGetClass(window)
+
+            ; Skip explorer.exe windows except File Explorer
+            if (winExe = "explorer.exe" && winClass != "CabinetWClass")
+                continue
+            if (winExe = "Lyricify for Spotify.exe")
+                continue
+            if (winExe = "AutoHotkey64.exe")
+                continue
+
+            ; Get window info
+            winTitle := WinGetTitle(window)
+            winId := WinGetID(window)
+
+            ; Check if the window is minimized
+            minMax := WinGetMinMax(window)
+            if (minMax == -1)  ; -1 means minimized
+                continue
+
+            ; Return the information
+            return {
+                title: winTitle,
+                id: Format("ahk_id {}", winId),
+                class: Format("ahk_class {}", winClass),
+                exe: Format("ahk_exe {}", winExe)
+            }
+        }
+
+        ; No suitable window found
+        return false
+    } catch as err {
+        MsgBox("ERROR in GetTopmostWindowInfo: " . err.Message)
+        return false
+    }
+}
