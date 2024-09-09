@@ -1,4 +1,4 @@
-;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -48,6 +48,7 @@ SendMode "Input"
 #Include function\folder.ahk
 #Include gui\help.ahk
 #Include gui\menu.ahk
+#Include capslockplus\capslock.ahk
 
 ;;;;;;;;;; AUTOMATIC TASKS ;;;;;;;;;;
 
