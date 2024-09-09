@@ -29,4 +29,4 @@ logfile := A_ScriptDir . "\logs\scheduled.log"
 ;; This script is ran by Windows Task Scheduler every time the system logon
 ;; Trigger: At logon of any user
 
-RunWait(A_ScriptDir . "\closerawaccel.ahk", , "Hide")
+RunWait(A_ScriptDir . "\applyrawaccel.ahk", , "Hide")
