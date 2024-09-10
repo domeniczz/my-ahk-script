@@ -1,7 +1,7 @@
 /**
  * Check if the current program is in the exclude list.
  * 
- * @returns {Boolean} true if the program is excluded, false otherwise
+ * @returns {Boolean} - `true` if the program is excluded, `false` otherwise
  */
 IsExcludedProgram() {
     program := ""

@@ -33,7 +33,7 @@ ToggleHelpWindow() {
  */
 DrawHelpGUI() {
     helpGui := Gui()
-    helpGui.Opt("+AlwaysOnTop -Caption +E0x20")  ; E0x20 means click-through
+    helpGui.Opt("-Caption +AlwaysOnTop +ToolWindow +E0x20")  ; E0x20 means click-through
 
     ; Set font style size (pt) and bold
     helpGui.SetFont("s16 bold")

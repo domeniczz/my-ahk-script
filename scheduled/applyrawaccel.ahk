@@ -34,7 +34,7 @@ ApplyRawAccel() {
     MaxAttempts := 300
     loop MaxAttempts {
         if ProcessExist("rawaccel.exe") {
-            CloseWindow("ahk_exe rawaccel.exe", , 600)
+            CloseWindow("ahk_exe rawaccel.exe", , 1000)
             break
         }
         sleep 200

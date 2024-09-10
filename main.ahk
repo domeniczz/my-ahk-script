@@ -1,4 +1,4 @@
-﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -40,7 +40,7 @@ SendMode "Input"
 #Include common\constants\keybindings.ahk
 #Include common\constants\scripts.ahk
 #Include common\utils\windowutils.ahk
-#Include common\utils\pathutils.ahk
+#Include common\utils\fileutils.ahk
 #Include common\utils\scriptutils.ahk
 #Include common\utils\systemutils.ahk
 #Include common\utils\commandutils.ahk

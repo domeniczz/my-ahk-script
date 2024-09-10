@@ -7,8 +7,8 @@ SendText(text) {
     A_Clipboard := text
     Send "^v"
 
-    ; Wait a bit to ensure the paste operation is complete
-    Sleep 50
+    ; Sleep a while in case the paste operation hasn't completed before the clipboard is cleared
+    Sleep 100
 
     ; Clear the clipboard item (the sent text)
     A_Clipboard := ""

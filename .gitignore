@@ -1,10 +1,15 @@
 # ignore everything
 *
 
-# except .ahk files
+# except the following files
 !*.ahk
 
-# except .gitignore
+!*.md
+
+!*.png
+
+!*.drawio
+
 !.gitignore
 
 # except .log files in the "log" folder

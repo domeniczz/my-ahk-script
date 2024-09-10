@@ -65,8 +65,8 @@ ToggleWinColorMode(mode := "Toggle") {
 
         ; Step 3: Update sunrise and sunset times
         res := GetSunriseSunsetTimes(currentLatitude, currentLongitude, currentTimezone)
-        sunrise := res[1] + 10
-        sunset := res[2] + 10
+        sunrise := res[1]
+        sunset := res[2]
     } catch as err {
         ; MsgBox("An error occurred while changing color mode: " . err.Message)
         LogError(err, "Return")
@@ -79,7 +79,7 @@ ToggleWinColorMode(mode := "Toggle") {
  * @param {Number} latitude - Latitude of the location (-90 to 90)
  * @param {Number} longitude - Longitude of the location (-180 to 180)
  * @param {Number} timezone - Timezone offset from UTC (-12 to 14)
- * @returns {Array} An array containing [sunrise, sunset] times in "HHmm" format
+ * @returns {Array} - An array containing [sunrise, sunset] times in "HHmm" format
  */
 GetSunriseSunsetTimes(latitude, longitude, timezone) {
     ; Constants

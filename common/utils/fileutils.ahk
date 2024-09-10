@@ -13,7 +13,7 @@ OpenFolder(path := A_MyDocuments, explorer := "explorer.exe ") {
  * 
  * @param {String} baseDir - The base directory to search in, supports wildcard. Default is "".
  * @param {String} exeName - The name of the executable file to search for. Default is "".
- * @returns {String} The path of the file if found, otherwise an empty string.
+ * @returns {String} - The path of the file if found, otherwise an empty string.
  */
 GetExePath(baseDir := "", exeName := "") {
     ; Loop through all subdirectories
@@ -37,7 +37,7 @@ GetExePath(baseDir := "", exeName := "") {
  * - "nameNoExt": Filename without extension
  * - "drive": Drive letter or name
  * 
- * @returns {String} The requested component of the file path, or the original path string if the component is not recognized
+ * @returns {String} - The requested component of the file path, or the original path string if the component is not recognized
  * @example GetPathComponent("C:\Windows\explorer.exe", "name") returns "explorer.exe"
  */
 GetPathComponent(path, component := "name") {
