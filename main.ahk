@@ -1,4 +1,4 @@
-;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -53,6 +53,7 @@ SendMode "Input"
 #Include function\folder.ahk
 #Include gui\help.ahk
 #Include gui\menu.ahk
+#Include gui\input.ahk
 #Include capslockplus\capslock.ahk
 
 ;;;;;;;;;; AUTOMATIC TASKS ;;;;;;;;;;
@@ -75,7 +76,7 @@ OnError LogError
 
 #SuspendExempt False
 
-#HotIf !IsExcludedProgram()
+#HotIf !CapsLockState and !IsExcludedProgram()
 
 ; `LAlt + 1` to toggle Notepad++
 <!1:: ToggleNotepadPP()
@@ -142,11 +143,6 @@ OnError LogError
 ; `RAlt + K` to toggle Gaming Network Environment
 >!k up:: RunScriptAsAdmin(toggleGameEnv)
 
-; `RAlt + \` to send text
-#HotIf WinActive("ahk_exe firefox.exe") or WinActive("ahk_exe chrome.exe") or WinActive("ahk_exe msedge.exe") or WinActive("ahk_exe brave.exe")
->!\:: SendTextLLMGeneralPrompt()
-#HotIf
-
 ; `LAlt + `` to close currently active window
 <!`:: CloseCurrentWindow()
 
@@ -166,6 +162,11 @@ OnError LogError
 
 ; `LAlt + /` to toggle the help window
 <!/:: ToggleHelpWindow()
+
+; `RAlt + \` to send text
+#HotIf !CapsLockState and WinActive("ahk_exe firefox.exe") and !IsExcludedProgram()
+
+>!\:: SendTextLLMGeneralPrompt()
 
 #HotIf
 

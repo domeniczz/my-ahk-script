@@ -15,12 +15,14 @@
         }
 
         Capslock_d() {
+            action_deleteCurrentLine()
         }
 
         Capslock_e() {
         }
 
         Capslock_f() {
+            action_searchInCurrentDocument()
         }
 
         Capslock_g() {
@@ -50,6 +52,7 @@
         }
 
         Capslock_n() {
+            action_replicateCurrentLineDown()
         }
 
         Capslock_o() {
@@ -63,6 +66,7 @@
         }
 
         Capslock_r() {
+            action_commentTheSelectedCode()
         }
 
         Capslock_s() {
@@ -81,6 +85,7 @@
         }
 
         Capslock_w() {
+            action_closeCurrentTab()
         }
 
         Capslock_x() {
@@ -88,6 +93,7 @@
         }
 
         Capslock_y() {
+            action_redo()
         }
 
         Capslock_z() {
@@ -157,6 +163,7 @@
         }
 
         Capslock_F10() {
+            action_toggleCapsLock()
         }
 
         Capslock_F11() {
@@ -213,6 +220,10 @@
         }
 
         Capslock_Tab() {
+        }
+
+        Capslock_Esc() {
+            action_closeApplication()
         }
     }
     ; Mouse buttons
@@ -450,6 +461,9 @@
 
         Capslock_Shift_Tab() {
         }
+
+        Capslock_Shift_Esc() {
+        }
     }
     ; Mouse buttons
     {
@@ -482,6 +496,7 @@
         }
 
         Capslock_Alt_c() {
+            action_separateCopy()
         }
 
         Capslock_Alt_d() {
@@ -519,6 +534,7 @@
         }
 
         Capslock_Alt_n() {
+            action_replicateCurrentLineDownSpecificTimes()
         }
 
         Capslock_Alt_o() {
@@ -528,6 +544,7 @@
         }
 
         Capslock_Alt_q() {
+            action_createOneVirtualDesktop()
         }
 
         Capslock_Alt_r() {
@@ -543,12 +560,15 @@
         }
 
         Capslock_Alt_v() {
+            action_separatePaste()
         }
 
         Capslock_Alt_w() {
+            action_deleteCurrentVirtualDesktop()
         }
 
         Capslock_Alt_x() {
+            action_separateCut()
         }
 
         Capslock_Alt_y() {
@@ -563,9 +583,11 @@
         }
 
         Capslock_Alt_1() {
+            action_switchToLeftVirtualDesktop()
         }
 
         Capslock_Alt_2() {
+            action_switchToRightVirtualDesktop()
         }
 
         Capslock_Alt_3() {
@@ -673,15 +695,18 @@
 
         Capslock_Alt_Tab() {
         }
+
+        Capslock_Alt_Esc() {
+        }
     }
     ; Mouse buttons
     {
         Capslock_Alt_WheelUp() {
-            action_browserForward()
+            action_browserBackward()
         }
 
         Capslock_Alt_WheelDown() {
-            action_browserBackward()
+            action_browserForward()
         }
 
         Capslock_Alt_LButton() {

@@ -24,6 +24,9 @@ CapsLockGui.Hide()
 ; Store the CapsLock activation state (0 = Off, 1 = On)
 CapsLockState := 0
 
+; Clipboard separate from the system clipboard
+seperateClipboard := ""
+
 ; ;; Activation approach 1: Actiavte CapsLock on click and deactivate on second click
 ; /**
 ;  * Checks the state of the CapsLock key and updates the GUI accordingly.
@@ -146,6 +149,7 @@ CapsLockState := 0
             Enter:: RunHotkeyFunction("Capslock_Enter")
             Backspace:: RunHotkeyFunction("Capslock_Backspace")
             Tab:: RunHotkeyFunction("Capslock_Tab")
+            Escape:: RunHotkeyFunction("Capslock_Esc")
         } catch as err {
             MsgBox "ERROR while running function Capslock_" . A_ThisHotkey
             ; LogError(err, "Return")
@@ -246,6 +250,7 @@ CapsLockState := 0
             +Enter:: RunHotkeyFunction("Capslock_Shift_Enter")
             +Backspace:: RunHotkeyFunction("Capslock_Shift_Backspace")
             +Tab:: RunHotkeyFunction("Capslock_Shift_Tab")
+            +Escape:: RunHotkeyFunction("Capslock_Shift_Esc")
         } catch as err {
             MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2)
             ; LogError(err, "Return")
@@ -346,6 +351,7 @@ CapsLockState := 0
             !Enter:: RunHotkeyFunction("Capslock_Alt_Enter")
             !Backspace:: RunHotkeyFunction("Capslock_Alt_Backspace")
             !Tab:: RunHotkeyFunction("Capslock_Alt_Tab")
+            !Escape:: RunHotkeyFunction("Capslock_Alt_Esc")
         } catch as err {
             MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2)
             ; LogError(err, "Return")

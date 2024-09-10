@@ -139,6 +139,34 @@ action_deleteOneWordRight() {
 }
 
 /**
+ * Deletes the current line.
+ */
+action_deleteCurrentLine() {
+    Send "{Home}{Shift Down}{End}{Shift Up}{BackSpace}"
+}
+
+/**
+ * Comment out the selected code.
+ */
+action_commentTheSelectedCode() {
+    Send "{LCtrl Down}{/}{LCtrl Up}"
+}
+
+/**
+ * Replicate the current line downwards.
+ */
+action_replicateCurrentLineDown() {
+    ReplicateCurrentLineDown()
+}
+
+/**
+ * Replicate the current line downwards for a specified number of times (ask the user for the number of lines to copy).
+ */
+action_replicateCurrentLineDownSpecificTimes() {
+    ReplicateCurrentLineDown(true)
+}
+
+/**
  * Undo the last action.
  */
 action_undo() {
@@ -154,13 +182,6 @@ action_redo() {
 }
 
 /**
- * Cut the selected text.
- */
-action_cut() {
-    Send "{LCtrl Down}x{LCtrl Up}"
-}
-
-/**
  * Copy the selected text.
  */
 action_copy() {
@@ -168,10 +189,45 @@ action_copy() {
 }
 
 /**
+ * Cut the selected text.
+ */
+action_cut() {
+    Send "{LCtrl Down}x{LCtrl Up}"
+}
+
+/**
  * Paste the copied text.
  */
 action_paste() {
     Send "{LCtrl Down}v{LCtrl Up}"
+}
+
+/**
+ * Copy the selected text to the separate clipboard that doesn't interfere with the system clipboard.
+ */
+action_separateCopy() {
+    SeparateClipboard("copy")
+}
+
+/**
+ * Cut the selected text to the separate clipboard that doesn't interfere with the system clipboard.
+ */
+action_separateCut() {
+    SeparateClipboard("cut")
+}
+
+/**
+ * Paste the copied text from the separate clipboard that doesn't interfere with the system clipboard.
+ */
+action_separatePaste() {
+    SeparateClipboard("paste")
+}
+
+/**
+ * Search for text in the current document.
+ */
+action_searchInCurrentDocument() {
+    Send "{LCtrl Down}f{LCtrl Up}"
 }
 
 /**
@@ -245,6 +301,20 @@ action_switchTabRight() {
 }
 
 /**
+ * Close the current tab.
+ */
+action_closeCurrentTab() {
+    Send "{LCtrl Down}{w}{LCtrl Up}"
+}
+
+/**
+ * Close the current application.
+ */
+action_closeApplication() {
+    Send "{LAlt Down}{F4}{LAlt Up}"
+}
+
+/**
  * Turn volume up.
  */
 action_volumeUp() {
@@ -287,6 +357,34 @@ action_playOrPauseMedia() {
 }
 
 /**
+ * Create a new virtual desktop.
+ */
+action_createOneVirtualDesktop() {
+    Send "{LCtrl Down}{LWin Down}d{LWin Up}{LCtrl Up}"
+}
+
+/**
+ * Delete the current virtual desktop.
+ */
+action_deleteCurrentVirtualDesktop() {
+    Send "{LCtrl Down}{LWin Down}{F4}{LWin Up}{LCtrl Up}"
+}
+
+/**
+ * Switch to the left virtual desktop.
+ */
+action_switchToLeftVirtualDesktop() {
+    Send "{LCtrl Down}{LWin Down}{Left}{LWin Up}{LCtrl Up}"
+}
+
+/**
+ * Switch to the right virtual desktop.
+ */
+action_switchToRightVirtualDesktop() {
+    Send "{LCtrl Down}{LWin Down}{Right}{LWin Up}{LCtrl Up}"
+}
+
+/**
  * Set the window to always be on top.
  */
 action_setWindowAlwaysOnTop() {
@@ -312,4 +410,11 @@ action_activateTopmostWindow() {
  */
 action_ejectAllRemovableDrives() {
     EjectAllRemovableDrives()
+}
+
+/**
+ * Toggle CapsLock on/off.
+ */
+action_toggleCapsLock() {
+    SetCapsLockState !GetKeyState("CapsLock", "T")
 }

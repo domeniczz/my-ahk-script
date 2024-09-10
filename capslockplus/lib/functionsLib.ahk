@@ -3,9 +3,9 @@
  * 
  * @param {String} Mode - The type of case conversion to perform.
  * 
- * - "L": Convert to lowercase
- * - "U": Convert to uppercase
- * - "T": Convert to titlecase (capitalize the first letter of each word)
+ * - `L`: Convert to lowercase
+ * - `U`: Convert to uppercase
+ * - `T`: Convert to titlecase (capitalize the first letter of each word)
  */
 SwitchTextCase(Mode) {
     ; Copy the text
@@ -30,35 +30,135 @@ SwitchTextCase(Mode) {
             MsgBox "ERROR! Invalid mode for SwitchTextCase: " Mode
     }
 
-    ; Paste the coverted text, and clear the clipboard
     Send "^v"
-    sleep 50
+    ; Sleep a while in case the paste operation hasn't completed before the clipboard is cleared
+    sleep 100
     A_Clipboard := ""
+}
+
+/**
+ * Get the selected text (if any), the text won't show up in the clipboard history.
+ * 
+ * @returns {String | Boolean} - The selected text or `false` if no text is selected.
+ */
+GetSelectedText() {
+    ; Copy the text
+    Send "^c"
+    if !ClipWait(1) {
+        MsgBox "Failed to copy text to clipboard."
+        return
+    }
+    ; Sleep for a while to ensure A_Clipboard works correctly
+    sleep 50
+    selectText := A_Clipboard
+    lastChar := SubStr(selectText, -1)
+    ; If the last character is a newline, check if the selected text is one whole line, if yes, ignore it
+    ; Because in IDEs, we can copy a whole line by just pressing `Ctrl + C` without selecting any text
+    if Ord(lastChar) == 10 or Ord(lastChar) == 13 {
+        count := 0
+        loop parse, selectText {
+            ; If the last character is a newline
+            ; ASCii 10: Line Feed (LF)
+            ; ASCii 13: Carriage Return (CR)
+            if (Ord(A_LoopField) == 10 or Ord(A_LoopField) == 13) {
+                count++
+            }
+            if count >= 2 {
+                return false
+            }
+            ; Limit the loop times in case the selected text is too long
+            if A_Index > 400 {
+                break
+            }
+        }
+    }
+    ; Delete from system clipboard history
+    A_Clipboard := ""
+    return selectText
+}
+
+/**
+ * Action on a separate clipboard that doesn't interfere with the system clipboard.
+ * 
+ * @param {String} action - Clipboard action
+ * 
+ * - `copy`: Copy the selected text
+ * - `cut`: Cut the selected text
+ * - `paste`: Paste the copied text
+ */
+SeparateClipboard(action := "copy") {
+    global seperateClipboard
+
+    if action == "paste" {
+        A_Clipboard := seperateClipboard
+        Send "{LCtrl Down}v{LCtrl Up}"
+        sleep 100
+        ; Delete from system clipboard history
+        A_Clipboard := ""
+        return
+    } else if action == "copy" {
+        Send "{LCtrl Down}c{LCtrl Up}"
+    } else if action == "cut" {
+        Send "{LCtrl Down}x{LCtrl Up}"
+    }
+    if !ClipWait(1) {
+        MsgBox "Failed to cut text to clipboard."
+        return
+    }
+    sleep 50
+    seperateClipboard := A_Clipboard
+    ; Delete from system clipboard history
+    A_Clipboard := ""
+}
+
+/**
+ * Replicate the current line downwards for a specified number of times.
+ * 
+ * @param {Boolean} userSpecify - Whether to ask the user for the number of lines to copy (default: `false`).
+ */
+ReplicateCurrentLineDown(userSpecify := false) {
+    times := !userSpecify ? 1 : Integer(LetUserInputNumber("How many lines to copy:"))
+    if times <= 0 {
+        return
+    } else if times == 1 {
+        Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{End}{Ctrl Down}v{Ctrl Up}"
+        return
+    } else {
+        loop times {
+            if A_Index == 1
+                Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{End}{Ctrl Down}v{Ctrl Up}"
+            else
+                Send "{Ctrl Down}v{Ctrl Up}"
+            sleep 50
+        }
+    }
 }
 
 /**
  * Toggle the Always On Top for the currently active window
  */
 SetWindowAlwaysOnTop() {
-    ; Uses AlwaysOnTop in Powertoys
-    Send "{LCtrl Down}{LWin Down}t{LCtrl Up}{LWin Up}"
-
-    ;; Below is the custom method
-
-    ; ; change title "! " as required
-    ; Title_When_On_Top := "! "
-    ; winTitle := WinGetTitle("A")
-    ; ExStyle := WinGetExStyle(winTitle)
-    ; ; 0x8 is WS_EX_TOPMOST
-    ; if (ExStyle & 0x8) {
-    ;     ; Turn OFF and remove Title_When_On_Top
-    ;     WinSetAlwaysOnTop 0, winTitle
-    ;     WinSetTitle (RegExReplace(winTitle, Title_When_On_Top)), winTitle
-    ; } else {
-    ;     ; Turn ON and add Title_When_On_Top
-    ;     WinSetAlwaysOnTop 1, winTitle
-    ;     WinSetTitle Title_When_On_Top winTitle, winTitle
-    ; }
+    if ProcessExist("PowerToys.AlwaysOnTop.exe") {
+        ; Uses AlwaysOnTop in Powertoys
+        Send "{LCtrl Down}{LWin Down}t{LCtrl Up}{LWin Up}"
+    }
+    ; Use the custom method if Powertoys is not available
+    else {
+        ; change title "! " as required
+        Title_When_On_Top := "! "
+        winTitle := WinGetTitle("A")
+        ExStyle := WinGetExStyle(winTitle)
+        ; 0x8 is WS_EX_TOPMOST
+        if (ExStyle & 0x8) {
+            ; Turn OFF and remove Title_When_On_Top
+            WinSetAlwaysOnTop 0, winTitle
+            WinSetTitle (RegExReplace(winTitle, Title_When_On_Top)), winTitle
+        } else {
+            ; Turn ON and add Title_When_On_Top
+            WinSetAlwaysOnTop 1, winTitle
+            WinSetTitle Title_When_On_Top winTitle, winTitle
+        }
+    }
 }
 
 /**
