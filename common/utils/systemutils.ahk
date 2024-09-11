@@ -1,5 +1,7 @@
 /**
  * Get the color mode of Windows (Light or Dark)
+ * 
+ * @returns {String} - The color mode of Windows (`Light` or `Dark`)
  */
 GetWindowsColorMode() {
     regKey := "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"

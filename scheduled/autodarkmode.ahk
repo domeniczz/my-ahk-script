@@ -24,6 +24,7 @@ logfile := A_ScriptDir . "\logs\scheduled.log"
 
 #Include ..\common\constants\autodarkmode.ahk
 #Include ..\common\utils\systemutils.ahk
+#Include ..\common\utils\timeutils.ahk
 #Include ..\function\autodarkmode.ahk
 #Include ..\common\utils\logutils.ahk
 

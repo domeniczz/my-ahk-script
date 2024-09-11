@@ -44,6 +44,7 @@ SendMode "Input"
 #Include common\utils\scriptutils.ahk
 #Include common\utils\systemutils.ahk
 #Include common\utils\commandutils.ahk
+#Include common\utils\timeutils.ahk
 #Include common\utils\textutils.ahk
 #Include common\utils\logutils.ahk
 #Include function\toggle.ahk
