@@ -17,6 +17,8 @@ notepad2 := A_ProgramFiles . "\Notepad2\Notepad2.exe"
 
 vscode := EnvGet("LocalAppData") . "\Programs\Microsoft VS Code\Code.exe"
 
+cursor := EnvGet("LocalAppData") . "\Programs\cursor\Cursor.exe"
+
 terminal := EnvGet("LocalAppData") . "\Microsoft\WindowsApps\wt.exe"
 
 firefox := A_ProgramFiles . "\Mozilla Firefox\firefox.exe"
@@ -69,6 +71,9 @@ notepadppDim := { x: 871, y: 240, w: 2097, h: 1689
 ; notepad2Dim := { x: 250, y: 40, w: 3340, h: 2080 }
 
 vscodeDim := { x: 250, y: 40, w: 3340, h: 2080
+}
+
+cursorDim := { x: 250, y: 40, w: 3340, h: 2080
 }
 
 firefoxDim := { x: 250, y: 40, w: 3340, h: 2080

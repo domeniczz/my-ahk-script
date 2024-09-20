@@ -98,6 +98,43 @@ ToggleVSCode() {
 }
 
 /**
+ * Toggle Cursor AI Editor
+ */
+ToggleCursor() {
+    ; If it is running, toggle the window
+    if ProcessExist("Cursor.exe") {
+        winList := WinGetList("ahk_exe Cursor.exe")
+        if winList.Length == 1 {
+            if WinActive("ahk_id " . winList[1]) {
+                ; Window is active, minimize it to taskbar
+                WinMinimize
+            } else {
+                ActivateWindow("ahk_id " . winList[1])
+            }
+        }
+        ; More than one expected window, cycle through them
+        else if winList.Length > 1 {
+            for win_id in winList {
+                if win_id == winList[winList.Length] {
+                    if WinActive("ahk_id " . win_id) {
+                        WinMinimize
+                    } else {
+                        ActivateWindow("ahk_id " . win_id)
+                    }
+                    break
+                }
+            }
+        }
+    }
+    ; If it is not running, run it
+    else {
+        Run cursor
+        ActivateWindow("ahk_exe Cursor.exe")
+        SetWindow("ahk_exe Cursor.exe", cursorDim.x, cursorDim.y, cursorDim.w, cursorDim.h, , 10)
+    }
+}
+
+/**
  * Toggle Windows Terminal
  */
 ToggleWindowsTerminal() {

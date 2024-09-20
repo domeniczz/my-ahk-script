@@ -102,8 +102,8 @@ ToggleGamingNetworkEnv() {
 
         Run leishen
         ; Set the window position and size, then focus on the window
-        ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1")
-        SetWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h, 60)
+        ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", 60)
+        SetWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", leishenDim.x, leishenDim.y, leishenDim.w, leishenDim.h)
         ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , 1573, 100, "Toggle 雷神时长")
 
         ; if !ProcessExist("steam.exe") {

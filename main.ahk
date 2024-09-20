@@ -92,11 +92,14 @@ OnError LogError
 ; `LAlt + 2` to toggle Notepad2
 <!2:: ToggleNotepad2()
 
-; `LAlt + 3` to toggle Visual Studio Code
-<!3:: ToggleVSCode()
+; `LAlt + 3` to toggle Cursor AI Editor
+<!3:: ToggleCursor()
 
-; `LAlt + 4` to toggle Windows Terminal
-<!4:: ToggleWindowsTerminal()
+; `LAlt + 4` to toggle Visual Studio Code
+<!4:: ToggleVSCode()
+
+; `LAlt + 5` to toggle Windows Terminal
+<!5:: ToggleWindowsTerminal()
 
 ; `LWin + 1` to toggle Firefox
 <#1:: ToggleFirefox()

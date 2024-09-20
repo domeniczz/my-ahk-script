@@ -4,9 +4,11 @@ keybindings := [
     ],
     ["LAlt + 2", "Toggle Notepad2"
     ],
-    ["LAlt + 3", "Toggle Visual Studio Code"
+    ["LAlt + 3", "Toggle Cursor AI Editor"
     ],
-    ["LAlt + 4", "Toggle Windows Terminal"
+    ["LAlt + 4", "Toggle Visual Studio Code"
+    ],
+    ["LAlt + 5", "Toggle Windows Terminal"
     ],
     ["LWin (+ LShift) + 1", "Toggle Firefox (or Private)"
     ],
