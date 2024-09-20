@@ -167,6 +167,13 @@ action_replicateCurrentLineDownSpecificTimes() {
 }
 
 /**
+ * New line (Enter).
+ */
+action_newLine() {
+    Send "{Enter}"
+}
+
+/**
  * Undo the last action.
  */
 action_undo() {
@@ -416,5 +423,16 @@ action_ejectAllRemovableDrives() {
  * Toggle CapsLock on/off.
  */
 action_toggleCapsLock() {
-    SetCapsLockState !GetKeyState("CapsLock", "T")
+    if GetKeyState("CapsLock", "T")
+        SetCapsLockState "AlwaysOff"
+    else
+        SetCapsLockState True
+}
+
+/**
+ * Reload the script.
+ */
+action_reloadScript() {
+    MsgBox "Reloading the script...", , "T0.5"
+    Reload
 }

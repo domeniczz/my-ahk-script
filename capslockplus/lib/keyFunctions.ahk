@@ -167,6 +167,7 @@
         }
 
         Capslock_F11() {
+            action_reloadScript()
         }
 
         Capslock_F12() {
@@ -719,6 +720,228 @@
 
         Capslock_Alt_MButton() {
             action_playOrPauseMedia()
+        }
+    }
+}
+
+;;;;;;;;;; CapsLock + Ctrl + Keys ;;;;;;;;;;
+
+{
+    ; a - z
+    {
+        Capslock_Ctrl_a() {
+        }
+
+        Capslock_Ctrl_b() {
+        }
+
+        Capslock_Ctrl_c() {
+        }
+
+        Capslock_Ctrl_d() {
+        }
+
+        Capslock_Ctrl_e() {
+        }
+
+        Capslock_Ctrl_f() {
+        }
+
+        Capslock_Ctrl_g() {
+        }
+
+        Capslock_Ctrl_h() {
+        }
+
+        Capslock_Ctrl_i() {
+        }
+
+        Capslock_Ctrl_j() {
+        }
+
+        Capslock_Ctrl_k() {
+        }
+
+        Capslock_Ctrl_l() {
+        }
+
+        Capslock_Ctrl_m() {
+        }
+
+        Capslock_Ctrl_n() {
+        }
+
+        Capslock_Ctrl_o() {
+        }
+
+        Capslock_Ctrl_p() {
+        }
+
+        Capslock_Ctrl_q() {
+        }
+
+        Capslock_Ctrl_r() {
+        }
+
+        Capslock_Ctrl_s() {
+        }
+
+        Capslock_Ctrl_t() {
+        }
+
+        Capslock_Ctrl_u() {
+        }
+
+        Capslock_Ctrl_v() {
+        }
+
+        Capslock_Ctrl_w() {
+        }
+
+        Capslock_Ctrl_x() {
+        }
+
+        Capslock_Ctrl_y() {
+        }
+
+        Capslock_Ctrl_z() {
+        }
+    }
+    ; 0 - 9
+    {
+        Capslock_Ctrl_0() {
+        }
+
+        Capslock_Ctrl_1() {
+        }
+
+        Capslock_Ctrl_2() {
+        }
+
+        Capslock_Ctrl_3() {
+        }
+
+        Capslock_Ctrl_4() {
+        }
+
+        Capslock_Ctrl_5() {
+        }
+
+        Capslock_Ctrl_6() {
+        }
+
+        Capslock_Ctrl_7() {
+        }
+
+        Capslock_Ctrl_8() {
+        }
+
+        Capslock_Ctrl_9() {
+        }
+    }
+    ; F1 - F12
+    {
+        Capslock_Ctrl_F1() {
+        }
+
+        Capslock_Ctrl_F2() {
+        }
+
+        Capslock_Ctrl_F3() {
+        }
+
+        Capslock_Ctrl_F4() {
+        }
+
+        Capslock_Ctrl_F5() {
+        }
+
+        Capslock_Ctrl_F6() {
+        }
+
+        Capslock_Ctrl_F7() {
+        }
+
+        Capslock_Ctrl_F8() {
+        }
+
+        Capslock_Ctrl_F9() {
+        }
+
+        Capslock_Ctrl_F10() {
+        }
+
+        Capslock_Ctrl_F11() {
+        }
+
+        Capslock_Ctrl_F12() {
+        }
+    }
+    ; Special keys
+    {
+        Capslock_Ctrl_Backtick() {
+        }
+
+        Capslock_Ctrl_Minus() {
+        }
+
+        Capslock_Ctrl_Equal() {
+        }
+
+        Capslock_Ctrl_LSquareBracket() {
+        }
+
+        Capslock_Ctrl_RSquareBracket() {
+        }
+
+        Capslock_Ctrl_Backslash() {
+        }
+
+        Capslock_Ctrl_Semicolon() {
+        }
+
+        Capslock_Ctrl_Apostrophe() {
+        }
+
+        Capslock_Ctrl_Comma() {
+        }
+
+        Capslock_Ctrl_Period() {
+        }
+
+        Capslock_Ctrl_Slash() {
+        }
+
+        Capslock_Ctrl_Space() {
+        }
+
+        Capslock_Ctrl_Enter() {
+        }
+
+        Capslock_Ctrl_Backspace() {
+        }
+
+        Capslock_Ctrl_Tab() {
+        }
+
+        Capslock_Ctrl_Esc() {
+        }
+    }
+    ; Mouse buttons
+    {
+        Capslock_Ctrl_WheelUp() {
+        }
+
+        Capslock_Ctrl_WheelDown() {
+        }
+
+        Capslock_Ctrl_LButton() {
+        }
+
+        Capslock_Ctrl_RButton() {
+        }
+
+        Capslock_Ctrl_MButton() {
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -25,6 +25,9 @@ SetWinDelay 0
 SetControlDelay 0
 
 SendMode "Input"
+
+; Turn CapsLock off initially
+SetCapsLockState "AlwaysOff"
 
 ; The keyboard hook will be used to implement all keyboard hotkeys
 ; If this directive is unspecified in the script, it will behave as though set to False, meaning the windows API function RegisterHotkey() is used to implement a keyboard hotkey whenever possible.

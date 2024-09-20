@@ -20,14 +20,10 @@ SwitchTextCase(Mode) {
 
     ; Convert the text based on the specified mode
     switch Mode {
-        case "L":
-            A_Clipboard := StrLower(A_Clipboard)
-        case "U":
-            A_Clipboard := StrUpper(A_Clipboard)
-        case "T":
-            A_Clipboard := StrTitle(A_Clipboard)
-        default:
-            MsgBox "ERROR! Invalid mode for SwitchTextCase: " Mode
+        case "L": A_Clipboard := StrLower(A_Clipboard)
+        case "U": A_Clipboard := StrUpper(A_Clipboard)
+        case "T": A_Clipboard := StrTitle(A_Clipboard)
+        default: MsgBox "ERROR! Invalid mode for SwitchTextCase: " Mode
     }
 
     Send "^v"
