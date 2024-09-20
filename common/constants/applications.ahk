@@ -23,6 +23,10 @@ firefox := A_ProgramFiles . "\Mozilla Firefox\firefox.exe"
 
 firefoxPrivate := A_ProgramFiles . "\Mozilla Firefox\private_browsing.exe"
 
+brave := A_ProgramFiles . "\BraveSoftware\Brave-Browser\Application\brave.exe"
+
+bravePrivate := Format('"{1}" {2}', brave, "--incognito")
+
 spotify := A_AppData . "\Spotify\Spotify.exe"
 
 lyricify := EnvGet("LocalAppData") . "\Lyricify 4\Lyricify for Spotify.exe"
@@ -51,6 +55,8 @@ rawaccel := "C:\Programs\RawAccel\rawaccel.exe"
 
 msiafterburner := EnvGet("ProgramFiles(x86)") . "\MSI Afterburner\MSIAfterburner.exe"
 
+clash := A_ProgramFiles . "\Clash for Windows\Clash for Windows.exe"
+
 ; Real executable path will be set in the toggle function
 ; Because the path might change after the app is updated
 discord := ""
@@ -63,6 +69,12 @@ notepadppDim := { x: 871, y: 240, w: 2097, h: 1689
 ; notepad2Dim := { x: 250, y: 40, w: 3340, h: 2080 }
 
 vscodeDim := { x: 250, y: 40, w: 3340, h: 2080
+}
+
+firefoxDim := { x: 250, y: 40, w: 3340, h: 2080
+}
+
+braveDim := { x: 240, y: 40, w: 3360, h: 2090
 }
 
 spotifyDim := { x: 450, y: 100, w: 2940, h: 1960
@@ -90,4 +102,7 @@ bilibiliVidDim := { x: 360, y: 65, w: 3120, h: 2030
 }
 
 eudicDim := { x: 850, y: 210, w: 2140, h: 1740
+}
+
+clashDim := { x: 960, y: 330, w: 1920, h: 1500
 }

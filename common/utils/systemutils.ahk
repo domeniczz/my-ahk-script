@@ -26,3 +26,19 @@ GetWindowsAccentColor(offset := 1) {
     hexColor := r . g . b
     return hexColor
 }
+
+/**
+ * Check if the system proxy is enabled.
+ * Internet Options -> Connections -> LAN settings -> Proxy server.
+ * 
+ * @returns {Boolean} - `true` if the system proxy is enabled, `false` otherwise
+ */
+IsSystemProxyEnabled() {
+    try {
+        regKey := "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+        proxyEnable := RegRead(regKey, "ProxyEnable")
+        return proxyEnable == 1
+    } catch as err {
+        return false
+    }
+}

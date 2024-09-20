@@ -6,7 +6,7 @@
  * Activate (focus) app window.
  * 
  * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
- * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 4)
  * @param {Integer} sleepDuration - Total miliseconds to sleep before activating the window (default: 0)
  * 
  * Displays an error message box if the window is not found after all attempts.
@@ -26,7 +26,7 @@ ActivateWindow(target, waitDuration := 4, sleepDuration := 0) {
  * Close app window.
  * 
  * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
- * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 4)
  * @param {Integer} sleepDuration - Total miliseconds to before closing the window (default: 0)
  * 
  * Displays an error message box if the window is not found after all attempts.
@@ -43,10 +43,30 @@ CloseWindow(target, waitDuration := 4, sleepDuration := 0) {
 }
 
 /**
+ * Maximize (focus) app window.
+ * 
+ * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
+ * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 4)
+ * @param {Integer} sleepDuration - Total miliseconds to sleep before maximizing the window (default: 0)
+ * 
+ * Displays an error message box if the window is not found after all attempts.
+ */
+MaximizeWindow(target, waitDuration := 4, sleepDuration := 0) {
+    if WinWait(target, , waitDuration) {
+        if (sleepDuration > 0) {
+            Sleep sleepDuration
+        }
+        WinMaximize
+    } else {
+        MsgBox 'ERROR Maximizing! The "' . target . '" window could not be found!'
+    }
+}
+
+/**
  * Activate (focus) app window and maximize it.
  * 
  * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
- * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 4)
  * @param {Integer} sleepDuration - Total miliseconds to sleep before activating the window (default: 0)
  * 
  * Displays an error message box if the window is not found after all attempts.
@@ -95,7 +115,7 @@ ActivateWindowAndClick(target, waitDuration := 4, ClickType := "left", ClickX :=
  * @param {Number} y - The y-coordinate of the window (optional)
  * @param {Number} width - The width of the window (optional)
  * @param {Number} height - The height of the window (optional)
- * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
+ * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 4)
  * @param {Integer} sleepDuration - Total milliseconds to sleep before setting the window position and size (default: 0)
  * 
  * Displays an error message box if the window is not found after all attempts.
@@ -120,46 +140,6 @@ SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4
                 target
             )
         }
-    } else {
-        MsgBox('ERROR Setting Window! The "' . target . '" window could not be found!')
-    }
-}
-
-/**
- * Set app window position and size and then activate (focus) app window.
- * 
- * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
- * @param {Number} x - The x-coordinate of the window (optional)
- * @param {Number} y - The y-coordinate of the window (optional)
- * @param {Number} width - The width of the window (optional)
- * @param {Number} height - The height of the window (optional)
- * @param {Integer} waitDuration - Total seconds to wait before the action (default: 4)
- * @param {Integer} sleepDuration - Total milliseconds to sleep before setting the window position and size (default: 0)
- * 
- * Displays an error message box if the window is not found after all attempts.
- */
-SetAndActivateWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 4, sleepDuration := 0) {
-    if WinWait(target, , waitDuration) {
-        ; Move and resize the window only if needed
-        ; Use provided values or current values if not provided
-        if (x != -1 or y != -1 or width != -1 or height != -1) {
-            ; Get current window position and size
-            WinGetPos &currentX, &currentY, &currentWidth, &currentHeight
-            if (x == currentX and y == currentY and width == currentWidth and height == currentHeight) {
-                return  ; No need to change the window position and size
-            }
-            WinMove(
-                x != -1 ? x : currentX,
-                y != -1 ? y : currentY,
-                width != -1 ? width : currentWidth,
-                height != -1 ? height : currentHeight,
-                target
-            )
-        }
-        if (sleepDuration > 0) {
-            Sleep sleepDuration
-        }
-        WinActivate
     } else {
         MsgBox('ERROR Setting Window! The "' . target . '" window could not be found!')
     }

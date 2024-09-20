@@ -8,7 +8,9 @@ keybindings := [
     ],
     ["LAlt + 4", "Toggle Windows Terminal"
     ],
-    ["LWin (+ LShift) + 1", "Toggle Firefox (Private)"
+    ["LWin (+ LShift) + 1", "Toggle Firefox (or Private)"
+    ],
+    ["LWin (+ LShift) + 2", "Toggle Brave (or Private)"
     ],
     ["RAlt + P", "Toggle Spotify"
     ],
@@ -24,13 +26,13 @@ keybindings := [
     ],
     ["RAlt + L", "Toggle Eudic"
     ],
-    ["RAlt + =", "Toggle Bilibili"
+    ["RAlt + = / LCtrl + ``", "Toggle Bilibili"
     ],
-    ["RAlt + -", "Toggle Bilibili (Sandboxed)"
+    ["RAlt + - / LCtrl + 1", "Toggle Bilibili (Sandboxed)"
     ],
-    ["RAlt + 0", "Open YouTube"
+    ["RAlt + 0 / LCtrl + 2", "Open YouTube"
     ],
-    ["RAlt + 9", "Open YouTube (Firefox Container)"
+    ["RAlt + 9 / LCtrl + 3", "Open YouTube (Firefox Container)"
     ],
     ["RAlt + RShift + P", "Run Spotify & Lyricify"
     ],

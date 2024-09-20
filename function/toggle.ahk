@@ -12,13 +12,14 @@ ToggleNotepadPP() {
             ; Window is active, minimize it to taskbar
             WinMinimize
         } else {
-            WinActivate "ahk_exe notepad++.exe"
+            ActivateWindow("ahk_exe notepad++.exe")
         }
     }
     ; If it is not running, run it
     else {
         Run notepadpp
-        SetAndActivateWindow("ahk_exe notepad++.exe", notepadppDim.x, notepadppDim.y, notepadppDim.w, notepadppDim.h)
+        ActivateWindow("ahk_exe notepad++.exe")
+        SetWindow("ahk_exe notepad++.exe", notepadppDim.x, notepadppDim.y, notepadppDim.w, notepadppDim.h)
     }
 }
 
@@ -34,7 +35,7 @@ ToggleNotepad2() {
                 ; Window is active, minimize it to taskbar
                 WinMinimize
             } else {
-                WinActivate "ahk_id " . winList[1]
+                ActivateWindow("ahk_id " . winList[1])
             }
         }
         ; More than one expected window, cycle through them
@@ -44,7 +45,7 @@ ToggleNotepad2() {
                     if WinActive("ahk_id " . win_id) {
                         WinMinimize
                     } else {
-                        WinActivate "ahk_id " . win_id
+                        ActivateWindow("ahk_id " . win_id)
                     }
                     break
                 }
@@ -55,7 +56,7 @@ ToggleNotepad2() {
     else {
         Run notepad2
         ActivateWindow("ahk_exe Notepad2.exe")
-        ; SetAndActivateWindow("ahk_exe Notepad2.exe", notepad2Dim.x, notepad2Dim.y, notepad2Dim.w, notepad2Dim.h)
+        ; SetWindow("ahk_exe Notepad2.exe", notepad2Dim.x, notepad2Dim.y, notepad2Dim.w, notepad2Dim.h)
     }
 }
 
@@ -71,7 +72,7 @@ ToggleVSCode() {
                 ; Window is active, minimize it to taskbar
                 WinMinimize
             } else {
-                WinActivate "ahk_id " . winList[1]
+                ActivateWindow("ahk_id " . winList[1])
             }
         }
         ; More than one expected window, cycle through them
@@ -81,7 +82,7 @@ ToggleVSCode() {
                     if WinActive("ahk_id " . win_id) {
                         WinMinimize
                     } else {
-                        WinActivate "ahk_id " . win_id
+                        ActivateWindow("ahk_id " . win_id)
                     }
                     break
                 }
@@ -91,7 +92,8 @@ ToggleVSCode() {
     ; If it is not running, run it
     else {
         Run vscode
-        SetAndActivateWindow("ahk_exe Code.exe", vscodeDim.x, vscodeDim.y, vscodeDim.w, vscodeDim.h, , 10)
+        ActivateWindow("ahk_exe Code.exe")
+        SetWindow("ahk_exe Code.exe", vscodeDim.x, vscodeDim.y, vscodeDim.w, vscodeDim.h, , 10)
     }
 }
 
@@ -105,7 +107,7 @@ ToggleWindowsTerminal() {
             ; Window is active, minimize it to taskbar
             WinMinimize
         } else {
-            WinActivate "ahk_exe WindowsTerminal.exe"
+            ActivateWindow("ahk_exe WindowsTerminal.exe")
         }
     }
     ; If it is not running, run it
@@ -115,17 +117,12 @@ ToggleWindowsTerminal() {
     }
 }
 
-firefoxWinId := ""
-firefoxPrivateWinId := ""
-
 /**
  * Toggle Firefox
  * 
  * @param {Boolean} isPrivate - Whether to toggle the private window (default: false)
  */
 ToggleFirefox(isPrivate := false) {
-    global firefoxWinId, firefoxPrivateWinId
-
     ; If it is running, toggle the window
     if ProcessExist("firefox.exe") {
         allWinList := WinGetList("ahk_exe firefox.exe")
@@ -140,26 +137,27 @@ ToggleFirefox(isPrivate := false) {
         ; No expected window, run it
         if winList.Length == 0 {
             Run !isPrivate ? firefox : firefoxPrivate
+            ActivateWindow("ahk_exe firefox.exe")
+            if WinGetMinMax("ahk_exe firefox.exe") != 1 {
+                ; Wait a bit for the window to be ready
+                MaximizeWindow("ahk_exe firefox.exe", , 400)
+            }
         }
         ; Only one expected window, toggle it
         else if winList.Length == 1 {
             if WinActive("ahk_id " . winList[1]) {
                 WinMinimize
             } else {
-                WinActivate "ahk_id " . winList[1]
+                ActivateWindow("ahk_id " . winList[1])
             }
         }
         ; More than one expected window, cycle through them
         else if winList.Length > 1 {
-            for win_id in winList {
-                if win_id == winList[winList.Length] {
-                    if WinActive("ahk_id " . win_id) {
-                        WinMinimize
-                    } else {
-                        WinActivate "ahk_id " . win_id
-                    }
-                    break
-                }
+            ; the last window in the list will change, so we can cycle through all of them in this way
+            if WinActive("ahk_id " . winList[winList.Length]) {
+                WinMinimize
+            } else {
+                ActivateWindow("ahk_id " . winList[winList.Length])
             }
         }
     }
@@ -167,6 +165,171 @@ ToggleFirefox(isPrivate := false) {
     else {
         Run !isPrivate ? firefox : firefoxPrivate
         ActivateWindow("ahk_exe firefox.exe")
+        if WinGetMinMax("ahk_exe firefox.exe") != 1 {
+            ; Wait a bit for the window to be ready
+            MaximizeWindow("ahk_exe firefox.exe", , 400)
+        }
+    }
+}
+
+braveAllWinIdList := []
+braveWinIdList := []
+bravePrivateWinIdList := []
+bravePid := ""
+
+/**
+ * Toggle Brave
+ * 
+ * @param {Boolean} isPrivate - Whether to toggle the private window (default: false)
+ */
+ToggleBrave(isPrivate := false) {
+    global braveWinIdList, bravePrivateWinIdList, braveAllWinIdList, bravePid
+
+    ; If it is running, toggle the window
+    if ProcessExist("brave.exe") {
+        ; If pid of the window is different, that means the process has been completely restarted
+        if bravePid != WinGetPID("ahk_exe brave.exe") {
+            ; Clear up
+            braveAllWinIdList := []
+            braveWinIdList := []
+            bravePrivateWinIdList := []
+        }
+
+        allWinList := WinGetList("ahk_exe brave.exe")
+
+        ; Remove the windows that does not exists anymore
+        if !isPrivate {
+            tempList := []
+            for winId in braveWinIdList {
+                for id in allWinList {
+                    if (winId == id) {
+                        tempList.Push(id)
+                    }
+                }
+            }
+            braveWinIdList := tempList
+        } else {
+            tempList := []
+            for privateWinId in bravePrivateWinIdList {
+                for id in allWinList {
+                    if (privateWinId == id) {
+                        tempList.Push(id)
+                    }
+                }
+            }
+            bravePrivateWinIdList := tempList
+        }
+
+        ; Check for new windows
+        newWins := []
+        for winId in allWinList {
+            isNewWindow := true
+            for id in braveAllWinIdList {
+                if (winId == id) {
+                    isNewWindow := false
+                    break
+                }
+            }
+            if (isNewWindow) {
+                newWins.Push(winId)
+            }
+        }
+
+        ; Handle new windows
+        if newWins.Length == 1 {
+            newWinId := newWins[1]
+            if !isPrivate {
+                braveWinIdList.InsertAt(1, newWinId)
+            } else {
+                bravePrivateWinIdList.InsertAt(1, newWinId)
+            }
+        } else if newWins.Length > 1 {
+            ; ATTENTION: Treat all new windows as new non-private windows if new windows are more than one
+            for newWinId in newWins {
+                braveWinIdList.InsertAt(1, newWinId)
+            }
+        }
+
+        ; Update the list of all windows
+        braveAllWinIdList := allWinList
+
+        winList := !isPrivate ? braveWinIdList : bravePrivateWinIdList
+
+        ; No expected window, run it
+        if winList.Length == 0 {
+            Run !isPrivate ? brave : bravePrivate
+            ; Get the new window's ahk_id
+            list := WinGetList("ahk_exe brave.exe")
+            for item in list {
+                for id in braveAllWinIdList {
+                    if item != id and A_Index == braveAllWinIdList.Length {
+                        winId := item
+                        break
+                    }
+                }
+            }
+            ; Store the window ahk_id
+            if !isPrivate {
+                braveWinIdList := [winId
+                ]
+            } else {
+                bravePrivateWinIdList := [winId
+                ]
+            }
+            ActivateWindow("ahk_id " . winId)
+            SetWindow("ahk_id " . winId, braveDim.x, braveDim.y, braveDim.w, braveDim.h)
+        }
+        ; Only one expected window, toggle it
+        else if winList.Length == 1 {
+            if WinActive("ahk_id " . winList[1]) {
+                WinMinimize
+            } else {
+                ActivateWindow("ahk_id " . winList[1])
+            }
+        }
+        ; More than one expected window, cycle through them
+        else if winList.Length > 1 {
+            lastWinId := winList[winList.Length]
+            ; the last window in the list will change, so we can cycle through all of them in this way
+            if WinActive("ahk_id " . lastWinId) {
+                WinMinimize
+            } else {
+                ActivateWindow("ahk_id " . lastWinId)
+            }
+            if !isPrivate {
+                braveWinIdList.RemoveAt(braveWinIdList.Length)
+                braveWinIdList.InsertAt(1, lastWinId)
+            } else {
+                bravePrivateWinIdList.RemoveAt(bravePrivateWinIdList.Length)
+                bravePrivateWinIdList.InsertAt(1, lastWinId)
+            }
+        }
+        ; Unexpected number of windows
+        else if winList.Length < 0 {
+            LogError(Error("<0 Brave browser window has been found while the process exists."))
+        }
+    }
+    ; If it is not running, run it
+    else {
+        Run !isPrivate ? brave : bravePrivate
+        ActivateWindow("ahk_exe brave.exe")
+        SetWindow("ahk_exe brave.exe", braveDim.x, braveDim.y, braveDim.w, braveDim.h)
+
+        ; Clear up
+        braveAllWinIdList := []
+        braveWinIdList := []
+        bravePrivateWinIdList := []
+
+        ; Store the window ahk_id
+        winId := WinGetID("ahk_exe brave.exe")
+        if !isPrivate {
+            braveWinIdList.Push(winId)
+        } else {
+            bravePrivateWinIdList.Push(winId)
+        }
+        braveAllWinIdList.Push(winId)
+
+        bravePid := WinGetPID("ahk_id " . winId)
     }
 }
 
@@ -180,7 +343,7 @@ ToggleSpotify() {
             ; Window is active, close to minimize it to the system tray
             WinClose
         } else if WinExist("ahk_exe Spotify.exe") and !WinActive("ahk_exe Spotify.exe") {
-            WinActivate
+            ActivateWindow("ahk_exe Spotify.exe")
         } else {
             Run spotify
         }
@@ -188,7 +351,8 @@ ToggleSpotify() {
     ; If it is not running, run it
     else {
         Run spotify
-        SetAndActivateWindow("ahk_exe Spotify.exe", spotifyDim.x, spotifyDim.y, spotifyDim.w, spotifyDim.h)
+        ActivateWindow("ahk_exe Spotify.exe")
+        SetWindow("ahk_exe Spotify.exe", spotifyDim.x, spotifyDim.y, spotifyDim.w, spotifyDim.h)
     }
 }
 
@@ -202,7 +366,7 @@ ToggleTelegram() {
             ; Window is active, close to minimize it to the system tray
             WinClose
         } else if WinExist("ahk_exe Telegram.exe") and !WinActive("ahk_exe Telegram.exe") {
-            WinActivate
+            ActivateWindow("ahk_exe Telegram.exe")
         } else {
             Run telegram
         }
@@ -227,7 +391,7 @@ ToggleDiscord() {
             ; Window is active, close to minimize it to the system tray
             WinClose
         } else if WinExist("ahk_exe Discord.exe") and !WinActive("ahk_exe Discord.exe") {
-            WinActivate
+            ActivateWindow("ahk_exe Discord.exe")
         } else {
             if discord != "" {
                 Run discord
@@ -247,7 +411,8 @@ ToggleDiscord() {
         discord := GetExePath(EnvGet("LocalAppData") . "\Discord" . "\app-*", "Discord.exe")
         if discord != "" {
             Run discord
-            SetAndActivateWindow("ahk_exe Discord.exe", discordDim.x, discordDim.y, discordDim.w, discordDim.h)
+            ActivateWindow("ahk_exe Discord.exe")
+            SetWindow("ahk_exe Discord.exe", discordDim.x, discordDim.y, discordDim.w, discordDim.h)
         } else {
             MsgBox "ERROR! Discord.exe not found in the expected directory `"" . discord . "`"."
         }
@@ -265,9 +430,10 @@ ToggleWeChat() {
             WinClose
         } else if WinExist("ahk_exe WeChat.exe") and !WinActive("ahk_exe WeChat.exe") {
             Run wechat
-            WinActivate
+            ActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC")
         } else {
             Run wechat
+            ActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC")
         }
     }
     ; If it is not running, run it
@@ -279,7 +445,8 @@ ToggleWeChat() {
         SetTimer () => ToolTip(), -1000, -1
 
         if WinWait("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", , 8) {
-            SetAndActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
+            ActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC")
+            SetWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
         } else {
             MsgBox "ERROR! WeChat.exe window could not be found!"
         }
@@ -308,7 +475,8 @@ ToggleTencentTIM() {
         MaxAttempts := 40
         loop MaxAttempts {
             if WinGetID("ahk_exe TIM.exe") != loginPageId {
-                SetAndActivateWindow("ahk_exe TIM.exe", timDim.x, timDim.y, timDim.w, timDim.h)
+                ActivateWindow("ahk_exe TIM.exe")
+                SetWindow("ahk_exe TIM.exe", timDim.x, timDim.y, timDim.w, timDim.h)
                 break
             }
             sleep 100
@@ -328,17 +496,11 @@ ToggleDingTalk() {
         if WinActive("ahk_exe DingTalk.exe") {
             ; Window is active, close to minimize it to the system tray
             WinClose
-            ToolTip("11111")
-            SetTimer () => ToolTip(), -1000, -1
         } else if WinExist("ahk_exe DingTalk.exe") and !WinActive("ahk_exe DingTalk.exe") {
             Run dingtalk
-            WinActivate
-            ToolTip("22222")
-            SetTimer () => ToolTip(), -1000, -1
+            ActivateWindow("ahk_exe DingTalk.exe")
         } else {
             Run dingtalk
-            ToolTip("33333")
-            SetTimer () => ToolTip(), -1000, -1
         }
     }
     ; If it is not running, run it
@@ -377,7 +539,7 @@ ToggleEudic() {
             ; Window is active, close to minimize it to the system tray
             WinClose "ahk_exe eudic.exe"
         } else if WinExist("ahk_exe eudic.exe") and !WinActive("ahk_exe eudic.exe") {
-            WinActivate
+            ActivateWindow("ahk_exe eudic.exe")
         } else {
             Run eudic
             ActivateWindow("ahk_exe eudic.exe")
@@ -386,7 +548,8 @@ ToggleEudic() {
     ; If it is not running, run it
     else {
         Run eudic
-        SetAndActivateWindow("ahk_exe eudic.exe", eudicDim.x, eudicDim.y, eudicDim.w, eudicDim.h)
+        ActivateWindow("ahk_exe eudic.exe")
+        SetWindow("ahk_exe eudic.exe", eudicDim.x, eudicDim.y, eudicDim.w, eudicDim.h)
     }
 }
 
@@ -409,7 +572,8 @@ ToggleBilibili() {
                 ; No window, run it
                 Run bilibili
                 if bilibiliWinId == "" and WinWait("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", , 10) {
-                    SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
+                    ActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
+                    SetWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
                     bilibiliWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
                 }
             case 1:
@@ -417,7 +581,7 @@ ToggleBilibili() {
                 if WinActive("ahk_id " . winList[1]) {
                     WinMinimize
                 } else {
-                    WinActivate "ahk_id " . winList[1]
+                    ActivateWindow("ahk_id " . winList[1])
                 }
                 if bilibiliWinId == "" {
                     bilibiliWinId := winList[1]
@@ -433,7 +597,8 @@ ToggleBilibili() {
                         if WinActive("ahk_id " . win_id) {
                             WinMinimize
                         } else {
-                            SetAndActivateWindow("ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
+                            ActivateWindow("ahk_id " . win_id)
+                            SetWindow("ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
                         }
                         break
                     }
@@ -445,7 +610,8 @@ ToggleBilibili() {
     ; If it is not running, run it
     else {
         Run bilibili
-        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
+        ActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
+        SetWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
         bilibiliWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1")
     }
 }
@@ -469,7 +635,8 @@ ToggleSandboxedBilibili() {
                 ; No window, run it
                 Run bilibiliSandboxed
                 if bilibiliSandboxedWinId == "" and WinWait("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", , 10) {
-                    SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
+                    ActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
+                    SetWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
                     bilibiliSandboxedWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
                 }
             case 1:
@@ -477,7 +644,7 @@ ToggleSandboxedBilibili() {
                 if WinActive("ahk_id " . winList[1]) {
                     WinMinimize
                 } else {
-                    WinActivate "ahk_id " . winList[1]
+                    ActivateWindow("ahk_id " . winList[1])
                 }
                 if bilibiliSandboxedWinId == "" {
                     bilibiliSandboxedWinId := winList[1]
@@ -493,7 +660,8 @@ ToggleSandboxedBilibili() {
                         if WinActive("ahk_id " . win_id) {
                             WinMinimize
                         } else {
-                            SetAndActivateWindow("ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
+                            ActivateWindow("ahk_id " . win_id)
+                            SetWindow("ahk_id " . win_id, bilibiliVidDim.x, bilibiliVidDim.y, bilibiliVidDim.w, bilibiliVidDim.h)
                         }
                         break
                     }
@@ -505,7 +673,8 @@ ToggleSandboxedBilibili() {
     ; If it is not running, run it
     else {
         Run bilibiliSandboxed
-        SetAndActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
+        ActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
+        SetWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
         bilibiliSandboxedWinId := WinGetID("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1")
     }
 }
@@ -610,7 +779,7 @@ ToggleMSIAfterburner() {
     ; If it is running, toggle the window
     if ProcessExist("MSIAfterburner.exe") {
         if WinExist("ahk_exe MSIAfterburner.exe") and !WinActive("ahk_exe MSIAfterburner.exe") {
-            WinActivate
+            ActivateWindow("ahk_exe MSIAfterburner.exe")
         } else {
             Run msiafterburner
         }
@@ -621,6 +790,41 @@ ToggleMSIAfterburner() {
         ToolTip("MSI Afterburner started")
         SetTimer () => ToolTip(), -2500, -1
     }
+}
+
+/**
+ * Toggle Clash for Windows
+ */
+ToggleClash() {
+    ; If it is running, toggle the window
+    if ProcessExist("Clash for Windows.exe") {
+        if WinActive("ahk_exe Clash for Windows.exe") {
+            ; Window is active, minimize it to taskbar
+            WinClose
+        } else {
+            Run clash
+            ActivateWindow("ahk_exe Clash for Windows.exe")
+            SetWindow("ahk_exe Clash for Windows.exe", clashDim.x, clashDim.y, clashDim.w, clashDim.h)
+        }
+    }
+    ; If it is not running, run it
+    else {
+        Run clash
+        ActivateWindow("ahk_exe Clash for Windows.exe")
+        SetWindow("ahk_exe Clash for Windows.exe", clashDim.x, clashDim.y, clashDim.w, clashDim.h)
+    }
+}
+
+/**
+ * Turn on/off the system proxy (Clash for Windows)
+ */
+ToggleProxyOnOff() {
+    sleep 200
+    Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
+    sleep 300
+    MsgBox IsSystemProxyEnabled() ? "Clash ON" : "Clash OFF", , "T0.5"
+    ; ToolTip(IsSystemProxyEnabled() ? "Clash Proxy Turned On" : "Clash Proxy Turned Off")
+    ; SetTimer () => ToolTip(), -2500, -1
 }
 
 /**

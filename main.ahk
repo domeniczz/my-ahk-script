@@ -1,4 +1,4 @@
-;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -32,6 +32,9 @@ SetCapsLockState "AlwaysOff"
 ; The keyboard hook will be used to implement all keyboard hotkeys
 ; If this directive is unspecified in the script, it will behave as though set to False, meaning the windows API function RegisterHotkey() is used to implement a keyboard hotkey whenever possible.
 #UseHook true
+; Install keyboard hook and mouse hook unconditionally and immediately after the script starts
+InstallKeybdHook
+InstallMouseHook
 
 ;; Use `#Include` without any path:
 ;; - AHK will first look for the ahk script in the same directory as the script that contains the #Include directive.
@@ -59,6 +62,7 @@ SetCapsLockState "AlwaysOff"
 #Include gui\menu.ahk
 #Include gui\input.ahk
 #Include capslockplus\capslock.ahk
+#Include hotstring\hotstring.ahk
 
 ;;;;;;;;;; AUTOMATIC TASKS ;;;;;;;;;;
 
@@ -102,6 +106,12 @@ OnError LogError
 ; Disable launch in safe mode: [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Mozilla\Firefox] "DisableSafeMode"=dword:00000001
 <#<+1:: ToggleFirefox(true)
 
+; `LWin + 2` to toggle Brave
+<#2:: ToggleBrave()
+
+; `LWin + LShift + 2` to toggle Brave in private mode
+<#<+2:: ToggleBrave(true)
+
 ; `RAlt + P` to toggle Spotify
 >!p:: ToggleSpotify()
 
@@ -124,15 +134,19 @@ OnError LogError
 >!l:: ToggleEudic()
 
 ; `RAlt + =` to toggle Bilibili
+<^`::
 >!=:: ToggleBilibili()
 
 ; `RAlt + -` to toggle Sandboxed Bilibili
+<^1::
 >!-:: ToggleSandboxedBilibili()
 
 ; `RAlt + 0` to open YouTube
+<^2::
 >!0:: OpenYouTube()
 
 ; `RAlt + 9` to open YouTube in a container
+<^3::
 >!9:: OpenYouTube2()
 
 ; `RAlt + RShift + P` to run Both Spotify and Lyricify
@@ -143,6 +157,12 @@ OnError LogError
 
 ; `RAlt + O` to open MSI Afterburner
 >!o:: ToggleMSIAfterburner()
+
+; `LAlt + LShift + C` to open Clash for Windows
+<!<+c:: ToggleClash()
+
+; `RAlt + Enter` to toggle system proxy (Clash for Windows) on/off
+>!Enter:: ToggleProxyOnOff()
 
 ; `RAlt + K` to toggle Gaming Network Environment
 >!k up:: RunScriptAsAdmin(toggleGameEnv)
@@ -167,9 +187,8 @@ OnError LogError
 ; `LAlt + /` to toggle the help window
 <!/:: ToggleHelpWindow()
 
-; `RAlt + \` to send text
 #HotIf !CapsLockState and WinActive("ahk_exe firefox.exe") and !IsExcludedProgram()
-
+; `RAlt + \` to send text
 >!\:: SendTextLLMGeneralPrompt()
 
 #HotIf
