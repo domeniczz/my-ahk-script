@@ -16,8 +16,8 @@ ToggleHelpWindow() {
         ; Show the help window
         window.Show("w" . A_ScreenWidth . " h" . A_ScreenHeight)
 
-        ; Set opacity (200/255), 255 is fully opaque
-        WinSetTransparent(200, window)
+        ; Set opacity (*/255), 255 is fully opaque
+        WinSetTransparent(210, window)
 
         ; Hide the window after an interval (4 seconds)
         ; SetTimer () => window.Hide(), -4000, -1
@@ -29,38 +29,47 @@ ToggleHelpWindow() {
 }
 
 /**
- * Draw the GUI of help window (displays all the keybindings)
+ * Draw the GUI of help window (displays all the keybindings in two columns)
  */
 DrawHelpGUI() {
     helpGui := Gui()
-    helpGui.Opt("-Caption +AlwaysOnTop +ToolWindow +E0x20")  ; E0x20 means click-through
+    helpGui.Opt("-Caption +AlwaysOnTop +ToolWindow")
 
     ; Set font style size (pt) and bold
     helpGui.SetFont("s16 bold")
 
-    ; Calculate ListView dimensions and position
     windowWidth := A_ScreenWidth
     windowHeight := A_ScreenHeight
-    lvWidth := 1000  ; Adjust this value to change the width of the centered ListView
-    lvHeight := 1200
+    ; Calculate ListView dimensions and position
+    lvWidth := windowWidth * 0.5  ; 50% of screen width
+    lvHeight := windowHeight * 0.4  ; 40% of screen height
     lvX := (windowWidth - lvWidth) / 2
     lvY := (windowHeight - lvHeight) / 2
 
     ; Add ListView to display keybindings
-    lv := helpGui.Add("ListView", Format("x{} y{} w{} h{} -E0x200 -Hdr -LV0x20 +LV0x4000 +ReadOnly -TabStop", lvX, lvY,
-        lvWidth, lvHeight), ["Hotkey", "Feature"
-        ])
+    lv := helpGui.Add("ListView", Format("x{} y{} w{} h{} -E0x200 -Hdr -LV0x20 +LV0x4000 +ReadOnly -TabStop", lvX, lvY, lvWidth, lvHeight), ["Content"
+    ])
 
-    for binding in keybindings {
-        lv.Add(, binding*)
-        lv.Add(, "", "")  ; Add an empty row after each binding
+    ; Split keybindings into two columns
+    columns := SplitKeybindings(keybindings)
+
+    ; Add items to the ListView
+    maxRows := Max(columns.left.Length, columns.right.Length)
+    loop maxRows {
+        leftItem := columns.left[A_Index]
+        rightItem := columns.right[A_Index]
+
+        leftContent := leftItem ? Format("{:-35s} {}", leftItem[1], leftItem[2]) : ""
+        rightContent := rightItem ? Format("{:-35s} {}", rightItem[1], rightItem[2]) : ""
+
+        content := Format("{:-80s}    {}", leftContent, rightContent)
+        lv.Add("", content)
+        ; Add an empty row after each row
+        lv.Add("", "")
     }
 
-    ; Set column widths and center alignment
-    lv.ModifyCol(1, lvWidth * 0.4)  ; 40% of ListView width
-    lv.ModifyCol(2, lvWidth * 0.6)  ; 60% of ListView width
-    ; lv.ModifyCol(1, "Center")
-    ; lv.ModifyCol(2, "Center")
+    ; Set column width
+    lv.ModifyCol(1, lvWidth)
 
     ; Set initial colors
     SetHelpWindowColors(helpGui, lv)
@@ -69,6 +78,30 @@ DrawHelpGUI() {
     helpGui.OnEvent("Escape", (*) => helpGui.Hide())
 
     return { gui: helpGui, lv: lv
+    }
+}
+
+/**
+ * Split keybindings into two balanced columns
+ * @param {Array} keybindings - Array of keybinding pairs
+ * @returns {Object} - Object with left and right column arrays
+ */
+SplitKeybindings(keybindings) {
+    totalItems := keybindings.Length
+    itemsPerColumn := Ceil(totalItems / 2)
+
+    leftColumn := []
+    rightColumn := []
+
+    for index, binding in keybindings {
+        if (index <= itemsPerColumn) {
+            leftColumn.Push(binding)
+        } else {
+            rightColumn.Push(binding)
+        }
+    }
+
+    return { left: leftColumn, right: rightColumn
     }
 }
 
@@ -83,14 +116,11 @@ SetHelpWindowColors(helpGui, lv) {
     if (colorMode == "Dark") {
         color := "4c4a48"
         helpGui.BackColor := color
-        ; helpGui.SetFont("c" . "ffffff")
         lv.Opt("+Background" . color)
         lv.SetFont("cWHITE")
     } else {
-        ; color := "c6ecff"
         color := "ffffff"
         helpGui.BackColor := color
-        ; helpGui.SetFont("c" . "000000")
         lv.Opt("+Background" . color)
         lv.SetFont("cBLACK")
     }
