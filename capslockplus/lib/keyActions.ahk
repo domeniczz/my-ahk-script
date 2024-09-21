@@ -153,17 +153,17 @@ action_commentTheSelectedCode() {
 }
 
 /**
- * Replicate the current line downwards.
+ * Replicate the current line or lines downwards.
  */
-action_replicateCurrentLineDown() {
-    ReplicateCurrentLineDown()
+action_replicateDown() {
+    ReplicateDown()
 }
 
 /**
- * Replicate the current line downwards for a specified number of times (ask the user for the number of lines to copy).
+ * Replicate the current line or lines downwards for a specified number of times (ask the user for the number of lines to copy).
  */
-action_replicateCurrentLineDownSpecificTimes() {
-    ReplicateCurrentLineDown(true)
+action_replicateDownSpecificTimes() {
+    ReplicateDown(true)
 }
 
 /**

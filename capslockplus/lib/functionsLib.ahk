@@ -74,6 +74,16 @@ GetSelectedText() {
 }
 
 /**
+ * Check if a string contains a newline character.
+ * 
+ * @param {String} str - The string to check.
+ * @returns {Boolean} - `true` if the string contains a newline character, `false` otherwise.
+ */
+IsTextContainsNewline(str) {
+    return InStr(str, "`n") > 0 or InStr(str, "`r") > 0
+}
+
+/**
  * Action on a separate clipboard that doesn't interfere with the system clipboard.
  * 
  * @param {String} action - Clipboard action
@@ -108,24 +118,35 @@ SeparateClipboard(action := "copy") {
 }
 
 /**
- * Replicate the current line downwards for a specified number of times.
+ * Replicate the current line or lines downwards for a specified number of times.
  * 
  * @param {Boolean} userSpecify - Whether to ask the user for the number of lines to copy (default: `false`).
  */
-ReplicateCurrentLineDown(userSpecify := false) {
+ReplicateDown(userSpecify := false) {
     times := !userSpecify ? 1 : Integer(LetUserInputNumber("How many lines to copy:"))
-    if times <= 0 {
-        return
-    } else if times == 1 {
-        Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{End}{Ctrl Down}v{Ctrl Up}"
-        return
-    } else {
-        loop times {
-            if A_Index == 1
-                Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{End}{Ctrl Down}v{Ctrl Up}"
-            else
-                Send "{Ctrl Down}v{Ctrl Up}"
-            sleep 50
+    if times == 1 {
+        if IsTextContainsNewline(GetSelectedText()) {
+            Send "{Ctrl Down}c{Ctrl Up}{Right}{Enter}{Ctrl Down}v{Ctrl Up}"
+        } else {
+            Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{End}{Ctrl Down}v{Ctrl Up}"
+        }
+    } else if times > 1 {
+        if IsTextContainsNewline(GetSelectedText()) {
+            loop times {
+                if A_Index == 1
+                    Send "{Ctrl Down}c{Ctrl Up}{Right}{Enter}{Ctrl Down}v{Ctrl Up}"
+                else
+                    Send "{Enter}{Ctrl Down}v{Ctrl Up}"
+                sleep 50
+            }
+        } else {
+            loop times {
+                if A_Index == 1
+                    Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{End}{Ctrl Down}v{Ctrl Up}"
+                else
+                    Send "{Ctrl Down}v{Ctrl Up}"
+                sleep 50
+            }
         }
     }
 }

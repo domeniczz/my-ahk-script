@@ -52,7 +52,7 @@
         }
 
         Capslock_n() {
-            action_replicateCurrentLineDown()
+            action_replicateDown()
         }
 
         Capslock_o() {
@@ -535,7 +535,7 @@
         }
 
         Capslock_Alt_n() {
-            action_replicateCurrentLineDownSpecificTimes()
+            action_replicateDownSpecificTimes()
         }
 
         Capslock_Alt_o() {
