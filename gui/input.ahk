@@ -53,7 +53,7 @@ LetUserInput(prompt := "Input here:") {
         inputGui.OnEvent("Escape", (*) => CloseGui())
         inputGui.OnEvent("Close", (*) => CloseGui())
 
-        if (WinExist("ahk_id " . inputGui.Hwnd)) {
+        if WinExist("ahk_id " . inputGui.Hwnd) {
             CloseGui()
         } else {
             inputBox.Value := ""
@@ -68,7 +68,7 @@ LetUserInput(prompt := "Input here:") {
     }
 
     ProcessInput(*) {
-        if (inputBox.Value != "") {
+        if inputBox.Value != "" {
             value := inputBox.Value
             CloseGui()
         } else {
@@ -77,7 +77,7 @@ LetUserInput(prompt := "Input here:") {
     }
 
     CheckFocus() {
-        if (!WinActive("ahk_id " . inputGui.Hwnd)) {
+        if !WinActive("ahk_id " . inputGui.Hwnd) {
             CloseGui()
         }
     }

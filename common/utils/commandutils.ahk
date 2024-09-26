@@ -11,7 +11,7 @@ IsDockerContainerRunning(containerName) {
     ; Run the command using cmd.exe without hiding the console
     RunWait A_ComSpec . " /c " . command
 
-    sleep 50
+    Sleep 50
 
     ; Trim any whitespace and convert to lowercase
     result := StrLower(RTrim(Trim(A_Clipboard), "`n`r"))

@@ -6,6 +6,9 @@
  * Open the menu GUI on middle button click
  */
 MiddleButtonHandler() {
+    ; prevent middle button from interrupting infinite scrolling
+    if infiniteScrollActive
+        return
     KeyWait "MButton", "T0.2"  ; Wait for up to 200ms
     ; If released within 200ms
     if A_TimeSinceThisHotkey < 200 {
@@ -23,7 +26,6 @@ MiddleButtonHandler() {
 
 infiniteScrollActive := false
 scrollDirection := 0
-rightClickStartTime := 0
 scrollAccumulator := 0.0
 consecutiveScrollCount := 0
 lastScrollDirection := 0
@@ -32,26 +34,27 @@ lastScrollDirection := 0
  * Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
  */
 InfiniteScrollHandler(*) {
-    ; if (IsExcludedProgram()) {
-    ;     Click "Right"
-    ;     return
-    ; }
+    if IsExcludedProgram() {
+        Click "Right"
+        return
+    }
 
-    global rightClickStartTime
+    try {
+        BeforeCleanUp()
 
-    ; BeforeCleanUp()
+        ; Start listening for scroll wheel movement
+        Hotkey "WheelUp", ScrollWheelHandler, "On"
+        Hotkey "WheelDown", ScrollWheelHandler, "On"
+        ; Start listening for left button click
+        Hotkey "LButton", LButtonClickHandler, "On"
 
-    rightClickStartTime := A_TickCount
-
-    ; Start listening for scroll wheel movement
-    Hotkey "WheelUp", ScrollWheelHandler, "On"
-    Hotkey "WheelDown", ScrollWheelHandler, "On"
-    ; Start listening for left button click
-    Hotkey "LButton", LButtonClickHandler, "On"
-
-    ; Set a timer to check for right button release
-    ; The priority is set to 100, which is higher than the default priority of 0
-    SetTimer CheckRButtonRelease, 5, 100
+        ; Set a timer to check for right button release
+        ; The priority is set to 100, which is higher than the default priority of 0
+        SetTimer CheckRButtonRelease, 5, 100
+    } catch as err {
+        LogError(err)
+        AfterCleanUp()
+    }
 }
 
 /**
@@ -126,7 +129,7 @@ ScrollWheelHandler(ThisHotkey) {
  */
 CalculateSpeedMultiplier(count) {
     ; 1 + (count * 0.12) ^ 3
-    return 1 + (count * 0.14) ** 3
+    return 1 + (count * 0.15) ** 3
 }
 
 /**
@@ -145,8 +148,6 @@ InfiniteScroll() {
                 Send "{WheelDown}"
             scrollAccumulator -= 1
         }
-    } else {
-        AfterCleanUp()
     }
 }
 
@@ -157,6 +158,7 @@ BeforeCleanUp() {
     global infiniteScrollActive, scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
 
     SetTimer InfiniteScroll, 0, 100
+    SetTimer CheckRButtonRelease, 0, 100
     infiniteScrollActive := false
     scrollAccumulator := 0.0
     scrollDirection := 0
@@ -168,7 +170,7 @@ BeforeCleanUp() {
  * Clean up actions after infinite scrolling
  */
 AfterCleanUp() {
-    global infiniteScrollActive := false, scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
+    global infiniteScrollActive, scrollDirection, scrollAccumulator, consecutiveScrollCount, lastScrollDirection
 
     SetTimer InfiniteScroll, 0, 100
     SetTimer CheckRButtonRelease, 0, 100

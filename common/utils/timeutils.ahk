@@ -35,9 +35,9 @@ CalculateSunriseSunsetTime(latitude, longitude, timezone) {
     y := 0.91764 * Sin(rad * l)
     x := Cos(rad * l)
     ra := ATan(y / x) / rad
-    if (x < 0)
+    if x < 0
         ra += 180
-    else if (y < 0)
+    else if y < 0
         ra += 360
     ra := Mod(ra + 360, 360)
 
@@ -72,7 +72,7 @@ CalculateSunriseSunsetTime(latitude, longitude, timezone) {
     DecimalToHHmm(decimalTime) {
         hours := Floor(decimalTime)
         minutes := Round((decimalTime - hours) * 60)
-        if (minutes = 60) {
+        if minutes = 60 {
             hours += 1
             minutes := 0
         }
@@ -94,16 +94,16 @@ CalculateSunriseSunsetTime(latitude, longitude, timezone) {
  */
 CalculateTimeInterval(startTime, endTime, result := "minutes") {
     ; Convert HHmm to minutes since midnight
-    if (StrLen(startTime) = 4)
+    if StrLen(startTime) = 4
         startMinutes := (SubStr(startTime, 1, 2) * 60) + SubStr(startTime, 3)
-    else if (StrLen(startTime) = 3)
+    else if StrLen(startTime) = 3
         startMinutes := (SubStr(startTime, 1, 1) * 60) + SubStr(startTime, 2)
     else
         throw ValueError("Invalid startTime format")
 
-    if (StrLen(endTime) = 4)
+    if StrLen(endTime) = 4
         endMinutes := (SubStr(endTime, 1, 2) * 60) + SubStr(endTime, 3)
-    else if (StrLen(endTime) = 3)
+    else if StrLen(endTime) = 3
         endMinutes := (SubStr(endTime, 1, 1) * 60) + SubStr(endTime, 2)
     else
         throw ValueError("Invalid endTime format")
@@ -112,7 +112,7 @@ CalculateTimeInterval(startTime, endTime, result := "minutes") {
     diffMinutes := endMinutes - startMinutes
 
     ; Handle crossing midnight
-    if (diffMinutes < 0)
+    if diffMinutes < 0
         diffMinutes += 1440  ; Add minutes in a day (24 * 60)
 
     ; Convert back to HHmm format

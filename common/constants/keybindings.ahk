@@ -2,17 +2,21 @@
 keybindings := [
     ["LAlt + 1", "Toggle Notepad++"
     ],
-    ["LAlt + 2", "Toggle Notepad2"
+    ["LAlt (+ LShift) + 2", "Toggle Notepad2 (or a new instance)"
     ],
-    ["LAlt + 3", "Toggle Cursor AI Editor"
+    ["LAlt (+ LShift) + 3", "Toggle Cursor (or a new instance)"
     ],
-    ["LAlt + 4", "Toggle Visual Studio Code"
+    ["LAlt (+ LShift) + 4", "Toggle VSCode (or a new instance)"
     ],
-    ["LAlt + 5", "Toggle Windows Terminal"
+    ["LAlt (+ LShift) + 5", "Toggle Terminal (or a new instance)"
     ],
-    ["LWin (+ LShift) + 1", "Toggle Firefox (or Private)"
+    ["LWin (+ LShift) + ``", "Toggle Firefox (or private window)"
     ],
-    ["LWin (+ LShift) + 2", "Toggle Brave (or Private)"
+    ["LWin (+ LShift) + 1", "Toggle Brave (or private window)"
+    ],
+    ["LWin (+ LShift) + 2", "Toggle Chrome (or private window)"
+    ],
+    ["LWin (+ LShift) + 3", "Toggle Edge (or private window)"
     ],
     ["RAlt + P", "Toggle Spotify"
     ],
@@ -28,19 +32,19 @@ keybindings := [
     ],
     ["RAlt + L", "Toggle Eudic"
     ],
-    ["RAlt + = / LCtrl + ``", "Toggle Bilibili"
+    ["RAlt + =", "Toggle Bilibili"
     ],
-    ["RAlt + - / LCtrl + 1", "Toggle Bilibili (Sandboxed)"
+    ["RAlt + -", "Toggle Bilibili (Sandboxed)"
     ],
-    ["RAlt + 0 / LCtrl + 2", "Open YouTube"
+    ["RAlt + 0", "Open YouTube"
     ],
-    ["RAlt + 9 / LCtrl + 3", "Open YouTube (Firefox Container)"
+    ["RAlt + 9", "Open YouTube (Firefox Container)"
     ],
     ["RAlt + RShift + P", "Run Spotify & Lyricify"
     ],
     ["RAlt + K", "Toggle Gaming Network Environment"
     ],
-    ["RAlt + C", "Start Ollama & Docker container for LLM"
+    ["RAlt + C", "Start Ollama & Docker for LLM"
     ],
     ["RAlt + O", "Open MSI Afterburner"
     ],
@@ -49,7 +53,5 @@ keybindings := [
     ["RAlt + F12", "Computer Sleep"
     ],
     ["LCtrl + LShift + RAlt + F12", "Computer Restart"
-    ],
-    ["RAlt + \", "Send LLM General Prompt"
     ]
 ]

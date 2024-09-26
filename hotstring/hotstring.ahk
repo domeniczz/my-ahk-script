@@ -25,6 +25,8 @@ Thank you in advance.
 
 :O:zsh::张晟昊
 
+:O:name::Domenic Zhang
+
 :O:alpha::α
 
 :O:beta::β

@@ -3,20 +3,7 @@
 #Include lib\functionsLib.ahk
 
 ; Create a GUI to display the CapsLock state
-CapsLockGui := Gui()
-CapsLockGui.Opt("+AlwaysOnTop -Caption +ToolWindow +E0x20")  ; E0x20 means click-through
-CapsLockGui.BackColor := GetWindowsAccentColor()
-CapsLockIndicator := CapsLockGui.Add("Text", "Center", "CAPS")
-; Margin from the screen edge
-margin := 0
-xPos := margin
-yPos := margin
-; Set opacity (*/255), 255 is fully opaque
-WinSetTransparent(160, CapsLockGui)
-; Show the GUI in the top-left corner
-CapsLockGui.Show(Format("x{} y{} NoActivate", xPos, yPos))
-; Intially hide the GUI
-CapsLockGui.Hide()
+CapsLockGui := DrawCapsLockStateGui()
 
 ; Store the CapsLock activation state (0 = Off, 1 = On)
 CapsLockState := 0
@@ -64,7 +51,7 @@ seperateClipboard := ""
     CapsLockGui.Hide()
 }
 
-#HotIf CapsLockState
+#HotIf CapsLockState and !IsExcludedProgram()
 
 ;;;;;;;;;; CapsLock + Keys ;;;;;;;;;;
 
@@ -616,4 +603,30 @@ RunHotkeyFunction(funcName) {
             default: %func%(params*)
         }
     }
+}
+
+DrawCapsLockStateGui() {
+    CapsLockGui := Gui()
+    ; Set GUI options:
+    ; +AlwaysOnTop: Keep the GUI on top of other windows
+    ; -Caption: Remove the title bar
+    ; +ToolWindow: Make it a tool window (thinner border, no taskbar entry)
+    ; +E0x20: Make the window click-through
+    CapsLockGui.Opt("+AlwaysOnTop -Caption +ToolWindow +E0x20")
+    ; Set the background color to the Windows accent color
+    CapsLockGui.BackColor := GetWindowsAccentColor()
+    ; Add a text control to display "CAPS"
+    CapsLockIndicator := CapsLockGui.Add("Text", "Center", "CAPS")
+    ; Margin from the screen edge
+    margin := 0
+    xPos := margin
+    yPos := margin
+    ; Set opacity (*/255), 255 is fully opaque
+    WinSetTransparent(160, CapsLockGui)
+    ; Show the GUI in the top-left corner
+    CapsLockGui.Show(Format("x{} y{} NoActivate", xPos, yPos))
+    ; Initially hide the GUI
+    CapsLockGui.Hide()
+
+    return CapsLockGui
 }

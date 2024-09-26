@@ -23,6 +23,8 @@ DrawMenu() {
     Main.SetIcon "Ollama Chat", "imageres.dll", 244
     Main.Add "MSI Afterburner", MenuHandler
     Main.SetIcon "MSI Afterburner", "DDORes.dll", 35
+    Main.Add "Toggle HWiNFO", MenuHandler
+    Main.SetIcon "Toggle HWiNFO", "imageres.dll", 145
     Main.Add "Gaming Environment", MenuHandler
     Main.SetIcon "Gaming Environment", "DDORes.dll", 30
     Main.Add "Suspend Script", MenuHandler
@@ -139,7 +141,7 @@ MainHandler(itemName, itemPos, menuObj) {
         case 2: StartOllamaAndDockerWebUI()
         case 3: RunScriptAsAdmin(adminScript, "ToggleMSIAfterburner")
         case 4: RunScriptAsAdmin(adminScript, "ToggleHWiNFO")
-        case 5: RunScriptAsAdmin(adminScript, "ToggleGameEnv")
+        case 5: ToggleGameEnv()
         case 6:
             SuspendScript()
             ; Refresh the menu item
@@ -150,7 +152,7 @@ MainHandler(itemName, itemPos, menuObj) {
 }
 
 SandboxieHandler(itemName, itemPos, menuObj) {
-    if (itemName == "Refresh List") {
+    if itemName == "Refresh List" {
         ; Delete all items
         menuObj.Delete
         ; Refresh the sandboxie containers list
@@ -168,11 +170,11 @@ SandboxieHandler(itemName, itemPos, menuObj) {
 ToolHandler(itemName, itemPos, menuObj) {
     switch itemPos {
         case 1: ToggleNotepadPP()
-        case 2: ToggleNotepad2()
+        case 2: ToggleNotepad2(true)
         case 3: ToggleVSCode()
         case 4: ToggleWindowsTerminal()
-        case 5: ToggleFirefox()
-        case 6: ToggleFirefox(true)
+        case 5: ToggleGecko()
+        case 6: ToggleGecko(, true)
         case 7: ToggleEudic()
         default: MsgBox("ERROR! Unknown item: " . itemName . " at position " . itemPos)
     }

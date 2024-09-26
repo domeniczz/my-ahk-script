@@ -1,45 +1,51 @@
-; Format the current date as MM-dd
-CurrentMonth := FormatTime("", "MM")
-CurrentDate := FormatTime("", "MM-dd")
-
-; Log file path
-logDir := A_ScriptDir . "\log" . "\" . CurrentMonth
-; Ensure log directory exists
-DirCreate logDir
-logfile := logDir . "\" . CurrentDate . ".log"
-; Ensure the log file exists (creates it if it doesn't)
-FileAppend "", logfile
-
 ; Speed of infinite scrolling (* times faster than normal scroll)
 ; It will increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
 baseScrollSpeed := 1.4
 
-; List (Map) of excluded programs
-excludedProgramList := Map(
+/**
+ * List (Map) of programs to exclude for AHK usage
+ * 
+ * Key:
+ * 
+ * - application executable name (String)
+ * 
+ * Value:
+ * 
+ * - `true` if the application should be excluded, `false` otherwise
+ */
+excludedProgramList := [
     ; Counter-Strike: Global Offensive
-    "cs2.exe", true,
-    "csgo_legacy_app.exe", true,
-    "csgo.exe", true,
+    "cs2.exe",
+    "csgo_legacy_app.exe",
+    "csgo.exe",
     ; Apex Legends
-    "r5apex.exe", true,
+    "r5apex.exe",
     ; Call of Duty
-    "cod.exe", true,
+    "cod.exe",
     ; Overwatch
-    "Overwatch.exe", true,
+    "Overwatch.exe",
+    ; PUBG
+    "ExecPubg.exe",
     ; Dota 2
-    "dota2.exe", true,
+    "dota2.exe",
     ; Red Dead Redemption 2
-    "RDR2.exe", true,
+    "RDR2.exe",
     ; Grand Theft Auto V
-    "GTA5.exe", true,
+    "GTA5.exe",
     ; Black Myth: Wukong
-    "b1.exe", true,
+    "b1.exe",
+    ; Forza Horizon 4
+    "ForzaHorizon4.exe",
+    ; Forza Horizon 5
+    "ForzaHorizon5.exe",
     ; Civilization VI
-    "CivilizationVI.exe", true,
+    "CivilizationVI.exe",
     ; Stardew Valley
-    "Stardew Valley.exe", true,
+    "Stardew Valley.exe",
     ; Terraria
-    "Terraria.exe", true,
+    "Terraria.exe",
+    ; Real Pool 3D - Poolians
+    "Poolians.exe",
     ; 3DMark
-    "3DMark.exe", true
-)
+    "3DMark.exe"
+]

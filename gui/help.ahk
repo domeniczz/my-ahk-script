@@ -1,6 +1,6 @@
 ;; This file contains help window GUI functions.
 
-helpWindow := DrawHelpGUI()
+helpWindow := DrawHelpWindow()
 
 /**
  * Toggle the help window
@@ -31,9 +31,9 @@ ToggleHelpWindow() {
 /**
  * Draw the GUI of help window (displays all the keybindings in two columns)
  */
-DrawHelpGUI() {
+DrawHelpWindow() {
     helpGui := Gui()
-    helpGui.Opt("-Caption +AlwaysOnTop +ToolWindow")
+    helpGui.Opt("-Caption +AlwaysOnTop +ToolWindow +E0x20")  ; +E0x20 means enable click-through
 
     ; Set font style size (pt) and bold
     helpGui.SetFont("s16 bold")
@@ -41,8 +41,8 @@ DrawHelpGUI() {
     windowWidth := A_ScreenWidth
     windowHeight := A_ScreenHeight
     ; Calculate ListView dimensions and position
-    lvWidth := windowWidth * 0.5  ; 50% of screen width
-    lvHeight := windowHeight * 0.4  ; 40% of screen height
+    lvWidth := windowWidth * 0.5
+    lvHeight := windowHeight * 0.4
     lvX := (windowWidth - lvWidth) / 2
     lvY := (windowHeight - lvHeight) / 2
 
@@ -54,15 +54,17 @@ DrawHelpGUI() {
     columns := SplitKeybindings(keybindings)
 
     ; Add items to the ListView
-    maxRows := Max(columns.left.Length, columns.right.Length)
+    lLength := columns.left.Length
+    rLength := columns.right.Length
+    maxRows := Max(lLength, rLength)
     loop maxRows {
-        leftItem := columns.left[A_Index]
-        rightItem := columns.right[A_Index]
+        leftItem := A_Index <= lLength ? columns.left[A_Index] : ""
+        rightItem := A_Index <= rLength ? columns.right[A_Index] : ""
 
-        leftContent := leftItem ? Format("{:-35s} {}", leftItem[1], leftItem[2]) : ""
-        rightContent := rightItem ? Format("{:-35s} {}", rightItem[1], rightItem[2]) : ""
+        leftContent := leftItem ? Format("{:-40s} {}", leftItem[1], leftItem[2]) : ""
+        rightContent := rightItem ? Format("{:-40s} {}", rightItem[1], rightItem[2]) : ""
 
-        content := Format("{:-80s}    {}", leftContent, rightContent)
+        content := Format("{:-90s}    {}", leftContent, rightContent)
         lv.Add("", content)
         ; Add an empty row after each row
         lv.Add("", "")
@@ -94,7 +96,7 @@ SplitKeybindings(keybindings) {
     rightColumn := []
 
     for index, binding in keybindings {
-        if (index <= itemsPerColumn) {
+        if index <= itemsPerColumn {
             leftColumn.Push(binding)
         } else {
             rightColumn.Push(binding)
@@ -113,7 +115,7 @@ SplitKeybindings(keybindings) {
  */
 SetHelpWindowColors(helpGui, lv) {
     colorMode := GetWindowsColorMode()
-    if (colorMode == "Dark") {
+    if colorMode == "Dark" {
         color := "4c4a48"
         helpGui.BackColor := color
         lv.Opt("+Background" . color)

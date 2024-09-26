@@ -11,6 +11,8 @@ wechatLoginBtnY := 450
 
 ;;;;;;;;;; APPLICATION PATHS ;;;;;;;;;;
 
+explorer := A_WinDir . "\explorer.exe"
+
 notepadpp := A_ProgramFiles . "\Notepad++\notepad++.exe"
 
 notepad2 := A_ProgramFiles . "\Notepad2\Notepad2.exe"
@@ -23,11 +25,11 @@ terminal := EnvGet("LocalAppData") . "\Microsoft\WindowsApps\wt.exe"
 
 firefox := A_ProgramFiles . "\Mozilla Firefox\firefox.exe"
 
-firefoxPrivate := A_ProgramFiles . "\Mozilla Firefox\private_browsing.exe"
-
 brave := A_ProgramFiles . "\BraveSoftware\Brave-Browser\Application\brave.exe"
 
-bravePrivate := Format('"{1}" {2}', brave, "--incognito")
+chrome := A_ProgramFiles . "\Google\Chrome\Application\chrome.exe"
+
+msedge := EnvGet("ProgramFiles(x86)") . "\Microsoft\Edge\Application\msedge.exe"
 
 spotify := A_AppData . "\Spotify\Spotify.exe"
 
@@ -57,6 +59,8 @@ rawaccel := "C:\Programs\RawAccel\rawaccel.exe"
 
 msiafterburner := EnvGet("ProgramFiles(x86)") . "\MSI Afterburner\MSIAfterburner.exe"
 
+hwinfo := A_ProgramFiles . "\HWiNFO64\HWiNFO64.EXE"
+
 clash := A_ProgramFiles . "\Clash for Windows\Clash for Windows.exe"
 
 ; Real executable path will be set in the toggle function
@@ -65,49 +69,97 @@ discord := ""
 
 ;;;;;;;;;; APPLICATION WINDOW DIMENSIONS ;;;;;;;;;;
 
-notepadppDim := { x: 871, y: 240, w: 2097, h: 1689
+explorerDim := { w: Round(A_ScreenWidth * 0.520833), h: Round(A_ScreenHeight * 0.648148)
 }
+explorerDim.x := (A_ScreenWidth - explorerDim.w) // 2
+explorerDim.y := (A_ScreenHeight - explorerDim.h) // 2
 
-; notepad2Dim := { x: 250, y: 40, w: 3340, h: 2080 }
-
-vscodeDim := { x: 250, y: 40, w: 3340, h: 2080
+notepadppDim := { w: Round(A_ScreenWidth * 0.546), h: Round(A_ScreenHeight * 0.7819)
 }
+notepadppDim.x := (A_ScreenWidth - notepadppDim.w) // 2
+notepadppDim.y := (A_ScreenHeight - notepadppDim.h) // 2
 
-cursorDim := { x: 250, y: 40, w: 3340, h: 2080
+vscodeDim := { w: Round(A_ScreenWidth * 0.86979166), h: Round(A_ScreenHeight * 0.962962)
 }
+vscodeDim.x := (A_ScreenWidth - vscodeDim.w) // 2
+vscodeDim.y := (A_ScreenHeight - vscodeDim.h) // 2
 
-firefoxDim := { x: 250, y: 40, w: 3340, h: 2080
+cursorDim := { w: Round(A_ScreenWidth * 0.86979166), h: Round(A_ScreenHeight * 0.962962)
 }
+cursorDim.x := (A_ScreenWidth - cursorDim.w) // 2
+cursorDim.y := (A_ScreenHeight - cursorDim.h) // 2
 
-braveDim := { x: 240, y: 40, w: 3360, h: 2090
+terminalDim := { w: Round(A_ScreenWidth * 0.55989583), h: Round(A_ScreenHeight * 0.7060185)
 }
+terminalDim.x := (A_ScreenWidth - terminalDim.w) // 2
+terminalDim.y := (A_ScreenHeight - terminalDim.h) // 2
 
-spotifyDim := { x: 450, y: 100, w: 2940, h: 1960
+geckoDim := { w: Round(A_ScreenWidth * 0.86979166), h: Round(A_ScreenHeight * 0.962962)
 }
+geckoDim.x := (A_ScreenWidth - geckoDim.w) // 2
+geckoDim.y := (A_ScreenHeight - geckoDim.h) // 2
 
-telegramDim := { x: 620, y: 130, w: 2600, h: 1900
+firefoxDim := { w: Round(A_ScreenWidth * 0.86979166), h: Round(A_ScreenHeight * 0.962962)
 }
+firefoxDim.x := (A_ScreenWidth - firefoxDim.w) // 2
+firefoxDim.y := (A_ScreenHeight - firefoxDim.h) // 2
 
-discordDim := { x: 600, y: 100, w: 2640, h: 1960
+chromiumDim := { w: Round(A_ScreenWidth * 0.875), h: Round(A_ScreenHeight * 0.96759)
 }
+chromiumDim.x := (A_ScreenWidth - chromiumDim.w) // 2
+chromiumDim.y := (A_ScreenHeight - chromiumDim.h) // 2 + 5
 
-wechatDim := { x: 800, y: 180, w: 2240, h: 1800
+braveDim := { w: Round(A_ScreenWidth * 0.875), h: Round(A_ScreenHeight * 0.96759)
 }
+braveDim.x := (A_ScreenWidth - braveDim.w) // 2
+braveDim.y := (A_ScreenHeight - braveDim.h) // 2 + 5
 
-timDim := { x: 720, y: 180, w: 2400, h: 1800
+spotifyDim := { w: Round(A_ScreenWidth * 0.765625), h: Round(A_ScreenHeight * 0.9074074)
 }
+spotifyDim.x := (A_ScreenWidth - spotifyDim.w) // 2
+spotifyDim.y := (A_ScreenHeight - spotifyDim.h) // 2
 
-dingtalkDim := { x: 670, y: 130, w: 2500, h: 1900
+telegramDim := { w: Round(A_ScreenWidth * 0.6770833), h: Round(A_ScreenHeight * 0.87962962)
 }
+telegramDim.x := (A_ScreenWidth - telegramDim.w) // 2
+telegramDim.y := (A_ScreenHeight - telegramDim.h) // 2
 
-bilibiliDim := { x: 520, y: 120, w: 2800, h: 1920
+discordDim := { w: Round(A_ScreenWidth * 0.6875), h: Round(A_ScreenHeight * 0.9074074)
 }
+discordDim.x := (A_ScreenWidth - discordDim.w) // 2
+discordDim.y := (A_ScreenHeight - discordDim.h) // 2
 
-bilibiliVidDim := { x: 360, y: 65, w: 3120, h: 2030
+wechatDim := { w: Round(A_ScreenWidth * 0.583333), h: Round(A_ScreenHeight * 0.833333)
 }
+wechatDim.x := (A_ScreenWidth - wechatDim.w) // 2
+wechatDim.y := (A_ScreenHeight - wechatDim.h) // 2
 
-eudicDim := { x: 850, y: 210, w: 2140, h: 1740
+timDim := { w: Round(A_ScreenWidth * 0.625), h: Round(A_ScreenHeight * 0.833333)
 }
+timDim.x := (A_ScreenWidth - timDim.w) // 2
+timDim.y := (A_ScreenHeight - timDim.h) // 2
 
-clashDim := { x: 960, y: 330, w: 1920, h: 1500
+dingtalkDim := { w: Round(A_ScreenWidth * 0.65104167), h: Round(A_ScreenHeight * 0.87962962)
 }
+dingtalkDim.x := (A_ScreenWidth - dingtalkDim.w) // 2
+dingtalkDim.y := (A_ScreenHeight - dingtalkDim.h) // 2
+
+bilibiliDim := { w: Round(A_ScreenWidth * 0.7291666), h: Round(A_ScreenHeight * 0.888888)
+}
+bilibiliDim.x := (A_ScreenWidth - bilibiliDim.w) // 2
+bilibiliDim.y := (A_ScreenHeight - bilibiliDim.h) // 2
+
+bilibiliVidDim := { w: Round(A_ScreenWidth * 0.8125), h: Round(A_ScreenHeight * 0.9398148)
+}
+bilibiliVidDim.x := (A_ScreenWidth - bilibiliVidDim.w) // 2
+bilibiliVidDim.y := (A_ScreenHeight - bilibiliVidDim.h) // 2
+
+eudicDim := { w: Round(A_ScreenWidth * 0.55729166), h: Round(A_ScreenHeight * 0.8055555)
+}
+eudicDim.x := (A_ScreenWidth - eudicDim.w) // 2
+eudicDim.y := (A_ScreenHeight - eudicDim.h) // 2
+
+clashDim := { w: Round(A_ScreenWidth * 0.5), h: Round(A_ScreenHeight * 0.6944444)
+}
+clashDim.x := (A_ScreenWidth - clashDim.w) // 2
+clashDim.y := (A_ScreenHeight - clashDim.h) // 2
