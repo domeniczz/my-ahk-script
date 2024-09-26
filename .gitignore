@@ -8,6 +8,8 @@
 
 !*.png
 
+!*.jpg
+
 !*.drawio
 
 !.gitignore
