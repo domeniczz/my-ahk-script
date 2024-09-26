@@ -160,10 +160,11 @@
         }
 
         Capslock_F9() {
+            action_toggleCapsLock()
         }
 
         Capslock_F10() {
-            action_toggleCapsLock()
+            action_exitScript()
         }
 
         Capslock_F11() {
@@ -171,6 +172,7 @@
         }
 
         Capslock_F12() {
+            action_reloadScriptWithAdminPrivilege()
         }
     }
     ; Special keys

@@ -41,10 +41,10 @@ seperateClipboard := ""
 ;     SetTimer CheckCapsLockState, 100
 ;     CapsLockState := !CapsLockState ? 1 : 0
 ;     if CapsLockState {
-;         ToolTip("CapsLock ON")
+;         ToolTip "CapsLock ON"
 ;         SetTimer () => ToolTip(), -600, -1
 ;     } else {
-;         ToolTip("CapsLock OFF")
+;         ToolTip "CapsLock OFF"
 ;         SetTimer () => ToolTip(), -600, -1
 ;     }
 ; }
@@ -124,7 +124,7 @@ seperateClipboard := ""
                 RunHotkeyFunction("Capslock_" . A_ThisHotkey)
             } catch as err {
                 MsgBox "ERROR while running function Capslock_" . A_ThisHotkey
-                ; LogError(err, "Return")
+                LogError(err, "Return")
             }
         }
     }
@@ -147,9 +147,10 @@ seperateClipboard := ""
             Backspace:: RunHotkeyFunction("Capslock_Backspace")
             Tab:: RunHotkeyFunction("Capslock_Tab")
             Escape:: RunHotkeyFunction("Capslock_Esc")
+            Delete:: RunHotkeyFunction("Capslock_Delete")
         } catch as err {
             MsgBox "ERROR while running function Capslock_" . A_ThisHotkey
-            ; LogError(err, "Return")
+            LogError(err, "Return")
         }
     }
     ; Mouse buttons
@@ -162,7 +163,7 @@ seperateClipboard := ""
             MButton:: RunHotkeyFunction("Capslock_MButton")
         } catch as err {
             MsgBox "ERROR while running function Capslock_" . A_ThisHotkey
-            ; LogError(err, "Return")
+            LogError(err, "Return")
         }
     }
 }
@@ -225,7 +226,7 @@ seperateClipboard := ""
                 RunHotkeyFunction("Capslock_Shift_" . SubStr(A_ThisHotkey, 2))
             } catch as err {
                 MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2)
-                ; LogError(err, "Return")
+                LogError(err, "Return")
             }
         }
     }
@@ -248,9 +249,10 @@ seperateClipboard := ""
             +Backspace:: RunHotkeyFunction("Capslock_Shift_Backspace")
             +Tab:: RunHotkeyFunction("Capslock_Shift_Tab")
             +Escape:: RunHotkeyFunction("Capslock_Shift_Esc")
+            +Delete:: RunHotkeyFunction("Capslock_Shift_Delete")
         } catch as err {
             MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2)
-            ; LogError(err, "Return")
+            LogError(err, "Return")
         }
     }
     ; Mouse buttons
@@ -263,7 +265,7 @@ seperateClipboard := ""
             +MButton:: RunHotkeyFunction("Capslock_Shift_MButton")
         } catch as err {
             MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2)
-            ; LogError(err, "Return")
+            LogError(err, "Return")
         }
     }
 }
@@ -326,7 +328,7 @@ seperateClipboard := ""
                 RunHotkeyFunction("Capslock_Alt_" . SubStr(A_ThisHotkey, 2))
             } catch as err {
                 MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2)
-                ; LogError(err, "Return")
+                LogError(err, "Return")
             }
         }
     }
@@ -349,9 +351,10 @@ seperateClipboard := ""
             !Backspace:: RunHotkeyFunction("Capslock_Alt_Backspace")
             !Tab:: RunHotkeyFunction("Capslock_Alt_Tab")
             !Escape:: RunHotkeyFunction("Capslock_Alt_Esc")
+            !Delete:: RunHotkeyFunction("Capslock_Alt_Delete")
         } catch as err {
             MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2)
-            ; LogError(err, "Return")
+            LogError(err, "Return")
         }
     }
     ; Mouse buttons
@@ -364,7 +367,7 @@ seperateClipboard := ""
             !MButton:: RunHotkeyFunction("Capslock_Alt_MButton")
         } catch as err {
             MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2)
-            ; LogError(err, "Return")
+            LogError(err, "Return")
         }
     }
 }
@@ -427,7 +430,7 @@ seperateClipboard := ""
                 RunHotkeyFunction("Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2))
             } catch as err {
                 MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
-                ; LogError(err, "Return")
+                LogError(err, "Return")
             }
         }
     }
@@ -450,9 +453,10 @@ seperateClipboard := ""
             ^Backspace:: RunHotkeyFunction("Capslock_Ctrl_Backspace")
             ^Tab:: RunHotkeyFunction("Capslock_Ctrl_Tab")
             ^Escape:: RunHotkeyFunction("Capslock_Ctrl_Esc")
+            ^Delete:: RunHotkeyFunction("Capslock_Ctrl_Delete")
         } catch as err {
             MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
-            ; LogError(err, "Return")
+            LogError(err, "Return")
         }
     }
     ; Mouse buttons
@@ -465,7 +469,109 @@ seperateClipboard := ""
             ^MButton:: RunHotkeyFunction("Capslock_Ctrl_MButton")
         } catch as err {
             MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
-            ; LogError(err, "Return")
+            LogError(err, "Return")
+        }
+    }
+}
+
+;;;;;;;;;; CapsLock + Win + Keys ;;;;;;;;;;
+
+{
+    ; A - Z, 0 - 9, F1 - F12
+    {
+        #a::
+        #b::
+        #c::
+        #d::
+        #e::
+        #f::
+        #g::
+        #h::
+        #i::
+        #j::
+        #k::
+        #l::
+        #m::
+        #n::
+        #o::
+        #p::
+        #q::
+        #r::
+        #s::
+        #t::
+        #u::
+        #v::
+        #w::
+        #x::
+        #y::
+        #z::
+        #0::
+        #1::
+        #2::
+        #3::
+        #4::
+        #5::
+        #6::
+        #7::
+        #8::
+        #9::
+        #F1::
+        #F2::
+        #F3::
+        #F4::
+        #F5::
+        #F6::
+        #F7::
+        #F8::
+        #F9::
+        #F10::
+        #F11::
+        #F12::
+        {
+            try {
+                RunHotkeyFunction("Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2))
+            } catch as err {
+                MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
+                LogError(err, "Return")
+            }
+        }
+    }
+    ; Special keys
+    {
+        try {
+            #`:: RunHotkeyFunction("Capslock_Ctrl_Backtick")
+            #-:: RunHotkeyFunction("Capslock_Ctrl_Minus")
+            #=:: RunHotkeyFunction("Capslock_Ctrl_Equal")
+            #[:: RunHotkeyFunction("Capslock_Ctrl_LSquareBracket")
+            #]:: RunHotkeyFunction("Capslock_Ctrl_RSquareBracket")
+            #\:: RunHotkeyFunction("Capslock_Ctrl_Backslash")
+            #`;:: RunHotkeyFunction("Capslock_Ctrl_Semicolon")
+            #':: RunHotkeyFunction("Capslock_Ctrl_Apostrophe")
+            #,:: RunHotkeyFunction("Capslock_Ctrl_Comma")
+            #.:: RunHotkeyFunction("Capslock_Ctrl_Period")
+            #/:: RunHotkeyFunction("Capslock_Ctrl_Slash")
+            #Space:: RunHotkeyFunction("Capslock_Ctrl_Space")
+            #Enter:: RunHotkeyFunction("Capslock_Ctrl_Enter")
+            #Backspace:: RunHotkeyFunction("Capslock_Ctrl_Backspace")
+            #Tab:: RunHotkeyFunction("Capslock_Ctrl_Tab")
+            #Escape:: RunHotkeyFunction("Capslock_Ctrl_Esc")
+            #Delete:: RunHotkeyFunction("Capslock_Ctrl_Delete")
+        } catch as err {
+            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
+            LogError(err, "Return")
+        }
+    }
+    ; Mouse buttons
+    {
+        try {
+            #WheelUp:: RunHotkeyFunction("Capslock_Ctrl_WheelUp")
+            #WheelDown:: RunHotkeyFunction("Capslock_Ctrl_WheelDown")
+            #LButton:: RunHotkeyFunction("Capslock_Ctrl_LButton")
+            #RButton:: RunHotkeyFunction("Capslock_Ctrl_RButton")
+            #MButton:: RunHotkeyFunction("Capslock_Ctrl_MButton")
+        } catch as err {
+            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
+            LogError(err, "Return")
         }
     }
 }

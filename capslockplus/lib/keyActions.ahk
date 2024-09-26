@@ -430,9 +430,25 @@ action_toggleCapsLock() {
 }
 
 /**
+ * Exit the script.
+ */
+action_exitScript() {
+    MsgBox "Exiting the script...", , "T0.5"
+    ExitApp
+}
+
+/**
  * Reload the script.
  */
 action_reloadScript() {
     MsgBox "Reloading the script...", , "T0.5"
     Reload
+}
+
+/**
+ * Reload the script with admin privileges
+ */
+action_reloadScriptWithAdminPrivilege() {
+    MsgBox "Reloading the script with admin privileges...", , "T0.5"
+    ReloadScriptWithAdminPrivilege()
 }

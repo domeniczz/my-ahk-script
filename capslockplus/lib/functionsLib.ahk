@@ -15,7 +15,7 @@ SwitchTextCase(Mode) {
         return
     }
     ; Sleep for a while to ensure A_Clipboard works correctly
-    sleep 50
+    Sleep 50
     A_Clipboard := RTrim(Trim(A_Clipboard), "`n`r")
 
     ; Convert the text based on the specified mode
@@ -23,30 +23,29 @@ SwitchTextCase(Mode) {
         case "L": A_Clipboard := StrLower(A_Clipboard)
         case "U": A_Clipboard := StrUpper(A_Clipboard)
         case "T": A_Clipboard := StrTitle(A_Clipboard)
-        default: MsgBox "ERROR! Invalid mode for SwitchTextCase: " Mode
+        default: MsgBox "ERROR! Invalid mode for SwitchTextCase: " . Mode
     }
 
     Send "^v"
     ; Sleep a while in case the paste operation hasn't completed before the clipboard is cleared
-    sleep 100
+    Sleep 100
     A_Clipboard := ""
 }
 
 /**
  * Get the selected text (if any), the text won't show up in the clipboard history.
  * 
- * @returns {String | Boolean} - The selected text or `false` if no text is selected.
+ * @returns {String | Boolean} - The selected text or empty ("") if no text is selected.
  */
 GetSelectedText() {
+    A_Clipboard := ""
     ; Copy the text
-    Send "^c"
-    if !ClipWait(1) {
-        MsgBox "Failed to copy text to clipboard."
-        return
-    }
+    Send "{LCtrl Down}c{LCtrl Up}"
     ; Sleep for a while to ensure A_Clipboard works correctly
-    sleep 50
+    Sleep 50
     selectText := A_Clipboard
+    if selectText == ""
+        return ""
     lastChar := SubStr(selectText, -1)
     ; If the last character is a newline, check if the selected text is one whole line, if yes, ignore it
     ; Because in IDEs, we can copy a whole line by just pressing `Ctrl + C` without selecting any text
@@ -56,11 +55,11 @@ GetSelectedText() {
             ; If the last character is a newline
             ; ASCii 10: Line Feed (LF)
             ; ASCii 13: Carriage Return (CR)
-            if (Ord(A_LoopField) == 10 or Ord(A_LoopField) == 13) {
+            if Ord(A_LoopField) == 10 or Ord(A_LoopField) == 13 {
                 count++
             }
             if count >= 2 {
-                return false
+                return ""
             }
             ; Limit the loop times in case the selected text is too long
             if A_Index > 400 {
@@ -77,9 +76,20 @@ GetSelectedText() {
  * Check if a string contains a newline character.
  * 
  * @param {String} str - The string to check.
+ * @param {Boolean} omitLeadingNewline - Whether to ignore leading newline characters.
+ * @param {Boolean} omitTrailingNewline - Whether to ignore trailing newline characters.
  * @returns {Boolean} - `true` if the string contains a newline character, `false` otherwise.
  */
-IsTextContainsNewline(str) {
+IsTextContainsNewline(str := "", omitLeadingNewline := false, omitTrailingNewline := false) {
+    if str == "" {
+        return false
+    }
+    if omitLeadingNewline {
+        str := RegExReplace(str, "^\R+")
+    }
+    if omitTrailingNewline {
+        str := RegExReplace(str, "\R+$")
+    }
     return InStr(str, "`n") > 0 or InStr(str, "`r") > 0
 }
 
@@ -98,7 +108,7 @@ SeparateClipboard(action := "copy") {
     if action == "paste" {
         A_Clipboard := seperateClipboard
         Send "{LCtrl Down}v{LCtrl Up}"
-        sleep 100
+        Sleep 100
         ; Delete from system clipboard history
         A_Clipboard := ""
         return
@@ -111,44 +121,80 @@ SeparateClipboard(action := "copy") {
         MsgBox "Failed to cut text to clipboard."
         return
     }
-    sleep 50
+    Sleep 50
     seperateClipboard := A_Clipboard
     ; Delete from system clipboard history
     A_Clipboard := ""
 }
 
+lastReplicateDownActionTime := 0
+
 /**
  * Replicate the current line or lines downwards for a specified number of times.
+ * 
+ * If the last replicate down action is within 2 seconds, simply paste the copied text, no need to execute the complete logic again; otherwise, execute the complete logic.
  * 
  * @param {Boolean} userSpecify - Whether to ask the user for the number of lines to copy (default: `false`).
  */
 ReplicateDown(userSpecify := false) {
-    times := !userSpecify ? 1 : Integer(LetUserInputNumber("How many lines to copy:"))
-    if times == 1 {
-        if IsTextContainsNewline(GetSelectedText()) {
-            Send "{Ctrl Down}c{Ctrl Up}{Right}{Enter}{Ctrl Down}v{Ctrl Up}"
+    global lastReplicateDownActionTime
+
+    ; If the last replicate down action is within 2 seconds, simply paste the copied text, no need to execute the complete logic again
+    if A_TickCount - lastReplicateDownActionTime < 2000 {
+        if IsTextContainsNewline(A_Clipboard, true) {
+            Send "{Enter}{Ctrl Down}v{Ctrl Up}"
         } else {
-            Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{End}{Ctrl Down}v{Ctrl Up}"
-        }
-    } else if times > 1 {
-        if IsTextContainsNewline(GetSelectedText()) {
-            loop times {
-                if A_Index == 1
-                    Send "{Ctrl Down}c{Ctrl Up}{Right}{Enter}{Ctrl Down}v{Ctrl Up}"
-                else
-                    Send "{Enter}{Ctrl Down}v{Ctrl Up}"
-                sleep 50
-            }
-        } else {
-            loop times {
-                if A_Index == 1
-                    Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{End}{Ctrl Down}v{Ctrl Up}"
-                else
-                    Send "{Ctrl Down}v{Ctrl Up}"
-                sleep 50
-            }
+            Send "{Ctrl Down}v{Ctrl Up}"
         }
     }
+    ; If the last replicate down action is not within 2 seconds, execute the complete logic
+    else {
+        times := !userSpecify ? 1 : Integer(LetUserInputNumber("How many lines to copy:"))
+        selectedText := GetSelectedText()
+        if times == 1 {
+            if IsTextContainsNewline(selectedText) {
+                Send "{Ctrl Down}c{Ctrl Up}{Right}{Enter}{Ctrl Down}v{Ctrl Up}"
+            } else {
+                if selectedText == ""
+                    Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{Right}{Ctrl Down}v{Ctrl Up}"
+                else
+                    Send "{Ctrl Down}c{Ctrl Up}{Right}{Enter}{Ctrl Down}v{Ctrl Up}"
+            }
+        } else if times > 1 {
+            if IsTextContainsNewline(selectedText) {
+                loop times {
+                    if A_Index == 1
+                        Send "{Ctrl Down}c{Ctrl Up}{Right}{Enter}{Ctrl Down}v{Ctrl Up}"
+                    else
+                        Send "{Enter}{Ctrl Down}v{Ctrl Up}"
+                    Sleep 50
+                }
+            } else {
+                if selectedText == "" {
+                    loop times {
+                        if A_Index == 1
+                            Send "{Up}{End}{Shift Down}{Down}{End}{Shift Up}{Ctrl Down}c{Ctrl Up}{Right}{Ctrl Down}v{Ctrl Up}"
+                        else
+                            Send "{Ctrl Down}v{Ctrl Up}"
+                        Sleep 50
+                    }
+                } else {
+                    loop times {
+                        if A_Index == 1
+                            Send "{Ctrl Down}c{Ctrl Up}{Right}{Enter}{Ctrl Down}v{Ctrl Up}"
+                        else
+                            Send "{Enter}{Ctrl Down}v{Ctrl Up}"
+                        Sleep 50
+                    }
+                }
+            }
+        } else if times < 0 {
+            MsgBox "ERROR! Invalid number of times to replicate: " . times
+        }
+    }
+
+    ; Update the last replicate down action time
+    lastReplicateDownActionTime := A_TickCount
 }
 
 /**
@@ -166,7 +212,7 @@ SetWindowAlwaysOnTop() {
         winTitle := WinGetTitle("A")
         ExStyle := WinGetExStyle(winTitle)
         ; 0x8 is WS_EX_TOPMOST
-        if (ExStyle & 0x8) {
+        if ExStyle & 0x8 {
             ; Turn OFF and remove Title_When_On_Top
             WinSetAlwaysOnTop 0, winTitle
             WinSetTitle (RegExReplace(winTitle, Title_When_On_Top)), winTitle
@@ -183,7 +229,7 @@ SetWindowAlwaysOnTop() {
  */
 DisplayTopmostWindowInfo() {
     info := GetTopmostWindowInfo()
-    if (info) {
+    if info {
         infoText := "Window Title: " . info.title . "`n"
             . "ahk_id: " . info.id . "`n"
             . "ahk_class: " . info.class . "`n"
@@ -199,7 +245,7 @@ DisplayTopmostWindowInfo() {
  */
 ActivateTopmostWindow() {
     info := GetTopmostWindowInfo()
-    if (info) {
+    if info {
         ActivateWindow(info.id)
     }
 }
@@ -215,16 +261,16 @@ EjectAllRemovableDrives() {
 
     ; for drive in StrSplit(driveList) {
     ;     drivePath := drive . ":"
-    ;     if (DriveGetType(drivePath) == "Removable") {
+    ;     if DriveGetType(drivePath) == "Removable" {
     ;         hVolume := DllCall("CreateFile", "Str", "\\.\" . drivePath, "UInt", 0x80000000 | 0x40000000,
     ;             "UInt", 0x1 | 0x2, "Ptr", 0, "UInt", 3, "UInt", 0, "Ptr", 0, "Ptr")
 
-    ;         if (hVolume != -1) {
+    ;         if hVolume != -1 {
     ;             result := DllCall("DeviceIoControl", "Ptr", hVolume, "UInt", 0x2D4808,
     ;                 "Ptr", 0, "UInt", 0, "Ptr", 0, "UInt", 0, "Ptr", 0, "Ptr", 0)
     ;             DllCall("CloseHandle", "Ptr", hVolume)
 
-    ;             if (result)
+    ;             if result
     ;                 MsgBox("Successfully ejected drive " . drivePath)
     ;             else
     ;                 MsgBox("Failed to eject drive " . drivePath, "Error", 16)
@@ -233,4 +279,18 @@ EjectAllRemovableDrives() {
     ;         }
     ;     }
     ; }
+}
+
+/**
+ * Reload the script with admin privileges
+ */
+ReloadScriptWithAdminPrivilege() {
+    try {
+        if A_IsCompiled {
+            Run '*RunAs "' A_ScriptFullPath '" /restart'
+        } else {
+            Run '*RunAs "' A_AhkPath '" /restart "' A_ScriptFullPath '"'
+        }
+    }
+    ExitApp
 }
