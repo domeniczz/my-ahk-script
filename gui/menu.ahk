@@ -137,10 +137,10 @@ MainHandler(itemName, itemPos, menuObj) {
     switch itemPos {
         case 1: RunSpotifyAndLyricify()
         case 2: StartOllamaAndDockerWebUI()
-        case 3: ToggleMSIAfterburner()
-        case 4:
-            RunScriptAsAdmin(toggleGameEnv)
-        case 5:
+        case 3: RunScriptAsAdmin(adminScript, "ToggleMSIAfterburner")
+        case 4: RunScriptAsAdmin(adminScript, "ToggleHWiNFO")
+        case 5: RunScriptAsAdmin(adminScript, "ToggleGameEnv")
+        case 6:
             SuspendScript()
             ; Refresh the menu item
             myMenu.Rename(A_IsSuspended ? "Suspend Script" : "Resume Script", A_IsSuspended ? "Resume Script" : "Suspend Script")

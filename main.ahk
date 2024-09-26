@@ -1,4 +1,4 @@
-﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -6,7 +6,7 @@
 
 #SingleInstance Force
 
-#WinActivateForce
+; #WinActivateForce
 
 ; #NoTrayIcon
 
@@ -158,8 +158,11 @@ OnError LogError
 ; `RAlt + C` to start Ollama and Docker container for chat webui to chat with LLMs
 >!c:: StartOllamaAndDockerWebUI()
 
+; `RAlt + I` to toggle HWiNFO64
+>!i:: RunScriptAsAdmin(adminScript, "ToggleHWiNFO")
+
 ; `RAlt + O` to open MSI Afterburner
->!o:: ToggleMSIAfterburner()
+>!o:: RunScriptAsAdmin(adminScript, "ToggleMSIAfterburner")
 
 ; `LAlt + LShift + C` to open Clash for Windows
 <!<+c:: ToggleClash()
@@ -168,18 +171,26 @@ OnError LogError
 >!Enter:: ToggleProxyOnOff()
 
 ; `RAlt + K` to toggle Gaming Network Environment
->!k up:: RunScriptAsAdmin(toggleGameEnv)
+>!k::
+{
+    RunScriptAsAdmin(adminScript, "ToggleGameEnv")
+    maxAttempts := 600
+    loop maxAttempts {
+        ; Exit AHK script after the game environment has been started
+        if FileExist("game_env_started.tmp") {
+            FileDelete("game_env_started.tmp")
+            MsgBox "Exiting the script...", , "T0.5"
+            ExitApp
+        }
+        Sleep 200
+    }
+}
 
 ; `LAlt + `` to close currently active window
 <!`:: CloseCurrentWindow()
 
 ; `LWin + E` to toggle File Explorer
-<#e::
-{
-    ; Wait Win key release to avoid toggling Windows start menu
-    KeyWait("LWin")
-    RunScriptAsAdmin(toggleFileExplorer)
-}
+<#e:: RunScriptAsAdmin(adminScript, "ToggleFileExplorer")
 
 ; `RAlt + F12` to put the computer to sleep
 >!F12:: PutComputerToSleep()
