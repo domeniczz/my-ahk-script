@@ -2,7 +2,7 @@
 
 #SingleInstance Force
 
-#WinActivateForce
+; #WinActivateForce
 
 ProcessSetPriority "High"
 

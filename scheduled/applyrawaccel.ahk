@@ -2,7 +2,7 @@
 
 #SingleInstance Force
 
-#WinActivateForce
+; #WinActivateForce
 
 A_MaxHotkeysPerInterval := 99999999
 A_HotkeyInterval := 99999999
@@ -31,13 +31,13 @@ logfile := A_ScriptDir . "\logs\scheduled.log"
  */
 ApplyRawAccel() {
     Run rawaccel
-    MaxAttempts := 300
-    loop MaxAttempts {
+    maxAttempts := 300
+    loop maxAttempts {
         if ProcessExist("rawaccel.exe") {
             CloseWindow("ahk_exe rawaccel.exe", , 1000)
             break
         }
-        sleep 200
+        Sleep 200
     }
 }
 

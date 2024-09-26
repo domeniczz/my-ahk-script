@@ -2,7 +2,7 @@
 
 #SingleInstance Force
 
-#WinActivateForce
+; #WinActivateForce
 
 A_MaxHotkeysPerInterval := 99999999
 A_HotkeyInterval := 99999999
