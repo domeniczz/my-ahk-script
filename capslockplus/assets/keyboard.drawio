@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
   <diagram name="Page-1" id="orfueDN8exPffnuzT4Qu">
-    <mxGraphModel dx="2074" dy="1245" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="3" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2440" dy="1465" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="3" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -208,16 +208,16 @@
         <mxCell id="bJI-o08UAZwF0vc7pJHo-84" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F7&lt;/b&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;" parent="1" vertex="1">
           <mxGeometry x="786" y="123" width="79" height="52" as="geometry" />
         </mxCell>
-        <mxCell id="bJI-o08UAZwF0vc7pJHo-85" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F12&lt;/b&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;" parent="1" vertex="1">
+        <mxCell id="bJI-o08UAZwF0vc7pJHo-85" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F12&lt;/b&gt;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;(以管理员身份重启此 Script)&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;strokeColor=#000000;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fillColor=#bdfdba;" parent="1" vertex="1">
           <mxGeometry x="1181" y="123" width="79" height="52" as="geometry" />
         </mxCell>
-        <mxCell id="bJI-o08UAZwF0vc7pJHo-86" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F11&lt;br&gt;(重启 AHK Script)&lt;/b&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;strokeColor=#000000;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fillColor=#bdfdba;" parent="1" vertex="1">
+        <mxCell id="bJI-o08UAZwF0vc7pJHo-86" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F11&lt;br&gt;(重启此 Script)&lt;/b&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;strokeColor=#000000;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fillColor=#bdfdba;" parent="1" vertex="1">
           <mxGeometry x="1102" y="123" width="79" height="52" as="geometry" />
         </mxCell>
-        <mxCell id="bJI-o08UAZwF0vc7pJHo-87" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F10&lt;/b&gt;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;(开关 CpasLock)&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;strokeColor=#000000;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fillColor=#bdfdba;" parent="1" vertex="1">
+        <mxCell id="bJI-o08UAZwF0vc7pJHo-87" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F10&lt;/b&gt;&lt;/span&gt;&lt;div&gt;&lt;b style=&quot;font-size: 8px;&quot;&gt;(关闭此 Script)&lt;/b&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;strokeColor=#000000;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fillColor=#bdfdba;" parent="1" vertex="1">
           <mxGeometry x="1023" y="123" width="79" height="52" as="geometry" />
         </mxCell>
-        <mxCell id="bJI-o08UAZwF0vc7pJHo-88" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F9&lt;/b&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;" parent="1" vertex="1">
+        <mxCell id="bJI-o08UAZwF0vc7pJHo-88" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F9&lt;/b&gt;&lt;/span&gt;&lt;div&gt;&lt;b style=&quot;font-size: 8px;&quot;&gt;(开关 CpasLock)&lt;/b&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;strokeColor=#000000;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fillColor=#bdfdba;" parent="1" vertex="1">
           <mxGeometry x="944" y="123" width="79" height="52" as="geometry" />
         </mxCell>
         <mxCell id="bJI-o08UAZwF0vc7pJHo-89" value="&lt;span style=&quot;font-size: 8px;&quot;&gt;&lt;b&gt;F8&lt;/b&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0;spacingLeft=1;spacingRight=1;" parent="1" vertex="1">
