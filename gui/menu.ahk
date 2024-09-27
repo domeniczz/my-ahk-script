@@ -147,7 +147,7 @@ MainHandler(itemName, itemPos, menuObj) {
             ; Refresh the menu item
             myMenu.Rename(A_IsSuspended ? "Suspend Script" : "Resume Script", A_IsSuspended ? "Resume Script" : "Suspend Script")
             myMenu.SetIcon(A_IsSuspended ? "Resume Script" : "Suspend Script", "imageres.dll", A_IsSuspended ? 231 : 229)
-        default: MsgBox("ERROR! Unknown item: " . itemName . " at position " . itemPos)
+        default: MsgBox "ERROR! Unknown item: " . itemName . " at position " . itemPos, , "T2"
     }
 }
 
@@ -176,7 +176,7 @@ ToolHandler(itemName, itemPos, menuObj) {
         case 5: ToggleGecko()
         case 6: ToggleGecko(, true)
         case 7: ToggleEudic()
-        default: MsgBox("ERROR! Unknown item: " . itemName . " at position " . itemPos)
+        default: MsgBox "ERROR! Unknown item: " . itemName . " at position " . itemPos, , "T2"
     }
 }
 
@@ -187,7 +187,7 @@ ChatHandler(itemName, itemPos, menuObj) {
         case 3: ToggleWeChat()
         case 4: ToggleTencentTIM()
         case 5: ToggleDingTalk()
-        default: MsgBox("ERROR! Unknown item: " . itemName . " at position " . itemPos)
+        default: MsgBox "ERROR! Unknown item: " . itemName . " at position " . itemPos, , "T2"
     }
 }
 
@@ -198,7 +198,7 @@ MediaHandler(itemName, itemPos, menuObj) {
         case 3: ToggleSandboxedBilibili()
         case 4: OpenYouTube()
         case 5: OpenYouTube2()
-        default: MsgBox("ERROR! Unknown item: " . itemName . " at position " . itemPos)
+        default: MsgBox "ERROR! Unknown item: " . itemName . " at position " . itemPos, , "T2"
     }
 }
 
@@ -206,6 +206,6 @@ PowerHandler(itemName, itemPos, menuObj) {
     switch itemPos {
         case 1: PutComputerToSleep()
         case 2: PutComputerToRestart()
-        default: MsgBox("ERROR! Unknown item: " . itemName . " at position " . itemPos)
+        default: MsgBox "ERROR! Unknown item: " . itemName . " at position " . itemPos, , "T2"
     }
 }

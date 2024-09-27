@@ -9,11 +9,7 @@ IsExcludedProgram() {
         program := WinGetProcessName("A")
         ; Check if the current program is in the exclude list
         ; If `WinGetProcessName` fails to get the process name and returns an empty string, return false
-        return program != "" ? excludedProgramList.HasValue(program) : false
-    } catch as err {
-        ; ToolTip "ERROR checking excluded program: " . (program != "" ? program : "Unknown")
-        ; SetTimer () => ToolTip(), -5000, -1
-        return false
+        return program != "" ? HasVal(excludedProgramList, program) : false
     }
 }
 
@@ -27,7 +23,8 @@ RunScriptAsAdmin(script, fucntionName := "") {
     try {
         Run '*RunAs "' . A_AhkPath . '" "' . script . '" "' . fucntionName . '"'
     } catch as err {
-        MsgBox "Error attempting to run admin script: " . err.Message
+        MsgBox "Error attempting to run admin script: " . err.Message, , "T2"
+        throw
     }
 }
 

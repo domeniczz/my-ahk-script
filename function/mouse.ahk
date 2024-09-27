@@ -38,7 +38,6 @@ InfiniteScrollHandler(*) {
         Click "Right"
         return
     }
-
     try {
         BeforeCleanUp()
 
@@ -52,7 +51,6 @@ InfiniteScrollHandler(*) {
         ; The priority is set to 100, which is higher than the default priority of 0
         SetTimer CheckRButtonRelease, 5, 100
     } catch as err {
-        LogError(err)
         AfterCleanUp()
     }
 }
@@ -116,7 +114,7 @@ ScrollWheelHandler(ThisHotkey) {
         infiniteScrollActive := true
         ; Start infinite scrolling
         ; The priority is set to 100, which is higher than the default priority of 0
-        SetTimer InfiniteScroll, 10, 100
+        SetTimer InfiniteScroll, 5, 100
     }
 }
 
@@ -128,7 +126,6 @@ ScrollWheelHandler(ThisHotkey) {
  * @returns {Number} - The speed multiplier to apply to the base scroll speed
  */
 CalculateSpeedMultiplier(count) {
-    ; 1 + (count * 0.12) ^ 3
     return 1 + (count * 0.15) ** 3
 }
 

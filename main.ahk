@@ -46,6 +46,7 @@ InstallMouseHook
 #Include common\constants\autodarkmode.ahk
 #Include common\constants\keybindings.ahk
 #Include common\constants\scripts.ahk
+#Include common\utils\ahkutils.ahk
 #Include common\utils\scriptutils.ahk
 #Include common\utils\windowutils.ahk
 #Include common\utils\fileutils.ahk
@@ -109,6 +110,15 @@ OnError LogError
 
 ; `LAlt + LShift + 5` to toggle a new instance of Windows Terminal
 <!<+5:: ToggleWindowsTerminal(true)
+
+; `LCtrl + `` to toggle Heynote
+<^`:: ToggleHeynote()
+
+; `LCtrl + 1` to toggle Typora
+<^1:: ToggleTypora()
+
+; `LCtrl + LShift + 1` to toggle a new instance of Typora
+<^<+1:: ToggleTypora(true)
 
 ; `LWin + `` to toggle Firefox
 <#`:: ToggleGecko()
@@ -236,29 +246,37 @@ if FileExist("game_env_started.tmp") {
 }
 
 ; Delete old log files under the "log" folder
-; Remove log files older than 2 days
+; Remove log files older than 3 days
 loop files, A_ScriptDir . "\log" . "\*", "D" {
     monthDir := A_LoopFilePath
     ; Get the current date
     dateNow := DateAdd(A_Now, 0, "days")
-    ; Get the cutoff date (2 days ago)
-    cutoffDate := DateAdd(dateNow, -2, "days")
+    ; Get the cutoff date (3 days ago)
+    cutoffDate := DateAdd(dateNow, -3, "days")
+    ; the date today
     dateNowFormatted := FormatTime(dateNow, "yyyyMMdd")
+    ; the date 3 days ago
     cutoffDateFormatted := FormatTime(cutoffDate, "yyyyMMdd")
     ; Loop through all log files in the month directory
     loop files, monthDir . "\*.log" {
         logFile := A_LoopFilePath
         ; Extract date from filename (assuming format MM-dd.log)
         fileNameNoExt := GetPathComponent(logFile, "nameNoExt")
+        ; Concatenate the year, month, and day from the current date with the filename
         fileDate := SubStr(A_Now, 1, 4) . SubStr(fileNameNoExt, 1, 2) . SubStr(fileNameNoExt, 4, 2)
+        ; If the file date is not today and the file is empty, delete it
+        if fileDate != dateNowFormatted and FileRead(logFile) == "" {
+            try {
+                FileDelete(logFile)
+                continue
+            }
+        }
         ; Check if the file date is within the range
         ; If the file date is older than the cutoff date or newer than the current date, delete it
         if fileDate < cutoffDateFormatted or fileDate > dateNowFormatted {
             ; Delete the file if it's older than the cutoff date
             try {
                 FileDelete(logFile)
-            } catch as err {
-                LogError(err)
             }
         }
     }
@@ -266,8 +284,6 @@ loop files, A_ScriptDir . "\log" . "\*", "D" {
     if !FileExist(monthDir . "\*.*") {
         try {
             DirDelete(monthDir)
-        } catch as err {
-            LogError(err)
         }
     }
 }

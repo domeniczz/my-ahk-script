@@ -16,7 +16,7 @@ LetUserInputNumber(prompt := "Input a number here:") {
             return value
         }
         ; Otherwise, show an error message and continue the loop to ask for input again
-        MsgBox "Invalid input. Please input a number."
+        MsgBox "Invalid input. Please input a number.", , "T2"
         continue
     }
 }

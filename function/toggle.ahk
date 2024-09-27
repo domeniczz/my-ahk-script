@@ -25,6 +25,8 @@ appData := Map(
         allWinIdList: []
     }, "Cursor", {
         allWinIdList: []
+    }, "Typora", {
+        allWinIdList: []
     }, "firefox", {
         allWinIdList: [],
         nonprivatewinIdList: [],
@@ -85,13 +87,31 @@ ToggleCursor(newInstance := false) {
 }
 
 /**
+ * Toggle Heynote
+ */
+ToggleHeynote() {
+    ToggleApplication(heynote, heynoteDim)
+}
+
+/**
+ * Toggle Typora
+ * 
+ * @param {Boolean} newInstance - Whether to open a new instance (default: false)
+ */
+ToggleTypora(newInstance := false) {
+    ToggleApplications(typora, typoraDim, , , newInstance)
+}
+
+/**
  * Toggle Windows Terminal
  * 
  * @param {Boolean} newInstance - Whether to open a new instance (default: false)
  */
 ToggleWindowsTerminal(newInstance := false) {
     if newInstance {
-        Run terminal
+        try {
+            Run terminal
+        }
         if ActivateWindow("ahk_exe WindowsTerminal.exe") {
             SetWindow("ahk_exe WindowsTerminal.exe", terminalDim.x, terminalDim.y, terminalDim.w, terminalDim.h)
         }
@@ -198,7 +218,9 @@ ToggleGecko(browser := firefox, isPrivate := false, incognitoFlag := "--private-
 
         ; No expected window, run it
         if winList.Length == 0 {
-            Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
+            try {
+                Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
+            }
             ; Get the new window's ahk_id
             list := WinGetList("ahk_exe " . exe)
             for item in list {
@@ -251,7 +273,9 @@ ToggleGecko(browser := firefox, isPrivate := false, incognitoFlag := "--private-
     }
     ; If it is not running, run it
     else {
-        Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
+        try {
+            Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
+        }
         ActivateWindow("ahk_exe " . exe)
         winId := WinGetID("ahk_exe " . exe)
         if winId {
@@ -378,7 +402,9 @@ ToggleChromium(browser := chrome, isPrivate := false, incognitoFlag := "--incogn
 
         ; No expected window, run it
         if winList.Length == 0 {
-            Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
+            try {
+                Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
+            }
             ; Get the new window's ahk_id
             list := WinGetList("ahk_exe " . exe)
             for item in list {
@@ -437,7 +463,9 @@ ToggleChromium(browser := chrome, isPrivate := false, incognitoFlag := "--incogn
     }
     ; If it is not running, run it
     else {
-        Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
+        try {
+            Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
+        }
         if ActivateWindow("ahk_exe " . exe) {
             try {
                 SetWindow("ahk_exe " . exe, %name%Dim.x, %name%Dim.y, %name%Dim.w, %name%Dim.h)
@@ -496,19 +524,23 @@ ToggleDiscord() {
             }
         } else {
             if discord != "" {
-                Run discord
+                try {
+                    Run discord
+                }
                 if ActivateWindow("ahk_exe Discord.exe") {
                     SetWindow("ahk_exe Discord.exe", discordDim.x, discordDim.y, discordDim.w, discordDim.h)
                 }
             } else {
                 discord := GetExePath(EnvGet("LocalAppData") . "\Discord" . "\app-*", "Discord.exe")
                 if discord != "" {
-                    Run discord
+                    try {
+                        Run discord
+                    }
                     if ActivateWindow("ahk_exe Discord.exe") {
                         SetWindow("ahk_exe Discord.exe", discordDim.x, discordDim.y, discordDim.w, discordDim.h)
                     }
                 } else {
-                    MsgBox "ERROR! Discord.exe not found in the expected directory `"" . discord . "`"."
+                    MsgBox "ERROR! Discord.exe not found in the expected directory `"" . discord . "`".", , "T2"
                 }
             }
         }
@@ -518,12 +550,14 @@ ToggleDiscord() {
         ; Get the path to the executable
         discord := GetExePath(EnvGet("LocalAppData") . "\Discord" . "\app-*", "Discord.exe")
         if discord != "" {
-            Run discord
+            try {
+                Run discord
+            }
             if ActivateWindow("ahk_exe Discord.exe") {
                 SetWindow("ahk_exe Discord.exe", discordDim.x, discordDim.y, discordDim.w, discordDim.h)
             }
         } else {
-            MsgBox "ERROR! Discord.exe not found in the expected directory `"" . discord . "`"."
+            MsgBox "ERROR! Discord.exe not found in the expected directory `"" . discord . "`".", , "T2"
         }
     }
 }
@@ -538,12 +572,16 @@ ToggleWeChat() {
             ; Window is active, close to minimize it to the system tray
             CloseWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC")
         } else if WinExist("ahk_exe WeChat.exe") and !WinActive("ahk_exe WeChat.exe") {
-            Run wechat
+            try {
+                Run wechat
+            }
             if ActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC") {
                 SetWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
             }
         } else {
-            Run wechat
+            try {
+                Run wechat
+            }
             if ActivateWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC") {
                 SetWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
             }
@@ -551,7 +589,9 @@ ToggleWeChat() {
     }
     ; If it is not running, run it
     else {
-        Run wechat
+        try {
+            Run wechat
+        }
         ActivateWindowAndClick("ahk_exe WeChat.exe ahk_class WeChatLoginWndForPC", , , wechatLoginBtnX, wechatLoginBtnY)
         ToolTip "WeChat Login"
         SetTimer () => ToolTip(), -1000, -1
@@ -561,7 +601,7 @@ ToggleWeChat() {
                 SetWindow("ahk_exe WeChat.exe ahk_class WeChatMainWndForPC", wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
             }
         } else {
-            MsgBox "ERROR! WeChat.exe window could not be found!"
+            MsgBox "ERROR! WeChat.exe window could not be found!", , "T2"
         }
     }
 }
@@ -584,7 +624,9 @@ ToggleTencentTIM() {
     }
     ; If it is not running, run it
     else {
-        Run tim
+        try {
+            Run tim
+        }
         ; SetWindow("ahk_exe Telegram.exe", telegramDim.x, telegramDim.y, telegramDim.w, telegramDim.h)
         ActivateWindow("ahk_exe TIM.exe")
         loginPageId := WinGetID("ahk_exe TIM.exe")
@@ -600,7 +642,7 @@ ToggleTencentTIM() {
             Sleep 100
         }
         if maxAttempts <= 0 {
-            MsgBox "ERROR! TIM.exe main window could not be found!"
+            MsgBox "ERROR! TIM.exe main window could not be found!", , "T2"
         }
     }
 }
@@ -615,12 +657,16 @@ ToggleDingTalk() {
             ; Window is active, close to minimize it to the system tray
             CloseWindow("ahk_exe DingTalk.exe")
         } else if WinExist("ahk_exe DingTalk.exe") and !WinActive("ahk_exe DingTalk.exe") {
-            Run dingtalk
+            try {
+                Run dingtalk
+            }
             if ActivateWindow("ahk_exe DingTalk.exe") {
                 SetWindow("ahk_exe DingTalk.exe ahk_class StandardFrame_DingTalk", dingtalkDim.x, dingtalkDim.y, dingtalkDim.w, dingtalkDim.h)
             }
         } else {
-            Run dingtalk
+            try {
+                Run dingtalk
+            }
             if ActivateWindow("ahk_exe DingTalk.exe") {
                 SetWindow("ahk_exe DingTalk.exe ahk_class StandardFrame_DingTalk", dingtalkDim.x, dingtalkDim.y, dingtalkDim.w, dingtalkDim.h)
             }
@@ -628,7 +674,9 @@ ToggleDingTalk() {
     }
     ; If it is not running, run it
     else {
-        Run dingtalk
+        try {
+            Run dingtalk
+        }
         maxAttempts1 := 40
         loop maxAttempts1 {
             ; Login window shows at first
@@ -649,7 +697,7 @@ ToggleDingTalk() {
             Sleep 100
         }
         if maxAttempts1 <= 0 {
-            MsgBox "ERROR! DingTalk.exe window could not be found!"
+            MsgBox "ERROR! DingTalk.exe window could not be found!", , "T2"
         }
     }
 }
@@ -678,7 +726,9 @@ ToggleBilibili() {
         switch winList.Length {
             case 0:
                 ; No window, run it
-                Run bilibili
+                try {
+                    Run bilibili
+                }
                 if bilibiliWinId == "" and WinWait("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", , 10) {
                     if ActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1") {
                         SetWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
@@ -719,12 +769,14 @@ ToggleBilibili() {
                     }
                 }
             default:
-                MsgBox "ERROR! Unexpected number of bilibili windows: " . winList.Length
+                MsgBox "ERROR! Unexpected number of bilibili windows: " . winList.Length, , "T2"
         }
     }
     ; If it is not running, run it
     else {
-        Run bilibili
+        try {
+            Run bilibili
+        }
         if ActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1") {
             SetWindow("ahk_exe 哔哩哔哩.exe ahk_class Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
         }
@@ -752,7 +804,9 @@ ToggleSandboxedBilibili() {
         switch winList.Length {
             case 0:
                 ; No window, run it
-                Run bilibiliSandboxed
+                try {
+                    Run bilibiliSandboxed
+                }
                 if bilibiliSandboxedWinId == "" and WinWait("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", , 10) {
                     if ActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1") {
                         SetWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
@@ -793,12 +847,14 @@ ToggleSandboxedBilibili() {
                     }
                 }
             default:
-                MsgBox "ERROR! Unexpected number of bilibili (sandboxed) windows: " . winList.Length
+                MsgBox "ERROR! Unexpected number of bilibili (sandboxed) windows: " . winList.Length, , "T2"
         }
     }
     ; If it is not running, run it
     else {
-        Run bilibiliSandboxed
+        try {
+            Run bilibiliSandboxed
+        }
         if ActivateWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1") {
             SetWindow("ahk_exe 哔哩哔哩.exe ahk_class Sandbox:MultiAccount:Chrome_WidgetWin_1", bilibiliDim.x, bilibiliDim.y, bilibiliDim.w, bilibiliDim.h)
         }
@@ -813,7 +869,9 @@ ToggleSandboxedBilibili() {
  * Open YouTube with browser
  */
 OpenYouTube() {
-    Run '"' . browser . '" "https://www.youtube.com"'
+    try {
+        Run '"' . browser . '" "https://www.youtube.com"'
+    }
     ActivateWindow("ahk_exe " . GetPathComponent(browser, "name"))
 }
 
@@ -823,7 +881,9 @@ OpenYouTube() {
 OpenYouTube2() {
     ; With the help of browser extension "Open external links in a container"
     ; Extension Repo: https://github.com/honsiorovskyi/open-url-in-container
-    Run '"' . browser . '" "ext+container:name=Dintionte&url=https://www.youtube.com"'
+    try {
+        Run '"' . browser . '" "ext+container:name=Dintionte&url=https://www.youtube.com"'
+    }
     ActivateWindow("ahk_exe " . GetPathComponent(browser, "name"))
 }
 
@@ -924,7 +984,7 @@ ToggleProxyOnOff() {
                 Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
                 Sleep 200
             } else {
-                MsgBox "ATTENTION! System Proxy is enabled but Clash for Windows is not running!"
+                MsgBox "ATTENTION! System Proxy is enabled but Clash for Windows is not running!", , "T2"
                 return
             }
             maxAttempts2 := 6
@@ -958,7 +1018,7 @@ ToggleProxyOnOff() {
                 Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
                 Sleep 200
             } else {
-                MsgBox "ATTENTION! System Proxy is enabled but Clash for Windows is not running!"
+                MsgBox "ATTENTION! System Proxy is enabled but Clash for Windows is not running!", , "T2"
                 return
             }
             maxAttempts2 := 6
@@ -1043,7 +1103,9 @@ CloseCurrentWindow() {
  * Put the computer to sleep
  */
 PutComputerToSleep() {
-    DllCall("PowrProf.dll\SetSuspendState", "Int", 0, "Int", 0, "Int", 0)
+    try {
+        DllCall("PowrProf.dll\SetSuspendState", "Int", 0, "Int", 0, "Int", 0)
+    }
 }
 
 /**
@@ -1051,7 +1113,9 @@ PutComputerToSleep() {
  */
 PutComputerToRestart() {
     countDownSeconds := 5
-    Run('pwsh.exe -Command "for ($i = ' . countDownSeconds . '; $i -gt 0; $i--) { Write-Host \"Restarting in $i seconds...\"; Start-Sleep -Seconds 1 }; Restart-Computer"')
+    try {
+        Run('pwsh.exe -Command "for ($i = ' . countDownSeconds . '; $i -gt 0; $i--) { Write-Host \"Restarting in $i seconds...\"; Start-Sleep -Seconds 1 }; Restart-Computer"')
+    }
 }
 
 ;;;;;;;;;; UTILITY FUNCTIONS ;;;;;;;;;;
@@ -1070,7 +1134,7 @@ PutComputerToRestart() {
 ToggleApplication(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
 }, winExeName := "", additionalWinSpecifier := "", setWinAfterEveryActivate := false, minimizeOrClose := 1) {
     if app == "" {
-        MsgBox "ERROR! No application specified!"
+        MsgBox "ERROR while toggling! No application specified!", , "T2"
         return
     }
 
@@ -1107,7 +1171,9 @@ ToggleApplication(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
     }
     ; If it is not running, run it
     else {
-        Run app
+        try {
+            Run app
+        }
         if ActivateWindow(winSpecifier) {
             SetWindow(winSpecifier, appDim.x, appDim.y, appDim.w, appDim.h)
         }
@@ -1130,7 +1196,7 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
     global appData
 
     if app == "" {
-        MsgBox "ERROR! No application specified!"
+        MsgBox "ERROR while toggling! No application specified!", , "T2"
         return
     }
 
@@ -1183,7 +1249,9 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
         if newInstance {
             oldWinCount := winList.Length
 
-            Run app
+            try {
+                Run app
+            }
 
             maxAttempts := 500
             loop maxAttempts {
@@ -1195,7 +1263,7 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
                 Sleep 20
             }
             if maxAttempts <= 0 {
-                MsgBox 'ERROR! New instance window of "' . name . '" could not be found!'
+                MsgBox 'ERROR! New instance window of "' . name . '" could not be found!', , "T2"
             }
 
             ; Get window id of the new instance
@@ -1219,7 +1287,9 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
 
         ; No expected window, run it
         if winList.Length == 0 {
-            Run app
+            try {
+                Run app
+            }
             if ActivateWindow(winSpecifier) {
                 SetWindow(winSpecifier, appDim.x, appDim.y, appDim.w, appDim.h)
             }
@@ -1262,7 +1332,9 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
     }
     ; If it is not running, run it
     else {
-        Run app
+        try {
+            Run app
+        }
         if ActivateWindow(winSpecifier) {
             SetWindow(winSpecifier, appDim.x, appDim.y, appDim.w, appDim.h)
         }

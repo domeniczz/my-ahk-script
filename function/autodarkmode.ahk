@@ -98,9 +98,5 @@ ToggleWinColorMode(mode := "Toggle") {
         res := CalculateSunriseSunsetTime(currentLatitude, currentLongitude, currentTimezone)
         sunrise := res[1]
         sunset := res[2]
-    } catch as err {
-        ; MsgBox("An error occurred while changing color mode: " . err.Message)
-        LogError(err, "Return")
-        return "Error"
     }
 }

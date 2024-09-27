@@ -10,6 +10,10 @@ keybindings := [
     ],
     ["LAlt (+ LShift) + 5", "Toggle Terminal (or a new instance)"
     ],
+    ["LCtrl + ``", "Toggle Heynote"
+    ],
+    ["LCtrl (+ LShift) + 1", "Toggle Typora (or a new instance)"
+    ],
     ["LWin (+ LShift) + ``", "Toggle Firefox (or private window)"
     ],
     ["LWin (+ LShift) + 1", "Toggle Brave (or private window)"

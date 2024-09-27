@@ -11,7 +11,7 @@ SwitchTextCase(Mode) {
     ; Copy the text
     Send "^c"
     if !ClipWait(1) {
-        MsgBox "Failed to copy text to clipboard."
+        MsgBox "Failed to copy text to clipboard.", , "T2"
         return
     }
     ; Sleep for a while to ensure A_Clipboard works correctly
@@ -23,7 +23,7 @@ SwitchTextCase(Mode) {
         case "L": A_Clipboard := StrLower(A_Clipboard)
         case "U": A_Clipboard := StrUpper(A_Clipboard)
         case "T": A_Clipboard := StrTitle(A_Clipboard)
-        default: MsgBox "ERROR! Invalid mode for SwitchTextCase: " . Mode
+        default: MsgBox "ERROR! Invalid mode for SwitchTextCase: " . Mode, , "T2"
     }
 
     Send "^v"
@@ -118,7 +118,7 @@ SeparateClipboard(action := "copy") {
         Send "{LCtrl Down}x{LCtrl Up}"
     }
     if !ClipWait(1) {
-        MsgBox "Failed to cut text to clipboard."
+        MsgBox "Failed to cut text to clipboard.", , "T2"
         return
     }
     Sleep 50
@@ -189,7 +189,7 @@ ReplicateDown(userSpecify := false) {
                 }
             }
         } else if times < 0 {
-            MsgBox "ERROR! Invalid number of times to replicate: " . times
+            MsgBox "ERROR! Invalid number of times to replicate: " . times, , "T2"
         }
     }
 
@@ -234,9 +234,9 @@ DisplayTopmostWindowInfo() {
             . "ahk_id: " . info.id . "`n"
             . "ahk_class: " . info.class . "`n"
             . "ahk_exe: " . info.exe
-        MsgBox(infoText, "Topmost Window Info")
+        MsgBox infoText, "Topmost Window Info", "T2"
     } else {
-        MsgBox("No suitable window found.", "Topmost Window Info")
+        MsgBox "No suitable window found.", "Topmost Window Info", "T2"
     }
 }
 
@@ -271,11 +271,11 @@ EjectAllRemovableDrives() {
     ;             DllCall("CloseHandle", "Ptr", hVolume)
 
     ;             if result
-    ;                 MsgBox("Successfully ejected drive " . drivePath)
+    ;                 MsgBox "Successfully ejected drive " . drivePath, , "T2"
     ;             else
-    ;                 MsgBox("Failed to eject drive " . drivePath, "Error", 16)
+    ;                 MsgBox "Failed to eject drive " . drivePath, "Error", "T2 16"
     ;         } else {
-    ;             MsgBox("Failed to open drive " . drivePath, "Error", 16)
+    ;             MsgBox "Failed to open drive " . drivePath, "Error", "T2 16"
     ;         }
     ;     }
     ; }
@@ -293,4 +293,64 @@ ReloadScriptWithAdminPrivilege() {
         }
     }
     ExitApp
+}
+
+/**
+ * Retrieves information of the topmost visible window: title, ahk_id, ahk_class, ahk_exe
+ * Returns false if no suitable window is found.
+ * 
+ * @returns {Object | Boolean} - The information of the topmost visible window or false if no suitable window is found
+ * @example
+ * {
+ *     title: "Mozilla Firefox",
+ *     id: "ahk_id 394026",
+ *     class: "ahk_class MozillaWindowClass",
+ *     exe: "ahk_exe firefox.exe"
+ * }
+ */
+GetTopmostWindowInfo() {
+    try {
+        windowList := WinGetList()
+
+        ; Iterate through all windows
+        for window in windowList {
+            ; Skip if window doesn't exist
+            if !WinExist(window)
+                continue
+
+            winExe := WinGetProcessName(window)
+            winClass := WinGetClass(window)
+
+            ; Skip explorer.exe windows except File Explorer
+            if winExe = "explorer.exe" && winClass != "CabinetWClass" {
+                continue
+            }
+            ; Skip excluded windows in the list
+            if HasVal(excludedWindowList, winExe) {
+                continue
+            }
+
+            winTitle := WinGetTitle(window)
+            winId := WinGetID(window)
+
+            ; Check if the window is minimized
+            minMax := WinGetMinMax(window)
+            if minMax == -1  ; -1 means minimized
+                continue
+
+            ; Return the information
+            return {
+                title: winTitle,
+                id: Format("ahk_id {}", winId),
+                class: Format("ahk_class {}", winClass),
+                exe: Format("ahk_exe {}", winExe)
+            }
+        }
+
+        ; No suitable window found
+        return false
+    } catch as err {
+        MsgBox "ERROR when get topmost window info: " . err.Message, , "T2"
+        throw
+    }
 }

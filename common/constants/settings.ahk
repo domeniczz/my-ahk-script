@@ -49,3 +49,20 @@ excludedProgramList := [
     ; 3DMark
     "3DMark.exe"
 ]
+
+/**
+ * List (Map) of applications to exclude when searching topmost window
+ * 
+ * Key:
+ * 
+ * - application executable name (String)
+ * 
+ * Value:
+ * 
+ * - `true` if the application should be excluded, `false` otherwise
+ */
+excludedWindowList := [
+    "StartMenuExperienceHost.exe",
+    "Lyricify for Spotify.exe",
+    "AutoHotkey64.exe"
+]

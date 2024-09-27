@@ -5,7 +5,9 @@
  * @param {String} explorer - The explorer program to open the folder
  */
 OpenFolder(path := A_MyDocuments, explorer := "explorer.exe ") {
-    Run(explorer . path)
+    try {
+        Run(explorer . path)
+    }
 }
 
 /**
@@ -16,11 +18,13 @@ OpenFolder(path := A_MyDocuments, explorer := "explorer.exe ") {
  * @returns {String} - The path of the file if found, otherwise an empty string.
  */
 GetExePath(baseDir := "", exeName := "") {
-    ; Loop through all subdirectories
-    loop files, baseDir, "D" {
-        ; Check if the executable file exists in current subdirectory
-        if FileExist(A_LoopFilePath . "\" . exeName)
-            return A_LoopFilePath . "\" . exeName
+    try {
+        ; Loop through all subdirectories
+        loop files, baseDir, "D" {
+            ; Check if the executable file exists in current subdirectory
+            if FileExist(A_LoopFilePath . "\" . exeName)
+                return A_LoopFilePath . "\" . exeName
+        }
     }
     return "" ; Return empty string if not found
 }

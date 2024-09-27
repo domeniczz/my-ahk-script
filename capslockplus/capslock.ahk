@@ -110,8 +110,8 @@ seperateClipboard := ""
             try {
                 RunHotkeyFunction("Capslock_" . A_ThisHotkey)
             } catch as err {
-                MsgBox "ERROR while running function Capslock_" . A_ThisHotkey
-                LogError(err, "Return")
+                MsgBox "ERROR while running function Capslock_" . A_ThisHotkey, , "T2"
+                throw
             }
         }
     }
@@ -136,8 +136,8 @@ seperateClipboard := ""
             Escape:: RunHotkeyFunction("Capslock_Esc")
             Delete:: RunHotkeyFunction("Capslock_Delete")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_" . A_ThisHotkey
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_" . A_ThisHotkey, , "T2"
+            throw
         }
     }
     ; Mouse buttons
@@ -149,8 +149,8 @@ seperateClipboard := ""
             RButton:: RunHotkeyFunction("Capslock_RButton")
             MButton:: RunHotkeyFunction("Capslock_MButton")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_" . A_ThisHotkey
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_" . A_ThisHotkey, , "T2"
+            throw
         }
     }
 }
@@ -212,8 +212,8 @@ seperateClipboard := ""
             try {
                 RunHotkeyFunction("Capslock_Shift_" . SubStr(A_ThisHotkey, 2))
             } catch as err {
-                MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2)
-                LogError(err, "Return")
+                MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2), , "T2"
+                throw
             }
         }
     }
@@ -238,8 +238,8 @@ seperateClipboard := ""
             +Escape:: RunHotkeyFunction("Capslock_Shift_Esc")
             +Delete:: RunHotkeyFunction("Capslock_Shift_Delete")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2)
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2), , "T2"
+            throw
         }
     }
     ; Mouse buttons
@@ -251,8 +251,8 @@ seperateClipboard := ""
             +RButton:: RunHotkeyFunction("Capslock_Shift_RButton")
             +MButton:: RunHotkeyFunction("Capslock_Shift_MButton")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2)
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_Shift_" . SubStr(A_ThisHotkey, 2), , "T2"
+            throw
         }
     }
 }
@@ -314,8 +314,8 @@ seperateClipboard := ""
             try {
                 RunHotkeyFunction("Capslock_Alt_" . SubStr(A_ThisHotkey, 2))
             } catch as err {
-                MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2)
-                LogError(err, "Return")
+                MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2), , "T2"
+                throw
             }
         }
     }
@@ -340,8 +340,8 @@ seperateClipboard := ""
             !Escape:: RunHotkeyFunction("Capslock_Alt_Esc")
             !Delete:: RunHotkeyFunction("Capslock_Alt_Delete")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2)
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2), , "T2"
+            throw
         }
     }
     ; Mouse buttons
@@ -353,8 +353,8 @@ seperateClipboard := ""
             !RButton:: RunHotkeyFunction("Capslock_Alt_RButton")
             !MButton:: RunHotkeyFunction("Capslock_Alt_MButton")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2)
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_Alt_" . SubStr(A_ThisHotkey, 2), , "T2"
+            throw
         }
     }
 }
@@ -416,8 +416,8 @@ seperateClipboard := ""
             try {
                 RunHotkeyFunction("Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2))
             } catch as err {
-                MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
-                LogError(err, "Return")
+                MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
+                throw
             }
         }
     }
@@ -442,8 +442,8 @@ seperateClipboard := ""
             ^Escape:: RunHotkeyFunction("Capslock_Ctrl_Esc")
             ^Delete:: RunHotkeyFunction("Capslock_Ctrl_Delete")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
+            throw
         }
     }
     ; Mouse buttons
@@ -455,8 +455,8 @@ seperateClipboard := ""
             ^RButton:: RunHotkeyFunction("Capslock_Ctrl_RButton")
             ^MButton:: RunHotkeyFunction("Capslock_Ctrl_MButton")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
+            throw
         }
     }
 }
@@ -518,8 +518,8 @@ seperateClipboard := ""
             try {
                 RunHotkeyFunction("Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2))
             } catch as err {
-                MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
-                LogError(err, "Return")
+                MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
+                throw
             }
         }
     }
@@ -544,8 +544,8 @@ seperateClipboard := ""
             #Escape:: RunHotkeyFunction("Capslock_Ctrl_Esc")
             #Delete:: RunHotkeyFunction("Capslock_Ctrl_Delete")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
+            throw
         }
     }
     ; Mouse buttons
@@ -557,8 +557,8 @@ seperateClipboard := ""
             #RButton:: RunHotkeyFunction("Capslock_Ctrl_RButton")
             #MButton:: RunHotkeyFunction("Capslock_Ctrl_MButton")
         } catch as err {
-            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2)
-            LogError(err, "Return")
+            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
+            throw
         }
     }
 }
@@ -585,22 +585,24 @@ seperateClipboard := ""
  *       Ensure all referenced functions are defined before calling RunHotkeyFunction.
  */
 RunHotkeyFunction(funcName) {
-    if !RegExMatch(Trim(funcName), "\)$") {
-        %funcName%()
-        return
-    }
-    if RegExMatch(funcName, "(\w+)\((.*)\)$", &match) {
-        func := match[1]
-        if !match[2] {
-            %func%()
+    try {
+        if !RegExMatch(Trim(funcName), "\)$") {
+            %funcName%()
             return
         }
-        params := StrSplit(match[2], ",", " `t")
-        switch params.Length {
-            case 1: %func%(params[1])
-            case 2: %func%(params[1], params[2])
-            case 3: %func%(params[1], params[2], params[3])
-            default: %func%(params*)
+        if RegExMatch(funcName, "(\w+)\((.*)\)$", &match) {
+            func := match[1]
+            if !match[2] {
+                %func%()
+                return
+            }
+            params := StrSplit(match[2], ",", " `t")
+            switch params.Length {
+                case 1: %func%(params[1])
+                case 2: %func%(params[1], params[2])
+                case 3: %func%(params[1], params[2], params[3])
+                default: %func%(params*)
+            }
         }
     }
 }

@@ -12,15 +12,17 @@
  * @returns {Boolean} - True if the window is found and activated, false otherwise
  */
 ActivateWindow(target, waitDuration := 10, sleepDuration := 0) {
-    if WinWait(target, , waitDuration) {
-        if sleepDuration > 0 {
-            Sleep sleepDuration
+    try {
+        if WinWait(target, , waitDuration) {
+            if sleepDuration > 0 {
+                Sleep sleepDuration
+            }
+            WinActivate
+            return true
         }
-        WinActivate
-        return true
-    } else {
-        MsgBox 'ERROR Activating! The "' . target . '" window could not be found!'
-        return false
+    } catch as err {
+        MsgBox 'ERROR Activating! The "' . target . '" window could not be found!', , "T2"
+        throw
     }
 }
 
@@ -34,15 +36,17 @@ ActivateWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @returns {Boolean} - True if the window is found and closed, false otherwise
  */
 CloseWindow(target, waitDuration := 10, sleepDuration := 0) {
-    if WinWait(target, , waitDuration) {
-        if sleepDuration > 0 {
-            Sleep sleepDuration
+    try {
+        if WinWait(target, , waitDuration) {
+            if sleepDuration > 0 {
+                Sleep sleepDuration
+            }
+            WinClose
+            return true
         }
-        WinClose
-        return true
-    } else {
-        MsgBox 'ERROR Closing! The "' . target . '" window could not be found!'
-        return false
+    } catch as err {
+        MsgBox 'ERROR Closing! The "' . target . '" window could not be found!', , "T2"
+        throw
     }
 }
 
@@ -56,15 +60,17 @@ CloseWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @returns {Boolean} - True if the window is found and maximized, false otherwise
  */
 MaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
-    if WinWait(target, , waitDuration) {
-        if sleepDuration > 0 {
-            Sleep sleepDuration
+    try {
+        if WinWait(target, , waitDuration) {
+            if sleepDuration > 0 {
+                Sleep sleepDuration
+            }
+            WinMaximize
+            return true
         }
-        WinMaximize
-        return true
-    } else {
-        MsgBox 'ERROR Maximizing! The "' . target . '" window could not be found!'
-        return false
+    } catch as err {
+        MsgBox 'ERROR Maximizing! The "' . target . '" window could not be found!', , "T2"
+        throw
     }
 }
 
@@ -78,15 +84,17 @@ MaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @returns {Boolean} - True if the window is found and minimized, false otherwise
  */
 MinimizeWindow(target, waitDuration := 10, sleepDuration := 0) {
-    if WinWait(target, , waitDuration) {
-        if sleepDuration > 0 {
-            Sleep sleepDuration
+    try {
+        if WinWait(target, , waitDuration) {
+            if sleepDuration > 0 {
+                Sleep sleepDuration
+            }
+            WinMinimize
+            return true
         }
-        WinMinimize
-        return true
-    } else {
-        MsgBox 'ERROR Minimizing! The "' . target . '" window could not be found!'
-        return false
+    } catch as err {
+        MsgBox 'ERROR Minimizing! The "' . target . '" window could not be found!', , "T2"
+        throw
     }
 }
 
@@ -100,16 +108,18 @@ MinimizeWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @returns {Boolean} - True if the window is found and maximized, false otherwise
  */
 ActivateAndMaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
-    if WinWait(target, , waitDuration) {
-        WinActivate
-        if sleepDuration > 0 {
-            Sleep sleepDuration
+    try {
+        if WinWait(target, , waitDuration) {
+            WinActivate
+            if sleepDuration > 0 {
+                Sleep sleepDuration
+            }
+            WinMaximize
+            return true
         }
-        WinMaximize
-        return true
-    } else {
-        MsgBox 'ERROR Activating! The "' . target . '" window could not be found!'
-        return false
+    } catch as err {
+        MsgBox 'ERROR Activating and Maximizing! The "' . target . '" window could not be found!', , "T2"
+        throw
     }
 }
 
@@ -126,16 +136,17 @@ ActivateAndMaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @returns {Boolean} - True if the window is found and clicked, false otherwise
  */
 ActivateWindowAndClick(target, waitDuration := 10, ClickType := "left", ClickX := 0, ClickY := 0, ClickInfo := "") {
-    if WinWait(target, , waitDuration) {
-        WinActivate
-        MouseClick ClickType, ClickX, ClickY
-        ToolTip ClickInfo
-        SetTimer () => ToolTip(), -1000, -1
-        return true
-    } else {
-        MsgBox 'ERROR ' . ClickType . ' Click (' . ClickX . ', ' . ClickY . ')! The "' . target .
-            '" window could not be found!'
-        return false
+    try {
+        if WinWait(target, , waitDuration) {
+            WinActivate
+            MouseClick ClickType, ClickX, ClickY
+            ToolTip ClickInfo
+            SetTimer () => ToolTip(), -1000, -1
+            return true
+        }
+    } catch as err {
+        MsgBox 'ERROR ' . ClickType . ' Click (' . ClickX . ', ' . ClickY . ')! The "' . target . '" window could not be found!', , "T2"
+        throw
     }
 }
 
@@ -153,106 +164,31 @@ ActivateWindowAndClick(target, waitDuration := 10, ClickType := "left", ClickX :
  * @returns {Boolean} - True if the window is found and its position and size are set, false otherwise
  */
 SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 10, sleepDuration := 0) {
-    if WinWait(target, , waitDuration) {
-        if sleepDuration > 0 {
-            Sleep sleepDuration
-        }
-        ; Move and resize the window only if needed
-        ; Use provided values or current values if not provided
-        if x != -1 or y != -1 or width != -1 or height != -1 {
-            ; Get current window position and size
-            WinGetPos &currentX, &currentY, &currentWidth, &currentHeight
-            if x == currentX and y == currentY and width == currentWidth and height == currentHeight {
-                return  ; No need to change the window position and size
-            }
-            WinMove(
-                x != -1 ? x : currentX,
-                y != -1 ? y : currentY,
-                width != -1 ? width : currentWidth,
-                height != -1 ? height : currentHeight,
-                target
-            )
-        }
-        return true
-    } else {
-        MsgBox('ERROR Setting Window! The "' . target . '" window could not be found!')
-        return false
-    }
-}
-
-/**
- * List (Map) of applications to exclude when searching topmost window
- * 
- * Key:
- * 
- * - application executable name (String)
- * 
- * Value:
- * 
- * - `true` if the application should be excluded, `false` otherwise
- */
-excludedWindowList := [
-    "StartMenuExperienceHost.exe",
-    "Lyricify for Spotify.exe",
-    "AutoHotkey64.exe"
-]
-
-/**
- * Retrieves information of the topmost visible window: title, ahk_id, ahk_class, ahk_exe
- * Returns false if no suitable window is found.
- * 
- * @returns {Object | Boolean} - The information of the topmost visible window or false if no suitable window is found
- * @example
- * {
- *     title: "Mozilla Firefox",
- *     id: "ahk_id 394026",
- *     class: "ahk_class MozillaWindowClass",
- *     exe: "ahk_exe firefox.exe"
- * }
- */
-GetTopmostWindowInfo() {
     try {
-        windowList := WinGetList()
-
-        ; Iterate through all windows
-        for window in windowList {
-            ; Skip if window doesn't exist
-            if !WinExist(window)
-                continue
-
-            winExe := WinGetProcessName(window)
-            winClass := WinGetClass(window)
-
-            ; Skip explorer.exe windows except File Explorer
-            if winExe = "explorer.exe" && winClass != "CabinetWClass" {
-                continue
+        if WinWait(target, , waitDuration) {
+            if sleepDuration > 0 {
+                Sleep sleepDuration
             }
-            ; Skip excluded windows in the list
-            if excludedWindowList.HasValue(winExe) {
-                continue
+            ; Move and resize the window only if needed
+            ; Use provided values or current values if not provided
+            if x != -1 or y != -1 or width != -1 or height != -1 {
+                ; Get current window position and size
+                WinGetPos &currentX, &currentY, &currentWidth, &currentHeight
+                if x == currentX and y == currentY and width == currentWidth and height == currentHeight {
+                    return  ; No need to change the window position and size
+                }
+                WinMove(
+                    x != -1 ? x : currentX,
+                    y != -1 ? y : currentY,
+                    width != -1 ? width : currentWidth,
+                    height != -1 ? height : currentHeight,
+                    target
+                )
             }
-
-            winTitle := WinGetTitle(window)
-            winId := WinGetID(window)
-
-            ; Check if the window is minimized
-            minMax := WinGetMinMax(window)
-            if minMax == -1  ; -1 means minimized
-                continue
-
-            ; Return the information
-            return {
-                title: winTitle,
-                id: Format("ahk_id {}", winId),
-                class: Format("ahk_class {}", winClass),
-                exe: Format("ahk_exe {}", winExe)
-            }
+            return true
         }
-
-        ; No suitable window found
-        return false
     } catch as err {
-        MsgBox("ERROR when get topmost window info: " . err.Message)
-        return false
+        MsgBox 'ERROR Setting Window! The "' . target . '" window could not be found!', , "T2"
+        throw
     }
 }

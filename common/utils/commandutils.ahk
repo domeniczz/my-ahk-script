@@ -9,7 +9,9 @@ IsDockerContainerRunning(containerName) {
     command := 'docker inspect -f "{{.State.Running}}" ' . containerName . ' | clip'
 
     ; Run the command using cmd.exe without hiding the console
-    RunWait A_ComSpec . " /c " . command
+    try {
+        RunWait A_ComSpec . " /c " . command
+    }
 
     Sleep 50
 
