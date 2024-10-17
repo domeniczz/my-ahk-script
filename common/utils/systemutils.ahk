@@ -16,6 +16,7 @@ GetWindowsColorMode() {
  * Get the accent color of Windows.
  * 
  * @param {Integer} offset - The offset to get different colors (default: 1)
+ * 
  * @returns {String} - The accent color of Windows
  */
 GetWindowsAccentColor(offset := 1) {
@@ -44,4 +45,33 @@ IsSystemProxyEnabled() {
         proxyEnable := RegRead(regKey, "ProxyEnable")
         return proxyEnable == 1
     }
+}
+
+/**
+ * Switch the IME input language.
+ * 
+ * @param {Integer} targetLayout - The target language keyboard ID
+ */
+SwitchIMEInputLanguage(targetLayout) {
+    currentLayout := GetCurrentIMEInputLanguage()
+    if currentLayout {
+        if currentLayout != targetLayout {
+            SendMessage(0x50, , targetLayout, , "A")
+        }
+    }
+}
+
+/**
+ * Get the current IME input language.
+ * 
+ * @returns {Integer|Boolean} - The current IME input language ID or `false` if failed
+ */
+GetCurrentIMEInputLanguage() {
+    winId := WinGetID("A")
+    if winId {
+        threadId := DllCall("GetWindowThreadProcessId", "Ptr", winId, "Ptr", 0)
+        currentLayout := DllCall("GetKeyboardLayout", "UInt", threadId, "Ptr")
+        return currentLayout
+    }
+    return false
 }

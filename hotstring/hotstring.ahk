@@ -3,15 +3,9 @@
 #Hotstring EndChars `t
 
 ; Predefined LLM prompt for general questions
-:O:llm::
-(
-You are an expert. Be reliable, neutral and formal.
-Provide multiple perspectives and solutions if possible. Cite sources with links if there are any.
-Peruse all the info and context the user provided and make sure you have understood them all.
-Think step-by-step carefully and logically. Derive a step-by-step plan to solve the problem first and then handle the task based on the plan.
-Your answer must be correct, clear and easy to understand. Use a professional tone. Use concise, precise and simple wording.
-Thank you in advance.
-)
+:O:llm:: {
+    SendText("You are an expert. You are omnipotent. Be reliable, neutral and formal. Provide multiple perspectives and solutions if possible. Cite sources with links if there are any. Peruse all the info and context the user provided carefully and make sure you have fully understood them. If my requirement is ambiguous or unclear, ask for more details to confirm your understanding before answering. Think step-by-step with reasoning carefully and logically. Derive a step-by-step plan to solve the problem first, and then handle the tasks one by one based on the plan. Break down complex problems or tasks into smaller, manageable steps and solve each one with reasoning. Your answer must be correct, coherent, clear and easy to understand. Use a professional tone. Use concise, precise and simple wording. Thank you in advance.")
+}
 
 :O:ggm::zhangdomenic@gmail.com
 
@@ -22,6 +16,24 @@ Thank you in advance.
 :O:oom::nadirankersmit@outlook.com
 
 :O:qqm::zhangdomenic@qq.com
+
+:O:yym::wi1kers0n@yandex.com
+
+:O:ppm::myriam950302@proton.me
+
+:O:ppm2::vladimir.metelka@proton.me
+
+:O:ddm::LvvGiulian0@disroot.org
+
+:O:ttm::and10w@tutanota.com
+
+:O:163m::dm_zdsfhb@163.com
+
+:O:126m::zhangdomenic@126.com
+
+:O:ggp::07871854275
+
+:O:ggp2::0776342165807763421658
 
 :O:zsh::张晟昊
 

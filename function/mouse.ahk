@@ -7,8 +7,20 @@
  */
 MiddleButtonHandler() {
     ; prevent middle button from interrupting infinite scrolling
-    if infiniteScrollActive
+    if infiniteScrollActive {
         return
+    }
+    ; If cursor is hovering over the taskbar, system tray, start menu, perform the original middle button functionality
+    MouseGetPos(, , &windowUnderCursor)
+    if !windowUnderCursor or
+        WinGetClass("ahk_id " . windowUnderCursor) == "Shell_TrayWnd" or
+        WinGetClass("ahk_id " . windowUnderCursor) == "TopLevelWindowForOverflowXamlIsland" or
+        WinGetProcessName("ahk_id " . windowUnderCursor) == "StartMenuExperienceHost.exe" {
+        Send "{MButton down}"
+        KeyWait "MButton"
+        Send "{MButton up}"
+        return
+    }
     KeyWait "MButton", "T0.2"  ; Wait for up to 200ms
     ; If released within 200ms
     if A_TimeSinceThisHotkey < 200 {
@@ -123,6 +135,7 @@ ScrollWheelHandler(ThisHotkey) {
  * The speed multiplier increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
  * 
  * @param count - The number of consecutive scroll wheel movements in the same direction
+ * 
  * @returns {Number} - The speed multiplier to apply to the base scroll speed
  */
 CalculateSpeedMultiplier(count) {

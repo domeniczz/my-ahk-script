@@ -5,7 +5,7 @@ sandboxieContainers := GetSandboxieContainerList()
  * Returns a map of container names and their paths
  */
 GetSandboxieContainerList() {
-    baseDir := "C:\Sandbox\" . A_UserName . "\"
+    baseDir := C_SystemDriveLetter . "\Sandbox\" . A_UserName . "\"
     containers := Map()
 
     loop files, baseDir "*", "D" {

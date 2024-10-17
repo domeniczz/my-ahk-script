@@ -157,6 +157,7 @@
         }
 
         Capslock_F8() {
+            action_switchKeyboardInputLanguage()
         }
 
         Capslock_F9() {
@@ -209,10 +210,11 @@
         }
 
         Capslock_Slash() {
+            action_toggleCapsHelp()
         }
 
         Capslock_Space() {
-            action_activateTopmostWindow()
+            action_searchSelectedTextOrOpenSelectedLink()
         }
 
         Capslock_Enter() {
@@ -223,6 +225,7 @@
         }
 
         Capslock_Tab() {
+            action_toggleWindowMaximize()
         }
 
         Capslock_Esc() {
@@ -379,7 +382,6 @@
     ; F1 - F12
     {
         Capslock_Shift_F1() {
-            action_displayTopMostWindowInfo()
         }
 
         Capslock_Shift_F2() {
@@ -451,9 +453,11 @@
         }
 
         Capslock_Shift_Slash() {
+            action_switchSelectedToTitleCase()
         }
 
         Capslock_Shift_Space() {
+            action_searchSelectedTextOrOpenSelectedLinkInPrivate()
         }
 
         Capslock_Shift_Enter() {
@@ -844,6 +848,7 @@
     ; F1 - F12
     {
         Capslock_Ctrl_F1() {
+            action_displayTopMostWindowInfo()
         }
 
         Capslock_Ctrl_F2() {
@@ -915,6 +920,7 @@
         }
 
         Capslock_Ctrl_Space() {
+            action_activateTopmostWindow()
         }
 
         Capslock_Ctrl_Enter() {

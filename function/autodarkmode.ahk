@@ -11,11 +11,14 @@ AutoDarkMode() {
 
     currentTime := FormatTime(A_Now, "HHmm")
 
+    adjustedSunriseTime := AdjustTheSunTime(sunrise, 10)
+    adjustedSunsetTime := AdjustTheSunTime(sunset, 10)
+
     ; Calculate the time interval between the current time and the next sunrise/sunset
-    diffInterval := Min(CalculateTimeInterval(currentTime, sunrise, "miliseconds"), CalculateTimeInterval(currentTime, sunset, "miliseconds"))
+    diffInterval := Min(CalculateTimeInterval(currentTime, adjustedSunriseTime, "miliseconds"), CalculateTimeInterval(currentTime, adjustedSunriseTime, "miliseconds"))
     ; Update the check interval if the next sunrise/sunset is closer than the default check interval
     ; The new check interval will be the time difference between the current time and the next sunrise/sunset, in order to make the color mode change time more accurately
-    if !tmpAutoDarkModeCheckInterval and diffInterval < autoDarkModeCheckInterval {
+    if diffInterval < autoDarkModeCheckInterval and !tmpAutoDarkModeCheckInterval {
         tmpAutoDarkModeCheckInterval := true
         ; Set a temporary check interval to check the color mode more precisely around sunrise/sunset
         SetTimer AutoDarkMode, diffInterval, -1
@@ -23,7 +26,7 @@ AutoDarkMode() {
     }
 
     ; If daytime, switch to light mode
-    if currentTime >= sunrise and currentTime < sunset {
+    if currentTime >= adjustedSunriseTime and currentTime < adjustedSunsetTime {
         if GetWindowsColorMode() != "Light" {
             ; Restore the default check interval
             tmpAutoDarkModeCheckInterval := false
@@ -53,7 +56,9 @@ AutoDarkMode() {
 /**
  * Changes the Windows color mode (theme) between Light and Dark.
  * If no mode is specified, it toggles between the current and the opposite mode.
+ * 
  * @param {String} - The desired color mode. Accepts "Light", "Dark", or "Toggle".
+ * 
  * @example
  * ToggleWinColorMode("Light")   ; Switch to light mode
  * ToggleWinColorMode("Dark")    ; Switch to dark mode
@@ -99,4 +104,24 @@ ToggleWinColorMode(mode := "Toggle") {
         sunrise := res[1]
         sunset := res[2]
     }
+}
+
+/**
+ * Adjust the sunrise and sunset times by adding or subtracting a specified number of minutes
+ * 
+ * @param {String} time - The time in "HHmm" format
+ * @param {Number} minutesToAdd - The number of minutes to add or subtract (positive for adding, negative for subtracting)
+ * 
+ * @returns {String} - The adjusted time in "HHmm" format
+ */
+AdjustTheSunTime(time, minutesToAdd := 0) {
+    if !RegExMatch(time, "^([01]\d|2[0-3])([0-5]\d)$") {
+        throw ValueError("Invalid sunrise/sunset time format, time: " . time)
+    }
+    ; Convert "HHmm" to a full datetime string
+    fullTime := FormatTime(A_Now, "yyyyMMdd") . time . "00"
+    ; Add the specified minutes
+    resTime := DateAdd(fullTime, minutesToAdd, "Minutes")
+    ; Format the result back to "HHmm"
+    return FormatTime(resTime, "HHmm")
 }

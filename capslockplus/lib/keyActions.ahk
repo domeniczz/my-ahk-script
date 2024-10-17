@@ -322,6 +322,20 @@ action_closeApplication() {
 }
 
 /**
+ * Search the selected text or open the selected link.
+ */
+action_searchSelectedTextOrOpenSelectedLink() {
+    SearchOrOpenSelected()
+}
+
+/**
+ * Search the selected text or open the selected link in browser's private mode.
+ */
+action_searchSelectedTextOrOpenSelectedLinkInPrivate() {
+    SearchOrOpenSelected(true)
+}
+
+/**
  * Turn volume up.
  */
 action_volumeUp() {
@@ -413,10 +427,24 @@ action_activateTopmostWindow() {
 }
 
 /**
+ * Toggle the window between maximized and restored state.
+ */
+action_toggleWindowMaximize() {
+    ToggleWindowMaximize()
+}
+
+/**
  * Eject all removable drives.
  */
 action_ejectAllRemovableDrives() {
     EjectAllRemovableDrives()
+}
+
+/**
+ * Switch the Keyboard input language.
+ */
+action_switchKeyboardInputLanguage() {
+    SwitchKeyboardInputLanguage()
 }
 
 /**
@@ -451,4 +479,11 @@ action_reloadScript() {
 action_reloadScriptWithAdminPrivilege() {
     MsgBox "Reloading the script with admin privileges...", , "T0.5"
     ReloadScriptWithAdminPrivilege()
+}
+
+/**
+ * Toggle the CapsLock+ help window.
+ */
+action_toggleCapsHelp() {
+    ToggleCapsHelpGui()
 }

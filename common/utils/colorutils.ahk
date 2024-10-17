@@ -6,8 +6,9 @@
  * - 2 = 2 x 2 grid
  * - 3 = 3 x 3 grid
  * - ...
- * @param {Integer} x - The x-coordinate of the center pixel (default: -1).
- * @param {Integer} y - The y-coordinate of the center pixel (default: -1).
+ * @param {Integer} x - The x-coordinate of the center pixel (default: -1)
+ * @param {Integer} y - The y-coordinate of the center pixel (default: -1)
+ * 
  * @returns {Map} - A map of the colors in the grid, with the `key` being the pixel coordinates and the `value` being the color. (e.g. `Map("1,2", "OxFFFFFF")`)
  */
 GetPixelColors(gridSize := 1, x := -1, y := -1) {
@@ -39,6 +40,7 @@ GetPixelColors(gridSize := 1, x := -1, y := -1) {
      * Get the range of pixels based on the grid size.
      * 
      * @param {Integer} gridSize - The size of the grid
+     * 
      * @returns {Array} - The range of pixels offset from the center (e.g. [-1, 0, 1] for a 3 x 3 grid)
      */
     GetPixelRange(gridSize) {
@@ -62,11 +64,10 @@ GetPixelColors(gridSize := 1, x := -1, y := -1) {
 /**
  * Check if color is within a specified range.
  * 
- * @param {String} color - The color to check.
- *                         Accepts `String` in hexadecimal format "0xRRGGBB", or a `Map` returned by `GetPixelColors` (e.g. `Map("1,2", "OxFFFFFF")`).
- * @param {Object} range - An object specifying the min and max values for each component.
- *                         Format: {r: {min: 0, max: 255}, g: {min: 0, max: 255}, b: {min: 0, max: 255}}
- * @returns {Boolean} True if the color is within the specified range, false otherwise.
+ * @param {String} color - The color to check. Accepts `String` in hexadecimal format "0xRRGGBB", or a `Map` returned by `GetPixelColors` (e.g. `Map("1,2", "OxFFFFFF")`).
+ * @param {Object} range - An object specifying the min and max values for each component. Format: {r: {min: 0, max: 255}, g: {min: 0, max: 255}, b: {min: 0, max: 255}}
+ * 
+ * @returns {Boolean} - True if the color is within the specified range, false otherwise.
  */
 IsColorInRange(color, range) {
     isInRange := false

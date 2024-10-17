@@ -1,17 +1,333 @@
-; Speed of infinite scrolling (* times faster than normal scroll)
-; It will increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
+/**
+ * Speed of infinite scrolling (* times faster than normal scroll)
+ * 
+ * It will increases non-linearly based on the number of consecutive scroll wheel movements in the same direction
+ */
 baseScrollSpeed := 1.4
 
+kagiSearchToken := "gAAATmX2bAY.YtRd36h3ymuGfQpMKY01kPL67CJnfGnQH-dj-1S16xY"
+
 /**
- * List (Map) of programs to exclude for AHK usage
+ * Rules for removing parameters from the URL
  * 
- * Key:
+ * Format: "||domain@regexPattern" or "regexPattern"
  * 
- * - application executable name (String)
+ * domain can be a regex pattern, wildcard pattern or exact match, if it's a regex pattern, it should be wrapped by "/"
  * 
- * Value:
+ * Example: "||example.com@^utm_\w+$", which only remove parameters with key like "utm_source" or "utm_medium" from the URL if it's from example.com domain.
  * 
- * - `true` if the application should be excluded, `false` otherwise
+ * Source: https://github.com/DandelionSprout/adfilt/blob/master/ClearURLs%20for%20uBo/clear_urls_uboified.txt
+ */
+paramsRemovalRules := [
+    "^(?:[\w\_]+)?(?:utm|itm|stm|ref|referral)(?:_\w+)?$",
+    "^ga_[a-z_]+",
+    "yclid",
+    "_openstat",
+    "^fb_action_(types|ids)",
+    "^fb_(source|ref)",
+    "fbclid",
+    "^action_(object|type|ref)_map",
+    "gs_l",
+    "mkt_tok",
+    "^hmb_(campaign|medium|source)",
+    "gclid",
+    "^otm_[a-z_]*",
+    "cmpid",
+    "os_ehash",
+    "_ga",
+    "_gl",
+    "__twitter_impression",
+    "^wt_?z?mc",
+    "wtrid",
+    "^[a-z]?mc",
+    "dclid",
+    "Echobox",
+    "spm",
+    "^vn(_[a-z]*)+",
+    "tracking_source",
+    "ceneo_spo",
+    "^itm_(campaign|medium|source)",
+    "__hsfp",
+    "__hssc",
+    "__hstc",
+    "_hsenc",
+    "__s",
+    "hsCtaTracking",
+    "^mc_(eid|cid|tc)",
+    "ml_subscriber",
+    "ml_subscriber_hash",
+    "msclkid",
+    "oly_anon_id",
+    "oly_enc_id",
+    "rb_clickid",
+    "s_cid",
+    "vero_conv",
+    "vero_id",
+    "wickedid",
+    "twclid",
+    "||youtube.com@^feature|gclid|kw|si",
+    "||youtu.be@^feature|gclid|kw|si",
+    "||bilibili.com@callback",
+    "||bilibili.com@spm_id_from",
+    "||bilibili.com@from_source",
+    "||bilibili.com@from",
+    "||bilibili.com@seid",
+    "||bilibili.com@mid",
+    "||bilibili.com@share_source",
+    "||bilibili.com@msource",
+    "||bilibili.com@refer_from",
+    "||bilibili.com@share_from",
+    "||bilibili.com@share_medium",
+    "||bilibili.com@share_source",
+    "||bilibili.com@share_plat",
+    "||bilibili.com@share_tag",
+    "||bilibili.com@share_session_id",
+    "||bilibili.com@timestamp",
+    "||bilibili.com@unique_k",
+    "||bilibili.com@vd_source",
+    "||bilibili.com@plat_id",
+    "||bilibili.com@buvid",
+    "||bilibili.com@is_story_h5",
+    "||bilibili.com@up_id",
+    "||m.bilibili.com@bbid",
+    "||m.bilibili.com@ts",
+    "||live.bilibili.com@visit_id",
+    "||live.bilibili.com@session_id",
+    "||live.bilibili.com@broadcast_type",
+    "||live.bilibili.com@is_room_feed",
+    "||tiktok.com@u_code",
+    "||tiktok.com@preview_pb",
+    "||tiktok.com@_d",
+    "||tiktok.com@timestamp",
+    "||tiktok.com@user_id",
+    "||tiktok.com@share_app_name",
+    "||tiktok.com@share_iid",
+    "||tiktok.com@source",
+    "||netflix.com@^jb[a-z]*?",
+    "||netflix.com@trackId|tctx",
+    "||twitch.com@tt_medium|tt_content",
+    "||google@^bi[a-z]*",
+    "||google@^gfe_[a-z]*",
+    "||google@ei",
+    "||google@^gs_[a-z]*",
+    "||google@oq",
+    "||google@esrc",
+    "||google@uact",
+    "||google@cd",
+    "||google@cad",
+    "||google@^gws_[a-z]*",
+    "||google@atyp",
+    "||google@vet",
+    "||google@_u",
+    "||google@je",
+    "||google@dcr",
+    "||google@ie",
+    "||google@sei",
+    "||google@dpr",
+    "||google@^btn[a-z]*",
+    "||google@cd",
+    "||google@cad",
+    "||google@uact",
+    "||google@aqs",
+    "||google@sourceid",
+    "||google@sxsrf",
+    "||google@rlz",
+    "||google@i-would-rather-use-firefox",
+    "||google@pcampaignid",
+    "||google@sca_esv",
+    "||/.*?google.*?\/search.*/@sclient",
+    "||bing@form|sk|sp|sc|qs|qp",
+    "||x.com@^(ref_?)?src",
+    "||x.com@s",
+    "||x.com@cn",
+    "||x.com@ref_url",
+    "||x.com@t",
+    "||reddit.com@%24deep_link",
+    "||reddit.com@^\x24deep_link",
+    "||reddit.com@correlation_id",
+    "||reddit.com@ref_campaign",
+    "||reddit.com@ref_source",
+    "||reddit.com@%243p",
+    "||reddit.com@^\x243p",
+    "||reddit.com@%24original_url",
+    "||reddit.com@^\x24original_url",
+    "||reddit.com@_branch_match_id",
+    "||linkedin.com@refId",
+    "||linkedin.com@trk",
+    "||linkedin.com@^li[a-z]{2}",
+    "||linkedin.com@trackingId",
+    "||/.*?linkedin.com\/learning.*/@u",
+    "||facebook.com@^hc_[a-z_%\[\]0-9]*",
+    "||facebook.com@^[a-z]*ref[a-z]*",
+    "||facebook.com@__tn__",
+    "||facebook.com@eid",
+    "||facebook.com@^__(xts|cft)__(\[|%5B)\d(\]|%5D)",
+    "||facebook.com@comment_tracking",
+    "||facebook.com@dti",
+    "||facebook.com@app",
+    "||facebook.com@video_source",
+    "||facebook.com@ftentidentifier",
+    "||facebook.com@pageid",
+    "||facebook.com@padding",
+    "||facebook.com@ls_ref",
+    "||facebook.com@action_history",
+    "||facebook.com@tracking",
+    "||facebook.com@referral_code",
+    "||facebook.com@referral_story_type",
+    "||facebook.com@eav",
+    "||facebook.com@sfnsn",
+    "||facebook.com@idorvanity",
+    "||facebook.com@wtsid",
+    "||facebook.com@rdc",
+    "||facebook.com@rdr",
+    "||facebook.com@paipv",
+    "||facebook.com@_nc_x",
+    "||facebook.com@_rdr",
+    "||facebook.com@mibextid",
+    "||msn.com@cvid|ocid",
+    "||amazon@^p[fd]_rd_[a-z]*",
+    "||amazon@qid",
+    "||amazon@^srs?",
+    "||amazon@^__mk_[a-z]{1,3}_[a-z]{1,3}",
+    "||amazon@spIA",
+    "||amazon@ms3_c",
+    "||amazon@^[a-z%0-9]*ie",
+    "||amazon@refRID",
+    "||amazon@^colii?d",
+    "||amazon@^[^a-z%0-9]adId",
+    "||amazon@qualifier",
+    "||amazon@_encoding",
+    "||amazon@smid",
+    "||amazon@field-lbr_brands_browse-bin",
+    "||amazon@th",
+    "||amazon@sprefix",
+    "||amazon@crid",
+    "||amazon@keywords",
+    "||amazon@^cv_ct_[a-z]+",
+    "||amazon@linkCode",
+    "||amazon@creativeASIN",
+    "||amazon@ascsubtag",
+    "||amazon@aaxitk",
+    "||amazon@hsa_cr_id",
+    "||amazon@^sb-ci-[a-z]+",
+    "||amazon@dchild",
+    "||amazon@camp",
+    "||amazon@creative",
+    "||amazon@content-id",
+    "||amazon@dib",
+    "||amazon@dib_tag",
+    "||/.*?amazon.*?\/s.*/@^p[fd]_rd_[a-z]*",
+    "||/.*?amazon.*?\/s.*/@qid",
+    "||/.*?amazon.*?\/s.*/@^srs?",
+    "||/.*?amazon.*?\/s.*/@^__mk_[a-z]{1,3}_[a-z]{1,3}",
+    "||/.*?amazon.*?\/s.*/@spIA",
+    "||/.*?amazon.*?\/s.*/@ms3_c",
+    "||/.*?amazon.*?\/s.*/@^[a-z%0-9]*ie",
+    "||/.*?amazon.*?\/s.*/@refRID",
+    "||/.*?amazon.*?\/s.*/@^colii?d",
+    "||/.*?amazon.*?\/s.*/@^[^a-z%0-9]adId",
+    "||/.*?amazon.*?\/s.*/@qualifier",
+    "||/.*?amazon.*?\/s.*/@_encoding",
+    "||/.*?amazon.*?\/s.*/@smid",
+    "||/.*?amazon.*?\/s.*/@field-lbr_brands_browse-bin",
+    "||/.*?amazon.*?\/s.*/@th",
+    "||/.*?amazon.*?\/s.*/@sprefix",
+    "||/.*?amazon.*?\/s.*/@crid",
+    "||/.*?amazon.*?\/s.*/@^cv_ct_[a-z]+",
+    "||/.*?amazon.*?\/s.*/@linkCode",
+    "||/.*?amazon.*?\/s.*/@creativeASIN",
+    "||/.*?amazon.*?\/s.*/@ascsubtag",
+    "||/.*?amazon.*?\/s.*/@aaxitk",
+    "||/.*?amazon.*?\/s.*/@hsa_cr_id",
+    "||/.*?amazon.*?\/s.*/@^sb-ci-[a-z]+",
+    "||/.*?amazon.*?\/s.*/@dchild",
+    "||/.*?amazon.*?\/s.*/@camp",
+    "||/.*?amazon.*?\/s.*/@creative",
+    "||taobao.com@price",
+    "||taobao.com@sourceType",
+    "||taobao.com@suid",
+    "||taobao.com@ut_sk",
+    "||taobao.com@un",
+    "||taobao.com@share_crt_v",
+    "||taobao.com@sp_tk",
+    "||taobao.com@cpp",
+    "||taobao.com@shareurl",
+    "||taobao.com@short_name",
+    "||taobao.com@app",
+    "||taobao.com@^scm[_a-z-]*",
+    "||taobao.com@pvid",
+    "||taobao.com@algo_expid",
+    "||taobao.com@algo_pvid",
+    "||taobao.com@ns",
+    "||taobao.com@abbucket",
+    "||taobao.com@ali_refid",
+    "||taobao.com@ali_trackid",
+    "||taobao.com@acm",
+    "||taobao.com@utparam",
+    "||taobao.com@pos",
+    "||taobao.com@abtest",
+    "||taobao.com@trackInfo",
+    "||taobao.com@utkn",
+    "||taobao.com@scene",
+    "||taobao.com@mytmenu",
+    "||taobao.com@turing_bucket",
+    "||taobao.com@lygClk",
+    "||taobao.com@impid",
+    "||taobao.com@bftTag",
+    "||taobao.com@bftRwd",
+    "||taobao.com@spm",
+    "||taobao.com@_u",
+    "||tmall.com@price",
+    "||tmall.com@sourceType",
+    "||tmall.com@suid",
+    "||tmall.com@ut_sk",
+    "||tmall.com@un",
+    "||tmall.com@share_crt_v",
+    "||tmall.com@sp_tk",
+    "||tmall.com@cpp",
+    "||tmall.com@shareurl",
+    "||tmall.com@short_name",
+    "||tmall.com@app",
+    "||tmall.com@^scm[_a-z-]*",
+    "||tmall.com@pvid",
+    "||tmall.com@algo_expid",
+    "||tmall.com@algo_pvid",
+    "||tmall.com@ns",
+    "||tmall.com@abbucket",
+    "||tmall.com@ali_refid",
+    "||tmall.com@ali_trackid",
+    "||tmall.com@acm",
+    "||tmall.com@utparam",
+    "||tmall.com@pos",
+    "||tmall.com@abtest",
+    "||tmall.com@trackInfo",
+    "||tmall.com@user_number_id",
+    "||tmall.com@utkn",
+    "||tmall.com@scene",
+    "||tmall.com@mytmenu",
+    "||tmall.com@turing_bucket",
+    "||tmall.com@lygClk",
+    "||tmall.com@impid",
+    "||tmall.com@bftTag",
+    "||tmall.com@bftRwd",
+    "||tmall.com@activity_id",
+    "||aliexpress.*@ws_ab_test",
+    "||aliexpress.*@btsid",
+    "||aliexpress.*@algo_expid",
+    "||aliexpress.*@algo_pvid",
+    "||aliexpress.*@gps-id",
+    "||aliexpress.*@^scm[_a-z-]*",
+    "||aliexpress.*@cv",
+    "||aliexpress.*@af",
+    "||aliexpress.*@mall_affr",
+    "||aliexpress.*@sk",
+    "||aliexpress.*@dp",
+    "||aliexpress.*@terminal_id",
+    "||aliexpress.*@aff_request_id",
+]
+
+/**
+ * List of programs (executable name) to exclude for AHK usage
  */
 excludedProgramList := [
     ; Counter-Strike: Global Offensive
@@ -51,18 +367,42 @@ excludedProgramList := [
 ]
 
 /**
- * List (Map) of applications to exclude when searching topmost window
- * 
- * Key:
- * 
- * - application executable name (String)
- * 
- * Value:
- * 
- * - `true` if the application should be excluded, `false` otherwise
+ * List of applications (executable name) to exclude when searching topmost window
  */
 excludedWindowList := [
-    "StartMenuExperienceHost.exe",
+    "StartMenuExperienceHost.exe",  ; Windows Start menu
     "Lyricify for Spotify.exe",
-    "AutoHotkey64.exe"
+    "AutoHotkey64.exe",             ; AutoHotkey Message Window
+    "UninstallMonitor.exe",         ; Iobit Uninstaller Install Monitor Notification
+    "NVIDIA Overlay.exe",           ; NVIDIA GeForce Experience Overlay
+    "MSIAfterburner.exe",
+    "RTSS.exe"                      ; RivaTuner Statistics Server
 ]
+
+/**
+ * List of mainstream chromium-based browser executable names
+ */
+chromiumBrowserList := [
+    "chrome.exe",
+    "msedge.exe",
+    "brave.exe",
+    "thorium.exe",
+    "opera.exe",
+    "vivaldi.exe",
+]
+
+/**
+ * List of mainstream gecko-based browsers executable names
+ */
+geckoBrowserList := [
+    "firefox.exe",
+    "mercury.exe"
+]
+
+/**
+ * Map of keyboard layouts and their corresponding IDs
+ */
+keyboardLayout := Map(
+    "en_us", 0x4090409,
+    "zh_cn", 0x8040804
+)

@@ -2,10 +2,18 @@
 
 helpWindow := DrawHelpWindow()
 
+helpGuiVisible := false
+
+#HotIf helpGuiVisible
+Esc:: ToggleHelpWindow()
+#HotIf
+
 /**
  * Toggle the help window
  */
 ToggleHelpWindow() {
+    global helpGuiVisible
+
     window := helpWindow.gui
     lv := helpWindow.lv
 
@@ -14,17 +22,19 @@ ToggleHelpWindow() {
         SetHelpWindowColors(window, lv)
 
         ; Show the help window
-        window.Show("w" . A_ScreenWidth . " h" . A_ScreenHeight)
+        window.Show("w" . A_ScreenWidth . " h" . A_ScreenHeight . " NoActivate")
 
         ; Set opacity (*/255), 255 is fully opaque
         WinSetTransparent(210, window)
 
         ; Hide the window after an interval (4 seconds)
         ; SetTimer () => window.Hide(), -4000, -1
+        helpGuiVisible := true
     } else {
         window.Hide()
         ; Cancel the timer if manually hidden
         ; SetTimer () => window.Hide(), 0, -1
+        helpGuiVisible := false
     }
 }
 
@@ -61,10 +71,10 @@ DrawHelpWindow() {
         leftItem := A_Index <= lLength ? columns.left[A_Index] : ""
         rightItem := A_Index <= rLength ? columns.right[A_Index] : ""
 
-        leftContent := leftItem ? Format("{:-40s} {}", leftItem[1], leftItem[2]) : ""
-        rightContent := rightItem ? Format("{:-40s} {}", rightItem[1], rightItem[2]) : ""
+        leftContent := leftItem ? Format("{:-30s} {}", leftItem[1], leftItem[2]) : ""
+        rightContent := rightItem ? Format("{:-30s} {}", rightItem[1], rightItem[2]) : ""
 
-        content := Format("{:-90s}    {}", leftContent, rightContent)
+        content := Format("{:-80s}    {}", leftContent, rightContent)
         lv.Add("", content)
         ; Add an empty row after each row
         lv.Add("", "")
@@ -76,16 +86,15 @@ DrawHelpWindow() {
     ; Set initial colors
     SetHelpWindowColors(helpGui, lv)
 
-    ; Add Esc hotkey to close the window
-    helpGui.OnEvent("Escape", (*) => helpGui.Hide())
-
     return { gui: helpGui, lv: lv
     }
 }
 
 /**
  * Split keybindings into two balanced columns
+ * 
  * @param {Array} keybindings - Array of keybinding pairs
+ * 
  * @returns {Object} - Object with left and right column arrays
  */
 SplitKeybindings(keybindings) {
@@ -121,7 +130,7 @@ SetHelpWindowColors(helpGui, lv) {
         lv.Opt("+Background" . color)
         lv.SetFont("cWHITE")
     } else {
-        color := "ffffff"
+        color := "ececec"
         helpGui.BackColor := color
         lv.Opt("+Background" . color)
         lv.SetFont("cBLACK")

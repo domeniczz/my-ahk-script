@@ -22,23 +22,30 @@ OnError LogError
 
 logfile := A_ScriptDir . "\logs\scheduled.log"
 
-#Include ..\common\constants\applications.ahk
+#Include ..\common\constants\custom.ahk
+#Include ..\common\utils\controlutils.ahk
+#Include ..\common\utils\applications.ahk
 #Include ..\common\utils\windowutils.ahk
+#Include ..\common\utils\fileutils.ahk
 #Include ..\common\utils\logutils.ahk
+
+rawaccel := C_SystemDriveLetter . "\Programs\RawAccel\rawaccel.exe"
+ValidateAndUpdatePath(&rawaccel)
 
 /**
  * Run and then close RawAccel
  */
 ApplyRawAccel() {
-    Run rawaccel
-    maxAttempts := 300
-    loop maxAttempts {
-        if ProcessExist("rawaccel.exe") {
-            CloseWindow("ahk_exe rawaccel.exe", , 1000)
-            break
-        }
-        Sleep 200
+    try {
+        Run rawaccel
     }
+    CloseRawAccelWin() {
+        if ProcessExist("rawaccel.exe") {
+            return CloseWindow("ahk_exe rawaccel.exe", , 1000)
+        }
+        return false
+    }
+    LoopLogic(CloseRawAccelWin, 300, 200)
 }
 
 ApplyRawAccel()

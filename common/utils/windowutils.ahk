@@ -9,7 +9,10 @@
  * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
  * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 10)
  * @param {Integer} sleepDuration - Total miliseconds to sleep before activating the window (default: 0)
+ * 
  * @returns {Boolean} - True if the window is found and activated, false otherwise
+ * 
+ * @throws {Error} - If encounter errors when activating the window
  */
 ActivateWindow(target, waitDuration := 10, sleepDuration := 0) {
     try {
@@ -33,7 +36,10 @@ ActivateWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
  * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 10)
  * @param {Integer} sleepDuration - Total miliseconds to before closing the window (default: 0)
+ * 
  * @returns {Boolean} - True if the window is found and closed, false otherwise
+ * 
+ * @throws {Error} - If encounter errors when closing the window
  */
 CloseWindow(target, waitDuration := 10, sleepDuration := 0) {
     try {
@@ -57,7 +63,10 @@ CloseWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
  * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 10)
  * @param {Integer} sleepDuration - Total miliseconds to sleep before maximizing the window (default: 0)
+ * 
  * @returns {Boolean} - True if the window is found and maximized, false otherwise
+ * 
+ * @throws {Error} - If encounter errors when maximizing the window
  */
 MaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
     try {
@@ -81,7 +90,10 @@ MaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
  * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 10)
  * @param {Integer} sleepDuration - Total miliseconds to sleep before minimizing the window (default: 0)
+ * 
  * @returns {Boolean} - True if the window is found and minimized, false otherwise
+ * 
+ * @throws {Error} - If encounter errors when minimizing the window
  */
 MinimizeWindow(target, waitDuration := 10, sleepDuration := 0) {
     try {
@@ -105,7 +117,10 @@ MinimizeWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @param target - The window identifier (e.g., "ahk_exe explorer.exe")
  * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 10)
  * @param {Integer} sleepDuration - Total miliseconds to sleep before activating the window (default: 0)
+ * 
  * @returns {Boolean} - True if the window is found and maximized, false otherwise
+ * 
+ * @throws {Error} - If encounter errors when activating and maximizing the window
  */
 ActivateAndMaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
     try {
@@ -133,15 +148,20 @@ ActivateAndMaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
  * @param {Integer} ClickX - The X coordinate of the click (default: 0)
  * @param {Integer} ClickY - The Y coordinate of the click (default: 0)
  * @param {String} ClickInfo - The tooltip message to display after the click (default: "")
+ * 
  * @returns {Boolean} - True if the window is found and clicked, false otherwise
+ * 
+ * @throws {Error} - If encounter errors when activating and clicking the window
  */
 ActivateWindowAndClick(target, waitDuration := 10, ClickType := "left", ClickX := 0, ClickY := 0, ClickInfo := "") {
     try {
         if WinWait(target, , waitDuration) {
             WinActivate
             MouseClick ClickType, ClickX, ClickY
-            ToolTip ClickInfo
-            SetTimer () => ToolTip(), -1000, -1
+            if ClickInfo != "" {
+                ToolTip ClickInfo
+                SetTimer () => ToolTip(), -1000, -1
+            }
             return true
         }
     } catch as err {
@@ -161,7 +181,10 @@ ActivateWindowAndClick(target, waitDuration := 10, ClickType := "left", ClickX :
  * @param {Number} height - The height of the window (optional)
  * @param {Integer} waitDuration - Total seconds to wait for finding the target window (default: 10)
  * @param {Integer} sleepDuration - Total milliseconds to sleep before setting the window position and size (default: 0)
+ * 
  * @returns {Boolean} - True if the window is found and its position and size are set, false otherwise
+ * 
+ * @throws {Error} - If encounter errors when setting the window position and size
  */
 SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 10, sleepDuration := 0) {
     try {

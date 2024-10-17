@@ -138,7 +138,7 @@ MenuHandler(itemName, itemPos, menuObj) {
 MainHandler(itemName, itemPos, menuObj) {
     switch itemPos {
         case 1: RunSpotifyAndLyricify()
-        case 2: StartOllamaAndDockerWebUI()
+        case 2: StartOllamaAndWebUI()
         case 3: RunScriptAsAdmin(adminScript, "ToggleMSIAfterburner")
         case 4: RunScriptAsAdmin(adminScript, "ToggleHWiNFO")
         case 5: ToggleGameEnv()
@@ -196,8 +196,8 @@ MediaHandler(itemName, itemPos, menuObj) {
         case 1: ToggleSpotify()
         case 2: ToggleBilibili()
         case 3: ToggleSandboxedBilibili()
-        case 4: OpenYouTube()
-        case 5: OpenYouTube2()
+        case 4: OpenYouTubeWeb()
+        case 5: OpenYouTubeWeb2()
         default: MsgBox "ERROR! Unknown item: " . itemName . " at position " . itemPos, , "T2"
     }
 }

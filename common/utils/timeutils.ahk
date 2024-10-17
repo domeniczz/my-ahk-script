@@ -1,8 +1,59 @@
 /**
+ * Calculate the time interval between two times in "HHmm" format and return the result in the specified format.
+ * If the endTime is earlier than the startTime, it is assumed to be the next day.
+ * 
+ * @param {Number} startTime - The start time in "HHmm" format
+ * @param {Number} endTime - The end time in "HHmm" format
+ * @param {String} result - The format in which to return the time interval (default: "minutes"). Accepts "hours", "minutes", "seconds", or "miliseconds".
+ * 
+ * @returns {Number} - The time interval between the two times in the specified format
+ * 
+ * @throws {ValueError} - If `startTime` or `endTime` is not in "HHmm" format
+ * @throws {ValueError} - If `result` is not a valid format
+ */
+CalculateTimeInterval(startTime, endTime, result := "minutes") {
+    ; Convert HHmm to minutes since midnight
+    if StrLen(startTime) = 4
+        startMinutes := (SubStr(startTime, 1, 2) * 60) + SubStr(startTime, 3)
+    else if StrLen(startTime) = 3
+        startMinutes := (SubStr(startTime, 1, 1) * 60) + SubStr(startTime, 2)
+    else
+        throw ValueError("Invalid startTime format")
+
+    if StrLen(endTime) = 4
+        endMinutes := (SubStr(endTime, 1, 2) * 60) + SubStr(endTime, 3)
+    else if StrLen(endTime) = 3
+        endMinutes := (SubStr(endTime, 1, 1) * 60) + SubStr(endTime, 2)
+    else
+        throw ValueError("Invalid endTime format")
+
+    ; Calculate the difference
+    diffMinutes := endMinutes - startMinutes
+
+    ; Handle crossing midnight
+    if diffMinutes < 0
+        diffMinutes += 1440  ; Add minutes in a day (24 * 60)
+
+    ; Convert back to HHmm format
+    hours := Floor(diffMinutes / 60)
+    minutes := Mod(diffMinutes, 60)
+
+    switch result {
+        case "hours": return hours + minutes / 60
+        case "minutes": return hours * 60 + minutes
+        case "seconds": return hours * 3600 + minutes * 60
+        case "miliseconds": return (hours * 3600 + minutes * 60) * 1000
+        default: throw ValueError("Invalid result format")
+    }
+}
+
+/**
  * Calculates sunrise and sunset times for a given location and date.
+ * 
  * @param {Number} latitude - Latitude of the location (-90 to 90)
  * @param {Number} longitude - Longitude of the location (-180 to 180)
  * @param {Number} timezone - Timezone offset from UTC (-12 to 14)
+ * 
  * @returns {Array} - An array containing [sunrise, sunset] times in "HHmm" format
  */
 CalculateSunriseSunsetTime(latitude, longitude, timezone) {
@@ -81,49 +132,4 @@ CalculateSunriseSunsetTime(latitude, longitude, timezone) {
 
     return [sunriseTime, sunsetTime
     ]
-}
-
-/**
- * Calculate the time interval between two times in "HHmm" format and return the result in the specified format.
- * If the endTime is earlier than the startTime, it is assumed to be the next day.
- * 
- * @param {Number} startTime - The start time in "HHmm" format
- * @param {Number} endTime - The end time in "HHmm" format
- * @param {String} result - The format in which to return the time interval (default: "minutes"). Accepts "hours", "minutes", "seconds", or "miliseconds".
- * @returns {Number} - The time interval between the two times in the specified format
- */
-CalculateTimeInterval(startTime, endTime, result := "minutes") {
-    ; Convert HHmm to minutes since midnight
-    if StrLen(startTime) = 4
-        startMinutes := (SubStr(startTime, 1, 2) * 60) + SubStr(startTime, 3)
-    else if StrLen(startTime) = 3
-        startMinutes := (SubStr(startTime, 1, 1) * 60) + SubStr(startTime, 2)
-    else
-        throw ValueError("Invalid startTime format")
-
-    if StrLen(endTime) = 4
-        endMinutes := (SubStr(endTime, 1, 2) * 60) + SubStr(endTime, 3)
-    else if StrLen(endTime) = 3
-        endMinutes := (SubStr(endTime, 1, 1) * 60) + SubStr(endTime, 2)
-    else
-        throw ValueError("Invalid endTime format")
-
-    ; Calculate the difference
-    diffMinutes := endMinutes - startMinutes
-
-    ; Handle crossing midnight
-    if diffMinutes < 0
-        diffMinutes += 1440  ; Add minutes in a day (24 * 60)
-
-    ; Convert back to HHmm format
-    hours := Floor(diffMinutes / 60)
-    minutes := Mod(diffMinutes, 60)
-
-    switch result {
-        case "hours": return hours + minutes / 60
-        case "minutes": return hours * 60 + minutes
-        case "seconds": return hours * 3600 + minutes * 60
-        case "miliseconds": return (hours * 3600 + minutes * 60) * 1000
-        default: throw ValueError("Invalid result format")
-    }
 }

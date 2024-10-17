@@ -11,22 +11,30 @@ OpenFolder(path := A_MyDocuments, explorer := "explorer.exe ") {
 }
 
 /**
- * Gets the path of the specified executable file.
+ * Gets the path of the specified file.
  * 
- * @param {String} baseDir - The base directory to search in, supports wildcard. Default is "".
- * @param {String} exeName - The name of the executable file to search for. Default is "".
- * @returns {String} - The path of the file if found, otherwise an empty string.
+ * @param {String} baseDir - The base directory to search in, supports wildcard (default: "C:\")
+ * @param {String} fileName - The name of the file (with file extension) to search for (default: "")
+ * 
+ * @returns {String} - The path of the file if found, otherwise an empty string "".
+ * 
+ * @throws {Error} - If baseDir or fileName is not a string
  */
-GetExePath(baseDir := "", exeName := "") {
+GetFilePath(baseDir := C_SystemDriveLetter . "\", fileName := "") {
+    if Type(baseDir) != "String" or Type(fileName) != "String" {
+        throw ValueError("baseDir and fileName must be strings")
+    }
+    if fileName == "" {
+        return ""
+    }
     try {
-        ; Loop through all subdirectories
-        loop files, baseDir, "D" {
-            ; Check if the executable file exists in current subdirectory
-            if FileExist(A_LoopFilePath . "\" . exeName)
-                return A_LoopFilePath . "\" . exeName
+        loop files, baseDir . "\" . fileName, "FR" {
+            if GetPathComponent(A_LoopFilePath, "name") == fileName {
+                return A_LoopFilePath
+            }
         }
     }
-    return "" ; Return empty string if not found
+    return ""
 }
 
 /**
@@ -42,6 +50,7 @@ GetExePath(baseDir := "", exeName := "") {
  * - "drive": Drive letter or name
  * 
  * @returns {String} - The requested component of the file path, or the original path string if the component is not recognized
+ * 
  * @example GetPathComponent("C:\Windows\explorer.exe", "name") returns "explorer.exe"
  */
 GetPathComponent(path, component := "name") {

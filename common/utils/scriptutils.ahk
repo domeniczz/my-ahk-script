@@ -18,6 +18,8 @@ IsExcludedProgram() {
  * 
  * @param {String} script - The path of the script to run
  * @param {String} fucntionName - The name of the function to run in the script
+ * 
+ * @throws {Error} - If encounter errors when running the script with admin privileges
  */
 RunScriptAsAdmin(script, fucntionName := "") {
     try {

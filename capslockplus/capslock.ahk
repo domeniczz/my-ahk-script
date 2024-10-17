@@ -1,15 +1,18 @@
 #Include lib\keyFunctions.ahk
 #Include lib\keyActions.ahk
 #Include lib\functionsLib.ahk
+#Include gui\capshelp.ahk
+#Include gui\capslockstate.ahk
+#Include gui\aotstate.ahk
 
 ; Create a GUI to display the CapsLock state
-CapsLockGui := DrawCapsLockStateGui()
+CapsLockStateGui := DrawCapsLockStateGui()
 
 ; Store the CapsLock activation state (0 = Off, 1 = On)
 CapsLockState := 0
 
 ; Clipboard separate from the system clipboard
-seperateClipboard := ""
+SeperateClipboard := ""
 
 ; ;; Activation approach 1: Actiavte CapsLock on click and deactivate on second click
 ; /**
@@ -17,15 +20,15 @@ seperateClipboard := ""
 ;  */
 ; CheckCapsLockState() {
 ;     if CapsLockState
-;         CapsLockGui.Show("NoActivate")
+;         CapsLockStateGui.Show("NoActivate")
 ;     else
-;         CapsLockGui.Hide()
+;         CapsLockStateGui.Hide()
 ; }
 ; ; Toggle CapsLock state On/Off with CapsLock key press
 ; *CapsLock::
 ; {
 ;     global CapsLockState
-;     SetTimer CheckCapsLockState, 100
+;     SetTimer CheckCapsLockState, 100`
 ;     CapsLockState := !CapsLockState ? 1 : 0
 ;     if CapsLockState {
 ;         ToolTip "CapsLock ON"
@@ -41,14 +44,14 @@ seperateClipboard := ""
 {
     global CapsLockState
     CapsLockState := 1
-    CapsLockGui.Show("NoActivate")
+    CapsLockStateGui.Show("NoActivate")
     KeyWait "CapsLock"
 }
 *CapsLock Up::
 {
     global CapsLockState
     CapsLockState := 0
-    CapsLockGui.Hide()
+    CapsLockStateGui.Hide()
 }
 
 #HotIf CapsLockState and !IsExcludedProgram()
@@ -463,105 +466,105 @@ seperateClipboard := ""
 
 ;;;;;;;;;; CapsLock + Win + Keys ;;;;;;;;;;
 
-{
-    ; A - Z, 0 - 9, F1 - F12
-    {
-        #a::
-        #b::
-        #c::
-        #d::
-        #e::
-        #f::
-        #g::
-        #h::
-        #i::
-        #j::
-        #k::
-        #l::
-        #m::
-        #n::
-        #o::
-        #p::
-        #q::
-        #r::
-        #s::
-        #t::
-        #u::
-        #v::
-        #w::
-        #x::
-        #y::
-        #z::
-        #0::
-        #1::
-        #2::
-        #3::
-        #4::
-        #5::
-        #6::
-        #7::
-        #8::
-        #9::
-        #F1::
-        #F2::
-        #F3::
-        #F4::
-        #F5::
-        #F6::
-        #F7::
-        #F8::
-        #F9::
-        #F10::
-        #F11::
-        #F12::
-        {
-            try {
-                RunHotkeyFunction("Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2))
-            } catch as err {
-                MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
-                throw
-            }
-        }
-    }
-    ; Special keys
-    {
-        try {
-            #`:: RunHotkeyFunction("Capslock_Ctrl_Backtick")
-            #-:: RunHotkeyFunction("Capslock_Ctrl_Minus")
-            #=:: RunHotkeyFunction("Capslock_Ctrl_Equal")
-            #[:: RunHotkeyFunction("Capslock_Ctrl_LSquareBracket")
-            #]:: RunHotkeyFunction("Capslock_Ctrl_RSquareBracket")
-            #\:: RunHotkeyFunction("Capslock_Ctrl_Backslash")
-            #`;:: RunHotkeyFunction("Capslock_Ctrl_Semicolon")
-            #':: RunHotkeyFunction("Capslock_Ctrl_Apostrophe")
-            #,:: RunHotkeyFunction("Capslock_Ctrl_Comma")
-            #.:: RunHotkeyFunction("Capslock_Ctrl_Period")
-            #/:: RunHotkeyFunction("Capslock_Ctrl_Slash")
-            #Space:: RunHotkeyFunction("Capslock_Ctrl_Space")
-            #Enter:: RunHotkeyFunction("Capslock_Ctrl_Enter")
-            #Backspace:: RunHotkeyFunction("Capslock_Ctrl_Backspace")
-            #Tab:: RunHotkeyFunction("Capslock_Ctrl_Tab")
-            #Escape:: RunHotkeyFunction("Capslock_Ctrl_Esc")
-            #Delete:: RunHotkeyFunction("Capslock_Ctrl_Delete")
-        } catch as err {
-            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
-            throw
-        }
-    }
-    ; Mouse buttons
-    {
-        try {
-            #WheelUp:: RunHotkeyFunction("Capslock_Ctrl_WheelUp")
-            #WheelDown:: RunHotkeyFunction("Capslock_Ctrl_WheelDown")
-            #LButton:: RunHotkeyFunction("Capslock_Ctrl_LButton")
-            #RButton:: RunHotkeyFunction("Capslock_Ctrl_RButton")
-            #MButton:: RunHotkeyFunction("Capslock_Ctrl_MButton")
-        } catch as err {
-            MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
-            throw
-        }
-    }
-}
+; {
+;     ; A - Z, 0 - 9, F1 - F12
+;     {
+;         #a::
+;         #b::
+;         #c::
+;         #d::
+;         #e::
+;         #f::
+;         #g::
+;         #h::
+;         #i::
+;         #j::
+;         #k::
+;         #l::
+;         #m::
+;         #n::
+;         #o::
+;         #p::
+;         #q::
+;         #r::
+;         #s::
+;         #t::
+;         #u::
+;         #v::
+;         #w::
+;         #x::
+;         #y::
+;         #z::
+;         #0::
+;         #1::
+;         #2::
+;         #3::
+;         #4::
+;         #5::
+;         #6::
+;         #7::
+;         #8::
+;         #9::
+;         #F1::
+;         #F2::
+;         #F3::
+;         #F4::
+;         #F5::
+;         #F6::
+;         #F7::
+;         #F8::
+;         #F9::
+;         #F10::
+;         #F11::
+;         #F12::
+;         {
+;             try {
+;                 RunHotkeyFunction("Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2))
+;             } catch as err {
+;                 MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
+;                 throw
+;             }
+;         }
+;     }
+;     ; Special keys
+;     {
+;         try {
+;             #`:: RunHotkeyFunction("Capslock_Ctrl_Backtick")
+;             #-:: RunHotkeyFunction("Capslock_Ctrl_Minus")
+;             #=:: RunHotkeyFunction("Capslock_Ctrl_Equal")
+;             #[:: RunHotkeyFunction("Capslock_Ctrl_LSquareBracket")
+;             #]:: RunHotkeyFunction("Capslock_Ctrl_RSquareBracket")
+;             #\:: RunHotkeyFunction("Capslock_Ctrl_Backslash")
+;             #`;:: RunHotkeyFunction("Capslock_Ctrl_Semicolon")
+;             #':: RunHotkeyFunction("Capslock_Ctrl_Apostrophe")
+;             #,:: RunHotkeyFunction("Capslock_Ctrl_Comma")
+;             #.:: RunHotkeyFunction("Capslock_Ctrl_Period")
+;             #/:: RunHotkeyFunction("Capslock_Ctrl_Slash")
+;             #Space:: RunHotkeyFunction("Capslock_Ctrl_Space")
+;             #Enter:: RunHotkeyFunction("Capslock_Ctrl_Enter")
+;             #Backspace:: RunHotkeyFunction("Capslock_Ctrl_Backspace")
+;             #Tab:: RunHotkeyFunction("Capslock_Ctrl_Tab")
+;             #Escape:: RunHotkeyFunction("Capslock_Ctrl_Esc")
+;             #Delete:: RunHotkeyFunction("Capslock_Ctrl_Delete")
+;         } catch as err {
+;             MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
+;             throw
+;         }
+;     }
+;     ; Mouse buttons
+;     {
+;         try {
+;             #WheelUp:: RunHotkeyFunction("Capslock_Ctrl_WheelUp")
+;             #WheelDown:: RunHotkeyFunction("Capslock_Ctrl_WheelDown")
+;             #LButton:: RunHotkeyFunction("Capslock_Ctrl_LButton")
+;             #RButton:: RunHotkeyFunction("Capslock_Ctrl_RButton")
+;             #MButton:: RunHotkeyFunction("Capslock_Ctrl_MButton")
+;         } catch as err {
+;             MsgBox "ERROR while running function Capslock_Ctrl_" . SubStr(A_ThisHotkey, 2), , "T2"
+;             throw
+;         }
+;     }
+; }
 
 #HotIf
 
@@ -586,11 +589,11 @@ seperateClipboard := ""
  */
 RunHotkeyFunction(funcName) {
     try {
-        if !RegExMatch(Trim(funcName), "\)$") {
+        if !RegExMatch(Trim(funcName), "i)\)$") {
             %funcName%()
             return
         }
-        if RegExMatch(funcName, "(\w+)\((.*)\)$", &match) {
+        if RegExMatch(funcName, "i)(\w+)\((.*)\)$", &match) {
             func := match[1]
             if !match[2] {
                 %func%()
@@ -605,30 +608,4 @@ RunHotkeyFunction(funcName) {
             }
         }
     }
-}
-
-DrawCapsLockStateGui() {
-    CapsLockGui := Gui()
-    ; Set GUI options:
-    ; +AlwaysOnTop: Keep the GUI on top of other windows
-    ; -Caption: Remove the title bar
-    ; +ToolWindow: Make it a tool window (thinner border, no taskbar entry)
-    ; +E0x20: Make the window click-through
-    CapsLockGui.Opt("+AlwaysOnTop -Caption +ToolWindow +E0x20")
-    ; Set the background color to the Windows accent color
-    CapsLockGui.BackColor := GetWindowsAccentColor()
-    ; Add a text control to display "CAPS"
-    CapsLockIndicator := CapsLockGui.Add("Text", "Center", "CAPS")
-    ; Margin from the screen edge
-    margin := 0
-    xPos := margin
-    yPos := margin
-    ; Set opacity (*/255), 255 is fully opaque
-    WinSetTransparent(160, CapsLockGui)
-    ; Show the GUI in the top-left corner
-    CapsLockGui.Show(Format("x{} y{} NoActivate", xPos, yPos))
-    ; Initially hide the GUI
-    CapsLockGui.Hide()
-
-    return CapsLockGui
 }

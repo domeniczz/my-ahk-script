@@ -2,6 +2,7 @@
  * Let user input a number in the GUI.
  * 
  * @param {String} prompt - The prompt message to display in the GUI.
+ * 
  * @returns {Number} - The inputted number or 0 if no input is provided.
  */
 LetUserInputNumber(prompt := "Input a number here:") {
@@ -25,6 +26,7 @@ LetUserInputNumber(prompt := "Input a number here:") {
  * Let user input a string in the GUI.
  * 
  * @param {String} prompt - The prompt message to display in the GUI.
+ * 
  * @returns {String} - The inputted value or "" if no input is provided.
  */
 LetUserInputString(prompt := "Input a string here:") {
@@ -35,6 +37,7 @@ LetUserInputString(prompt := "Input a string here:") {
  * Let user input in the GUI.
  * 
  * @param {String} prompt - The prompt message to display in the GUI.
+ * 
  * @returns {String} - The inputted value or "" if no input is provided.
  */
 LetUserInput(prompt := "Input here:") {

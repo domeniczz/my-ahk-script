@@ -2,6 +2,7 @@
  * Checks if a Docker container is currently running.
  * 
  * @param {String} containerName - The name of the Docker container to check.
+ * 
  * @returns {Boolean} - `true` if the container is running, `false` otherwise.
  */
 IsDockerContainerRunning(containerName) {
@@ -16,7 +17,7 @@ IsDockerContainerRunning(containerName) {
     Sleep 50
 
     ; Trim any whitespace and convert to lowercase
-    result := StrLower(RTrim(Trim(A_Clipboard), "`n`r"))
+    result := StrLower(RTrim(Trim(A_Clipboard), "`r`n"))
 
     A_Clipboard := ""
 

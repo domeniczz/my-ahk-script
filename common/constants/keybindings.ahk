@@ -1,28 +1,34 @@
 ; All custom hotkey bindings
 keybindings := [
-    ["LAlt + 1", "Toggle Notepad++"
+    ["LAlt (+ LShift) + 1", "Toggle Cursor (new instance)"
     ],
-    ["LAlt (+ LShift) + 2", "Toggle Notepad2 (or a new instance)"
+    ["LAlt (+ LShift) + 2", "Toggle VSCode (new instance)"
     ],
-    ["LAlt (+ LShift) + 3", "Toggle Cursor (or a new instance)"
+    ["LAlt (+ LShift) + 3", "Toggle Notepad2 (new instance)"
     ],
-    ["LAlt (+ LShift) + 4", "Toggle VSCode (or a new instance)"
+    ["LAlt + 4", "Toggle Notepad++"
     ],
-    ["LAlt (+ LShift) + 5", "Toggle Terminal (or a new instance)"
+    ["LAlt (+ LShift) + 5", "Toggle Terminal (new instance)"
     ],
     ["LCtrl + ``", "Toggle Heynote"
     ],
-    ["LCtrl (+ LShift) + 1", "Toggle Typora (or a new instance)"
+    ["LCtrl (+ LShift) + 1", "Toggle Typora (new instance)"
     ],
-    ["LWin (+ LShift) + ``", "Toggle Firefox (or private window)"
+    ["LCtrl + 2", "Toggle Obsidian"
     ],
-    ["LWin (+ LShift) + 1", "Toggle Brave (or private window)"
+    ["LWin (+ LShift) + ``", "Toggle Firefox (private window)"
     ],
-    ["LWin (+ LShift) + 2", "Toggle Chrome (or private window)"
+    ["LWin (+ LShift) + 1", "Toggle Brave (private window)"
     ],
-    ["LWin (+ LShift) + 3", "Toggle Edge (or private window)"
+    ["LWin (+ LShift) + 2", "Toggle Chrome (private window)"
+    ],
+    ["LWin (+ LShift) + 3", "Toggle Edge (private window)"
+    ],
+    ["RAlt + M", "Toggle Thunderbird"
     ],
     ["RAlt + P", "Toggle Spotify"
+    ],
+    ["LAlt + F", "Toggle Follow"
     ],
     ["LAlt + R", "Toggle Telegram"
     ],
@@ -40,9 +46,13 @@ keybindings := [
     ],
     ["RAlt + -", "Toggle Bilibili (Sandboxed)"
     ],
-    ["RAlt + 0", "Open YouTube"
+    ["RAlt + RShift + =", "Open Bilibili Web"
     ],
-    ["RAlt + 9", "Open YouTube (Firefox Container)"
+    ["RAlt + RShift + -", "Open Bilibili Web (Brave)"
+    ],
+    ["RAlt + 0", "Open YouTube Web"
+    ],
+    ["RAlt + 9", "Open YouTube Web (Firefox Container)"
     ],
     ["RAlt + RShift + P", "Run Spotify & Lyricify"
     ],
@@ -50,9 +60,11 @@ keybindings := [
     ],
     ["RAlt + C", "Start Ollama & Docker for LLM"
     ],
+    ["RAlt + I", "Toggle HWiNFO64"
+    ],
     ["RAlt + O", "Open MSI Afterburner"
     ],
-    ["LAlt + ``", "Close current window"
+    ["LAlt + Esc", "Close current window"
     ],
     ["RAlt + F12", "Computer Sleep"
     ],

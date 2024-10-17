@@ -1,4 +1,9 @@
-﻿;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
+﻿/************************************************************************
+ * @description AutoHotkey script for Windows (Personal Usage)
+ * @author Domenic
+ ***********************************************************************/
+
+;;;;;;;;;;  + is Shift, ! is Alt, ^ is Ctrl, # is Win  ;;;;;;;;;;
 
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
@@ -6,9 +11,7 @@
 
 #SingleInstance Force
 
-; #WinActivateForce
-
-; #NoTrayIcon
+#WinActivateForce
 
 ProcessSetPriority "High"
 
@@ -36,17 +39,22 @@ SetCapsLockState "AlwaysOff"
 InstallKeybdHook
 InstallMouseHook
 
+; Store the CapsLock activation state (0 = Off, 1 = On)
+CapsLockState := 0
+
 ; Use `#Include` without any path:
 ; - AHK will first look for the ahk script in the same directory as the script that contains the #Include directive.
 ; - If still not found, it will look in the standard library folder of AHK's installation directory.
 ; - If not found there, it will search in the user's standard library folder (usually Documents\AutoHotkey\Lib).
+#Include common\constants\custom.ahk
+#Include common\constants\settings.ahk
 #Include common\constants\logs.ahk
 #Include common\constants\applications.ahk
-#Include common\constants\settings.ahk
 #Include common\constants\autodarkmode.ahk
 #Include common\constants\keybindings.ahk
 #Include common\constants\scripts.ahk
-#Include common\utils\ahkutils.ahk
+#Include common\utils\datautils.ahk
+#Include common\utils\controlutils.ahk
 #Include common\utils\scriptutils.ahk
 #Include common\utils\windowutils.ahk
 #Include common\utils\fileutils.ahk
@@ -55,15 +63,20 @@ InstallMouseHook
 #Include common\utils\timeutils.ahk
 #Include common\utils\textutils.ahk
 #Include common\utils\logutils.ahk
+#Include common\utils\applications.ahk
 #Include function\toggle.ahk
 #Include function\mouse.ahk
 #Include function\autodarkmode.ahk
 #Include function\folder.ahk
+#Include capslockplus\capslock.ahk
+#Include hotstring\hotstring.ahk
 #Include gui\help.ahk
 #Include gui\menu.ahk
 #Include gui\input.ahk
-#Include capslockplus\capslock.ahk
-#Include hotstring\hotstring.ahk
+#Include lib\Gdip_All.ahk
+
+; Check windows color mode immediately after script starts
+AutoDarkMode()
 
 ;;;;;;;;;; AUTOMATIC TASKS ;;;;;;;;;;
 
@@ -84,26 +97,26 @@ OnError LogError
 
 #HotIf !CapsLockState and !IsExcludedProgram()
 
-; `LAlt + 1` to toggle Notepad++
-<!1:: ToggleNotepadPP()
+; `LAlt + 1` to toggle Cursor AI Editor
+<!1:: ToggleCursor()
 
-; `LAlt + 2` to toggle Notepad2
-<!2:: ToggleNotepad2()
+; `LAlt + LShift + 1` to toggle a new instance of Cursor AI Editor
+<!<+1:: ToggleCursor(true)
 
-; `LAlt + LShift + 2` to toggle a new instance of Notepad2
-<!<+2:: ToggleNotepad2(true)
+; `LAlt + 2` to toggle Visual Studio Code
+<!2:: ToggleVSCode()
 
-; `LAlt + 3` to toggle Cursor AI Editor
-<!3:: ToggleCursor()
+; `LAlt + LShift + 2` to toggle a new instance of Visual Studio Code
+<!<+2:: ToggleVSCode(true)
 
-; `LAlt + LShift + 3` to toggle a new instance of Cursor AI Editor
-<!<+3:: ToggleCursor(true)
+; `LAlt + 3` to toggle Notepad2
+<!3:: ToggleNotepad2()
 
-; `LAlt + 4` to toggle Visual Studio Code
-<!4:: ToggleVSCode()
+; `LAlt + LShift + 3` to toggle a new instance of Notepad2
+<!<+3:: ToggleNotepad2(true)
 
-; `LAlt + LShift + 4` to toggle a new instance of Visual Studio Code
-<!<+4:: ToggleVSCode(true)
+; `LAlt + 4` to toggle Notepad++
+<!4:: ToggleNotepadPP()
 
 ; `LAlt + 5` to toggle Windows Terminal
 <!5:: ToggleWindowsTerminal()
@@ -119,6 +132,9 @@ OnError LogError
 
 ; `LCtrl + LShift + 1` to toggle a new instance of Typora
 <^<+1:: ToggleTypora(true)
+
+; `LCtrl + 2` to toggle Obsidian
+<^2:: ToggleObsidian()
 
 ; `LWin + `` to toggle Firefox
 <#`:: ToggleGecko()
@@ -146,8 +162,14 @@ OnError LogError
 ; `LWin + LShift + 3` to toggle Microsoft Edge in private mode
 <#<+3:: ToggleChromium(msedge, true, "-inprivate")
 
+; `RAlt + M` to toggle Thunderbird
+>!m:: ToggleThunderbird()
+
 ; `RAlt + P` to toggle Spotify
 >!p:: ToggleSpotify()
+
+; `LAlt + F` to toggle Follow
+<!f:: ToggleFollow()
 
 ; `LAlt + R` to toggle Telegram
 <!r:: ToggleTelegram()
@@ -167,23 +189,32 @@ OnError LogError
 ; `RAlt + L` to toggle Eudic
 >!l:: ToggleEudic()
 
-; `RAlt + =` to toggle Bilibili
+; `LAlt + LShift + P` to toggle 1Password
+<!<+p:: Toggle1Password()
+
+; `RAlt + RShift + =` to toggle Bilibili
 >!=:: ToggleBilibili()
 
-; `RAlt + -` to toggle Sandboxed Bilibili
+; `RAlt + RShift + -` to toggle Sandboxed Bilibili
 >!-:: ToggleSandboxedBilibili()
 
-; `RAlt + 0` to open YouTube
->!0:: OpenYouTube()
+; `RAlt + =` to open Bilibili web interface
+>!>+=:: OpenBilibiliWeb()
 
-; `RAlt + 9` to open YouTube in a container
->!9:: OpenYouTube2()
+; `RAlt + -` to open Bilibili web interface in a firefox container
+>!>+-:: OpenBilibiliWeb2()
+
+; `RAlt + 0` to open YouTube web interface
+>!0:: OpenYouTubeWeb()
+
+; `RAlt + 9` to open YouTube web interface in a firefox container
+>!9:: OpenYouTubeWeb2()
 
 ; `RAlt + RShift + P` to run Both Spotify and Lyricify
->+>!p:: RunSpotifyAndLyricify()
+>!>+p:: RunSpotifyAndLyricify()
 
 ; `RAlt + C` to start Ollama and Docker container for chat webui to chat with LLMs
->!c:: StartOllamaAndDockerWebUI()
+>!c:: StartOllamaAndWebUI()
 
 ; `LWin + E` to toggle File Explorer
 <#e:: ToggleExplorer()
@@ -206,8 +237,8 @@ OnError LogError
 ; `RAlt + K` to toggle Gaming Network Environment
 >!k:: ToggleGameEnv()
 
-; `LAlt + `` to close currently active window
-<!`:: CloseCurrentWindow()
+; `LAlt + Esc` to close currently active window
+<!Esc:: CloseCurrentWindow()
 
 ; `RAlt + F12` to put the computer to sleep
 >!F12:: PutComputerToSleep()
@@ -215,13 +246,8 @@ OnError LogError
 ; `LCtrl + LShift + RAlt + F12` to restart the computer
 <^<+>!F12:: PutComputerToRestart()
 
-; `LAlt + /` to toggle the help window, hide the window after LAlt is released
-<!/::
-{
-    ToggleHelpWindow()
-    KeyWait "LAlt"
-    ToggleHelpWindow()
-}
+; `LAlt + /` to toggle the help window
+<!/:: ToggleHelpWindow()
 
 ; `LWin + Z` to show the menu
 <#z:: OpenMenu()
@@ -240,41 +266,35 @@ MButton:: MiddleButtonHandler()
 
 ;;;;;;;;;; STARTUP CLEANUP ;;;;;;;;;;
 
-; Delete the "game_env_started.tmp" file if it exists
 if FileExist("game_env_started.tmp") {
     FileDelete("game_env_started.tmp")
 }
 
 ; Delete old log files under the "log" folder
-; Remove log files older than 3 days
+; Remove log files older than 2 days
 loop files, A_ScriptDir . "\log" . "\*", "D" {
     monthDir := A_LoopFilePath
-    ; Get the current date
+
     dateNow := DateAdd(A_Now, 0, "days")
-    ; Get the cutoff date (3 days ago)
-    cutoffDate := DateAdd(dateNow, -3, "days")
-    ; the date today
+    cutoffDate := DateAdd(dateNow, -2, "days")
     dateNowFormatted := FormatTime(dateNow, "yyyyMMdd")
-    ; the date 3 days ago
     cutoffDateFormatted := FormatTime(cutoffDate, "yyyyMMdd")
-    ; Loop through all log files in the month directory
+
     loop files, monthDir . "\*.log" {
         logFile := A_LoopFilePath
+
         ; Extract date from filename (assuming format MM-dd.log)
         fileNameNoExt := GetPathComponent(logFile, "nameNoExt")
         ; Concatenate the year, month, and day from the current date with the filename
         fileDate := SubStr(A_Now, 1, 4) . SubStr(fileNameNoExt, 1, 2) . SubStr(fileNameNoExt, 4, 2)
-        ; If the file date is not today and the file is empty, delete it
+
         if fileDate != dateNowFormatted and FileRead(logFile) == "" {
             try {
                 FileDelete(logFile)
                 continue
             }
         }
-        ; Check if the file date is within the range
-        ; If the file date is older than the cutoff date or newer than the current date, delete it
         if fileDate < cutoffDateFormatted or fileDate > dateNowFormatted {
-            ; Delete the file if it's older than the cutoff date
             try {
                 FileDelete(logFile)
             }

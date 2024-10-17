@@ -38,10 +38,14 @@ if not A_IsAdmin {
     ExitApp
 }
 
+#Include ..\common\constants\custom.ahk
+#Include ..\common\utils\controlutils.ahk
 #Include ..\common\utils\windowutils.ahk
 #Include ..\common\utils\systemutils.ahk
 #Include ..\common\utils\colorutils.ahk
 #Include ..\common\utils\logutils.ahk
+#Include ..\common\utils\applications.ahk
+#Include ..\common\utils\fileutils.ahk
 
 OnError LogError
 
@@ -51,18 +55,17 @@ OnError LogError
 
 logfile := A_ScriptDir . "\log\other.log"
 
-steam := EnvGet("ProgramFiles(x86)") . "\Steam\steam.exe"
+leishen := C_ProgramFilesx86 . "\LeiGod_Acc\leigod_launcher.exe"
+ValidateAndUpdatePath(&leishen)
 
-leishen := EnvGet("ProgramFiles(x86)") . "\LeiGod_Acc\leigod_launcher.exe"
+steam := C_ProgramFilesx86 . "\Steam\steam.exe"
+ValidateAndUpdatePath(&steam)
+
+msiafterburner := C_ProgramFilesx86 . "\MSI Afterburner\MSIAfterburner.exe"
+ValidateAndUpdatePath(&msiafterburner)
 
 hwinfo := A_ProgramFiles . "\HWiNFO64\HWiNFO64.EXE"
-
-msiafterburner := EnvGet("ProgramFiles(x86)") . "\MSI Afterburner\MSIAfterburner.exe"
-
-hwinfoDim := { w: Round(A_ScreenWidth * 0.41875), h: Round(A_ScreenHeight * 0.466666)
-}
-hwinfoDim.x := (A_ScreenWidth - hwinfoDim.w) // 2
-hwinfoDim.y := (A_ScreenHeight - hwinfoDim.h) // 2
+ValidateAndUpdatePath(&hwinfo)
 
 ;;;;;;;;;; USER DEFINED FUNCTIONS ;;;;;;;;;;
 
@@ -71,7 +74,10 @@ hwinfoDim.y := (A_ScreenHeight - hwinfoDim.h) // 2
  * - Start gaming: Turn off clash, turn on leigod
  * - Stop gaming: Turn on clash, turn off leigod
  */
-ToggleGameEnv() {
+ToggleGameEnvAdmin() {
+    leigodWinIdentifier := "ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1"
+    steamWinIdentifier := "ahk_exe steamwebhelper.exe ahk_class SDL_app"
+
     clickX := 1573
     clickY := 100
 
@@ -109,71 +115,85 @@ ToggleGameEnv() {
         }
     }
 
+    IsProxyOn() {
+        return IsSystemProxyEnabled()
+    }
+    IsProxyOff() {
+        return !IsSystemProxyEnabled()
+    }
+    TurnOnProxy() {
+        toggleClashProxyShortcut := "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
+        if ProcessExist("Clash for Windows.exe") {
+            Sleep 200
+            ; Turn on Clash
+            Send toggleClashProxyShortcut
+            Sleep 200
+        } else {
+            MsgBox "ATTENTION! System Proxy is disabled but Clash for Windows is not running!", , "T2"
+            return false
+        }
+        if LoopLogic(IsProxyOn, 6, 500) {
+            ToolTip "Proxy Turned On"
+            SetTimer () => ToolTip(), -2000, -1
+            return true
+        }
+        MsgBox "Fail to turn proxy on, trying again...", , "T2"
+        return false
+    }
+    TurnOffProxy() {
+        toggleClashProxyShortcut := "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
+        if ProcessExist("Clash for Windows.exe") {
+            Sleep 200
+            ; Turn off Clash
+            Send toggleClashProxyShortcut
+            Sleep 200
+        } else {
+            MsgBox "ATTENTION! System Proxy is enabled but Clash for Windows is not running!", , "T2"
+            return false
+        }
+        if LoopLogic(IsProxyOff, 6, 500) {
+            ToolTip "Proxy Turned Off"
+            SetTimer () => ToolTip(), -2000, -1
+            return true
+        }
+        MsgBox "Fail to turn proxy off, trying again...", , "T2"
+        return false
+    }
+
     ; If LeiGod is running, then close it, and turn on Clash
     if ProcessExist("leigod.exe") {
         ; Turn off proxy if it is enabled
         if IsSystemProxyEnabled() {
-            maxAttempts1 := 3
-            loop maxAttempts1 {
-                if ProcessExist("Clash for Windows.exe") {
-                    Sleep 200
-                    ; Turn off Clash
-                    Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
-                    Sleep 200
-                } else {
-                    MsgBox "ATTENTION! System Proxy is enabled but Clash for Windows is not running!", , "T2"
-                    return
-                }
-                maxAttempts2 := 6
-                loop maxAttempts2 {
-                    if !IsSystemProxyEnabled() {
-                        ToolTip "Proxy Turned Off"
-                        SetTimer () => ToolTip(), -2000, -1
-                        break
-                    }
-                    maxAttempts2 -= 1
-                    Sleep 500
-                }
-                if maxAttempts2 <= 0 {
-                    MsgBox "Attempt " . A_Index . " to turn proxy off failed, trying again...", , "T0.5"
-                    maxAttempts1 -= 1
-                }
-                if !IsSystemProxyEnabled() {
-                    break
-                }
-            }
-            if maxAttempts1 <= 0 {
-                MsgBox "Fail to turn proxy off!", , "T0.5"
-                return
+            if !LoopLogic(TurnOffProxy, 3, 0) {
+                MsgBox "Fail to turn proxy off!", , "T2"
             }
         }
 
-        if !WinExist("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1") {
+        if !WinExist(leigodWinIdentifier) {
             try {
                 Run leishen
             }
         }
-        ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", 120)
+        ActivateWindow(leigodWinIdentifier, 120)
         Sleep 500
 
         if IsColorInRange(GetPixelColors(2, clickX, clickY), leishenActiveColor) or
-            IsColorInRange(GetPixelColors(2, clickX, clickY), leishenActiveColorCursorOnButton) {
-            ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , clickX, clickY, "雷神关闭")
+        IsColorInRange(GetPixelColors(2, clickX, clickY), leishenActiveColorCursorOnButton) {
+            ActivateWindowAndClick(leigodWinIdentifier, , , clickX, clickY, "雷神关闭")
             Sleep 2000
 
             ; WinClose "ahk_exe leigod.exe"
-            if ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1") {
+            if ActivateWindow(leigodWinIdentifier) {
                 ; Alt + F4 to exit the app
                 Send "{LAlt down}{F4}{LAlt up}"
             }
+            SwitchIMEInputLanguageAdmin(C_IMEInputLanguage["zh_cn"])
             Sleep 200
 
+            ; Turn on proxy
             if !IsSystemProxyEnabled() {
-                if ProcessExist("Clash for Windows.exe") {
-                    ; Turn on Clash
-                    Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
-                    ToolTip "Proxy Turned On"
-                    SetTimer () => ToolTip(), -2000, -1
+                if !LoopLogic(TurnOnProxy, 3, 0) {
+                    MsgBox "Fail to turn proxy on!", , "T2"
                 }
             }
 
@@ -204,10 +224,11 @@ ToggleGameEnv() {
             ; ToolTip "Remember to un-suspend AHK!"
             ; SetTimer () => ToolTip(), -2000, -1
         } else if IsColorInRange(GetPixelColors(2, clickX, clickY), leishenNonActiveColor) or
-            IsColorInRange(GetPixelColors(2, clickX, clickY), leishenNonActiveColorCursorOnButton) {
-            if ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , clickX, clickY, "雷神启动") {
+        IsColorInRange(GetPixelColors(2, clickX, clickY), leishenNonActiveColorCursorOnButton) {
+            if ActivateWindowAndClick(leigodWinIdentifier, , , clickX, clickY, "雷神启动") {
                 ; Create a file to indicate that the game environment has been started
                 FileAppend("", "../game_env_started.tmp")
+                SwitchIMEInputLanguageAdmin(C_IMEInputLanguage["en_us"])
                 Sleep 2000
             }
         }
@@ -216,88 +237,39 @@ ToggleGameEnv() {
     else {
         ; Turn off proxy if it is enabled
         if IsSystemProxyEnabled() {
-            maxAttempts1 := 3
-            loop maxAttempts1 {
-                if ProcessExist("Clash for Windows.exe") {
-                    Sleep 200
-                    ; Turn off Clash
-                    Send "{LCtrl down}{LAlt down}{LShift down}pmt{LCtrl up}{LAlt up}{LShift up}"
-                    Sleep 200
-                } else {
-                    MsgBox "ATTENTION! System Proxy is enabled but Clash for Windows is not running!", , "T2"
-                    return
-                }
-                maxAttempts2 := 6
-                loop maxAttempts2 {
-                    if !IsSystemProxyEnabled() {
-                        ToolTip "Proxy Turned Off"
-                        SetTimer () => ToolTip(), -2000, -1
-                        break
-                    }
-                    maxAttempts2 -= 1
-                    Sleep 500
-                }
-                if maxAttempts2 <= 0 {
-                    MsgBox "Attempt " . A_Index . " to turn proxy off failed, trying again...", , "T0.5"
-                    maxAttempts1 -= 1
-                }
-                if !IsSystemProxyEnabled() {
-                    break
-                }
-            }
-            if maxAttempts1 <= 0 {
-                MsgBox "Fail to turn proxy off!", , "T0.5"
-                return
+            if !LoopLogic(TurnOffProxy, 3, 0) {
+                MsgBox "Fail to turn proxy off!", , "T2"
             }
         }
 
         try {
+            if !ProcessExist("steam.exe") {
+                try {
+                    Run steam
+                }
+            }
+
             Run leishen
-            ; Set the window position and size, then focus on the window
-            ActivateWindow("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", 120)
+            IsLeigodStarted() {
+                if !WinExist("ahk_exe leigod_launcher.exe") and !WinExist("ahk_exe updater.exe") and WinExist(leigodWinIdentifier) {
+                    ; Set the window position and size, then focus on the window
+                    ActivateWindow(leigodWinIdentifier)
+                    return true
+                }
+            }
+            LoopLogic(IsLeigodStarted, 900)
             Sleep 1000
 
-            if ActivateWindowAndClick("ahk_exe leigod.exe ahk_class Chrome_WidgetWin_1", , , clickX, clickY, "雷神启动") {
+            if ActivateWindowAndClick(leigodWinIdentifier, , , clickX, clickY, "雷神启动") {
                 ; Create a file to indicate that the game environment has been started
                 FileAppend("", "../game_env_started.tmp")
+
+                SwitchIMEInputLanguageAdmin(C_IMEInputLanguage["en_us"])
 
                 ; Start MSI Afterburner
                 if !ProcessExist("MSIAfterburner.exe") {
                     try {
                         Run msiafterburner
-                    }
-                }
-
-                ; Start Steam
-                if !ProcessExist("steam.exe") {
-                    try {
-                        Run steam
-                    }
-                    loginWinId := 0
-                    loginWinPid := 0
-                    steamWinIdentifier := "ahk_exe steamwebhelper.exe ahk_class SDL_app"
-                    if WinWait(steamWinIdentifier, , 10) {
-                        loginWinId := WinGetID(steamWinIdentifier)
-                        loginWinPid := WinGetPID(steamWinIdentifier)
-                    }
-                    maxAttempts := 400
-                    tempCount := 2
-                    loop maxAttempts {
-                        if WinExist("Steam " . steamWinIdentifier) {
-                            mainWinId := WinGetID("Steam " . steamWinIdentifier)
-                            if mainWinId != loginWinId and WinGetPID("Steam " . steamWinIdentifier) == loginWinPid {
-                                CloseWindow("Steam ahk_id " . mainWinId)
-                                tempCount -= 1
-                                if tempCount <= 0 {
-                                    break
-                                }
-                            }
-                        }
-                        maxAttempts -= 1
-                        Sleep 500
-                    }
-                    if maxAttempts <= 0 {
-                        MsgBox "Fail to detect Steam main window!", , "T0.5"
                     }
                 }
             }
@@ -315,14 +287,14 @@ ToggleGameEnv() {
 /**
  * Toggle HWiNFO64
  */
-ToggleHWiNFO() {
+ToggleHWiNFOAdmin() {
+    winIdentifier := "ahk_exe HWiNFO64.EXE"
+
     try {
         ; If it is running, toggle the window
         if ProcessExist("HWiNFO64.EXE") {
-            if WinActive("ahk_exe HWiNFO64.EXE") {
-                WinMinimize
-            } else if WinExist("ahk_exe HWiNFO64.EXE") and !WinActive("ahk_exe HWiNFO64.EXE") {
-                ActivateWindow("ahk_exe HWiNFO64.EXE")
+            if WinExist(winIdentifier) and !WinActive(winIdentifier) {
+                ActivateWindow(winIdentifier)
             } else {
                 Run hwinfo
             }
@@ -330,17 +302,16 @@ ToggleHWiNFO() {
         ; If it is not running, run it
         else {
             Run hwinfo
-            if ActivateWindow("ahk_exe HWiNFO64.EXE") {
-                startupWinId := WinGetID("ahk_exe HWiNFO64.EXE")
+            if ActivateWindow(winIdentifier) {
+                startupWinId := WinGetID(winIdentifier)
                 Send "{Enter}"
-                maxAttempts := 600
-                loop maxAttempts {
-                    id := WinGetID("ahk_exe HWiNFO64.EXE")
+                WaitAndActivateWin() {
+                    id := WinGetID(winIdentifier)
                     if id != startupWinId {
-                        ActivateWindow("ahk_id " . id)
+                        return ActivateWindow("ahk_id " . id)
                     }
-                    Sleep 100
                 }
+                LoopLogic(WaitAndActivateWin, 600)
             }
         }
     }
@@ -349,12 +320,14 @@ ToggleHWiNFO() {
 /**
  * Toggle MSI Afterburner (it will also toggle RivaTuner Statistics Server)
  */
-ToggleMSIAfterburner() {
+ToggleMSIAfterburnerAdmin() {
+    winIdentifier := "ahk_exe MSIAfterburner.exe"
+
     try {
         ; If it is running, toggle the window
         if ProcessExist("MSIAfterburner.exe") {
-            if WinExist("ahk_exe MSIAfterburner.exe") and !WinActive("ahk_exe MSIAfterburner.exe") {
-                ActivateWindow("ahk_exe MSIAfterburner.exe")
+            if WinExist(winIdentifier) and !WinActive(winIdentifier) {
+                ActivateWindow(winIdentifier)
             } else {
                 Run msiafterburner
             }
@@ -368,11 +341,28 @@ ToggleMSIAfterburner() {
     }
 }
 
+/**
+ * Switch the IME input language.
+ * 
+ * @param {Integer} targetLayout - The target language keyboard ID
+ */
+SwitchIMEInputLanguageAdmin(targetLayout) {
+    winId := WinGetID("A")
+    if winId {
+        threadId := DllCall("GetWindowThreadProcessId", "Ptr", winId, "Ptr", 0)
+        currentLayout := DllCall("GetKeyboardLayout", "UInt", threadId, "Ptr")
+
+        if currentLayout != targetLayout {
+            SendMessage(0x50, , targetLayout, , "A")
+        }
+    }
+}
+
 ;;;;;;;;;; MAIN FUNCTION ;;;;;;;;;;
 
 if A_Args.Length > 0 {
     functionName := A_Args[1]
     try {
-        %functionName%()
+        %functionName%Admin()
     }
 }
