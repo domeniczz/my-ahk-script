@@ -46,7 +46,7 @@ lastScrollDirection := 0
  * Press and hold right button, then scroll wheel up/down to trigger infinite scrolling
  */
 InfiniteScrollHandler(*) {
-    if IsExcludedProgram() {
+    if IsWindowExcludedProgram() {
         Click "Right"
         return
     }
@@ -61,7 +61,7 @@ InfiniteScrollHandler(*) {
 
         ; Set a timer to check for right button release
         ; The priority is set to 100, which is higher than the default priority of 0
-        SetTimer CheckRButtonRelease, 5, 100
+        SetTimer CheckRButtonRelease, 2, 100
     } catch as err {
         AfterCleanUp()
     }
@@ -88,7 +88,7 @@ CheckRButtonRelease() {
 
     ; `GetKeyState` returns 1 (true) if the key is down or 0 (false) if it is up
     if !GetKeyState("RButton", "P") {
-        if !infiniteScrollActive {
+        if !infiniteScrollActive and !GetKeyState("LButton", "P") {
             ; Perform right-click if no infinite scrolling occurred
             Click "Right"
         }
@@ -103,10 +103,11 @@ ScrollWheelHandler(ThisHotkey) {
     global infiniteScrollActive, scrollDirection, consecutiveScrollCount, lastScrollDirection
 
     ; Get scroll direction
-    if ThisHotkey == "WheelUp"
+    if ThisHotkey == "WheelUp" {
         direction := 1
-    else if ThisHotkey == "WheelDown"
+    } else if ThisHotkey == "WheelDown" {
         direction := -1
+    }
 
     ; If the scroll direction has changed, reset the consecutive scroll count
     if direction != lastScrollDirection {
@@ -117,8 +118,9 @@ ScrollWheelHandler(ThisHotkey) {
     ; Otherwise, increment the consecutive scroll count
     else {
         ; Limit the count in case of accidental continuous increase
-        if consecutiveScrollCount < 25
+        if consecutiveScrollCount < 25 {
             consecutiveScrollCount++
+        }
     }
 
     ; Start infinite scrolling if not already
@@ -126,7 +128,7 @@ ScrollWheelHandler(ThisHotkey) {
         infiniteScrollActive := true
         ; Start infinite scrolling
         ; The priority is set to 100, which is higher than the default priority of 0
-        SetTimer InfiniteScroll, 5, 100
+        SetTimer InfiniteScroll, 2, 100
     }
 }
 
@@ -148,7 +150,7 @@ CalculateSpeedMultiplier(count) {
 InfiniteScroll() {
     global scrollAccumulator
 
-    if GetKeyState("RButton", "P") and !GetKeyState("LButton", "P") {
+    if infiniteScrollActive and GetKeyState("RButton", "P") and !GetKeyState("LButton", "P") {
         finalScrollSpeed := baseScrollSpeed * CalculateSpeedMultiplier(consecutiveScrollCount)
         scrollAccumulator += finalScrollSpeed
         while (scrollAccumulator >= 1) {

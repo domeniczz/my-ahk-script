@@ -1,9 +1,9 @@
 /**
- * Check if the current program is in the exclude list.
+ * Check if the current active window's process name is in the exclude list.
  * 
  * @returns {Boolean} - `true` if the program is excluded, `false` otherwise
  */
-IsExcludedProgram() {
+IsWindowExcludedProgram() {
     program := ""
     try {
         program := WinGetProcessName("A")
@@ -11,6 +11,20 @@ IsExcludedProgram() {
         ; If `WinGetProcessName` fails to get the process name and returns an empty string, return false
         return program != "" ? HasVal(excludedProgramList, program) : false
     }
+}
+
+/**
+ * Check if any of the excluded programs are currently running.
+ * 
+ * @returns {Boolean} - `true` if any excluded program is running, `false` otherwise
+ */
+IsExcludedProgramRunning() {
+    for exe in excludedProgramList {
+        if ProcessExist(exe) {
+            return true
+        }
+    }
+    return false
 }
 
 /**

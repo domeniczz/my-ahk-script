@@ -1,4 +1,32 @@
 /**
+ * Create an array with a given size, all elements are `unset`.
+ * 
+ * @param {Integer} size - The size of the array
+ * 
+ * @returns {Array} - The created array
+ */
+CreateArray(size) {
+    arr := []
+    loop size {
+        arr.Push(unset)
+    }
+    return arr
+}
+
+/**
+ * Print the array in a human readable format with MsgBox.
+ * 
+ * @param {Array} arr - The array to print
+ */
+PrintArray(arr) {
+    arrStr := ""
+    for index, val in arr {
+        arrStr .= index . ": " . val . "`n"
+    }
+    MsgBox arrStr
+}
+
+/**
  * Check if the value exists in the list.
  * 
  * @param {Object} list - The list to search in
@@ -13,7 +41,7 @@ HasVal(list, value) {
         throw Error("Invalid list")
     }
     for index, val in list {
-        if val = value {
+        if val == value {
             return index
         }
     }

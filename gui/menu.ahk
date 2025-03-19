@@ -184,8 +184,8 @@ ChatHandler(itemName, itemPos, menuObj) {
     switch itemPos {
         case 1: ToggleTelegram()
         case 2: ToggleDiscord()
-        case 3: ToggleWeChat()
-        case 4: ToggleTencentTIM()
+        case 3: ToggleWechat()
+        case 4: ToggleSandboxedTIM()
         case 5: ToggleDingTalk()
         default: MsgBox "ERROR! Unknown item: " . itemName . " at position " . itemPos, , "T2"
     }

@@ -54,7 +54,7 @@ SeperateClipboard := ""
     CapsLockStateGui.Hide()
 }
 
-#HotIf CapsLockState and !IsExcludedProgram()
+#HotIf CapsLockState and !IsWindowExcludedProgram()
 
 ;;;;;;;;;; CapsLock + Keys ;;;;;;;;;;
 

@@ -70,7 +70,7 @@ ToggleWinColorMode(mode := "Toggle") {
     try {
         ;; Step 1: Change the Windows color mode
         static HKCU := "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
-        if mode = "Toggle" {
+        if mode == "Toggle" {
             currentTheme := RegRead(HKCU, "SystemUsesLightTheme")
             mode := (currentTheme = 0) ? "Light" : "Dark"
         }

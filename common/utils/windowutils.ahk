@@ -22,6 +22,8 @@ ActivateWindow(target, waitDuration := 10, sleepDuration := 0) {
             }
             WinActivate
             return true
+        } else {
+            throw Error('The "' . target . '" window could not be found !')
         }
     } catch as err {
         MsgBox 'ERROR Activating! The "' . target . '" window could not be found!', , "T2"
@@ -49,6 +51,8 @@ CloseWindow(target, waitDuration := 10, sleepDuration := 0) {
             }
             WinClose
             return true
+        } else {
+            throw Error('The "' . target . '" window could not be found !')
         }
     } catch as err {
         MsgBox 'ERROR Closing! The "' . target . '" window could not be found!', , "T2"
@@ -76,6 +80,8 @@ MaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
             }
             WinMaximize
             return true
+        } else {
+            throw Error('The "' . target . '" window could not be found !')
         }
     } catch as err {
         MsgBox 'ERROR Maximizing! The "' . target . '" window could not be found!', , "T2"
@@ -103,6 +109,8 @@ MinimizeWindow(target, waitDuration := 10, sleepDuration := 0) {
             }
             WinMinimize
             return true
+        } else {
+            throw Error('The "' . target . '" window could not be found !')
         }
     } catch as err {
         MsgBox 'ERROR Minimizing! The "' . target . '" window could not be found!', , "T2"
@@ -131,6 +139,8 @@ ActivateAndMaximizeWindow(target, waitDuration := 10, sleepDuration := 0) {
             }
             WinMaximize
             return true
+        } else {
+            throw Error('The "' . target . '" window could not be found !')
         }
     } catch as err {
         MsgBox 'ERROR Activating and Maximizing! The "' . target . '" window could not be found!', , "T2"
@@ -163,6 +173,8 @@ ActivateWindowAndClick(target, waitDuration := 10, ClickType := "left", ClickX :
                 SetTimer () => ToolTip(), -1000, -1
             }
             return true
+        } else {
+            throw Error('The "' . target . '" window could not be found !')
         }
     } catch as err {
         MsgBox 'ERROR ' . ClickType . ' Click (' . ClickX . ', ' . ClickY . ')! The "' . target . '" window could not be found!', , "T2"
@@ -194,21 +206,25 @@ SetWindow(target, x := -1, y := -1, width := -1, height := -1, waitDuration := 1
             }
             ; Move and resize the window only if needed
             ; Use provided values or current values if not provided
-            if x != -1 or y != -1 or width != -1 or height != -1 {
-                ; Get current window position and size
-                WinGetPos &currentX, &currentY, &currentWidth, &currentHeight
-                if x == currentX and y == currentY and width == currentWidth and height == currentHeight {
-                    return  ; No need to change the window position and size
-                }
-                WinMove(
-                    x != -1 ? x : currentX,
-                    y != -1 ? y : currentY,
-                    width != -1 ? width : currentWidth,
-                    height != -1 ? height : currentHeight,
-                    target
-                )
+            ; Get current window position and size
+            WinGetPos &currentX, &currentY, &currentWidth, &currentHeight
+            if x == currentX and y == currentY and width == currentWidth and height == currentHeight {
+                return  ; No need to change the window position and size
             }
+            params := CreateArray(5)
+            params[5] := target
+            if x != -1 and x != currentX
+                params[1] := x
+            if y != -1 and y != currentY
+                params[2] := y
+            if width != -1 and width != currentWidth
+                params[3] := width
+            if height != -1 and height != currentHeight
+                params[4] := height
+            WinMove(params*)
             return true
+        } else {
+            throw Error('The "' . target . '" window could not be found !')
         }
     } catch as err {
         MsgBox 'ERROR Setting Window! The "' . target . '" window could not be found!', , "T2"

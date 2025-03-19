@@ -5,7 +5,107 @@
  */
 baseScrollSpeed := 1.4
 
-kagiSearchToken := "gAAATmX2bAY.YtRd36h3ymuGfQpMKY01kPL67CJnfGnQH-dj-1S16xY"
+/**
+ * Common application installation paths
+ */
+commonInstallationPaths := [
+    A_ProgramFiles,
+    C_ProgramFilesx86,
+    C_LocalAppData,
+    C_LocalAppData . "\Microsoft\WindowsApps",
+    A_WinDir . "\System32",
+    C_SystemDriveLetter . "\Programs"
+]
+
+/**
+ * List of programs (executable name) to exclude for AHK usage
+ */
+excludedProgramList := [
+    ; Counter-Strike: Offensive
+    "cs2.exe",
+    "csgo_legacy_app.exe",
+    ; Apex Legends
+    "ApexLauncher.exe"
+    "r5apex.exe",
+    "r5apex_dx12.exe",
+    ; Call of Duty
+    "cod.exe",
+    ; Overwatch
+    "Overwatch.exe",
+    ; PUBG
+    "ExecPubg.exe",
+    ; Dota 2
+    "dota2.exe",
+    ; Red Dead Redemption 2
+    "RDR2.exe",
+    "PlayRDR2.exe",
+    ; Grand Theft Auto V
+    "GTA5.exe",
+    "GTA5_BE.exe",
+    "PlayGTAV.exe",
+    ; Black Myth: Wukong
+    "b1.exe",
+    "b1_Win64_Shipping.exe",
+    ; Forza Horizon 4
+    "ForzaHorizon4.exe",
+    ; Forza Horizon 5
+    "ForzaHorizon5.exe",
+    ; Left 4 Dead 2
+    "left4dead2.exe",
+    ; Civilization VI
+    "CivilizationVI.exe",
+    ; Stardew Valley
+    "Stardew Valley.exe",
+    ; Terraria
+    "Terraria.exe",
+    ; Real Pool 3D - Poolians
+    "Poolians.exe",
+    ; Brotato
+    "Brotato.exe",
+    ; 3DMark
+    "3DMark.exe"
+]
+
+/**
+ * List of applications (executable name) to exclude when searching topmost window
+ */
+excludedWindowList := [
+    "StartMenuExperienceHost.exe",  ; Windows Start menu
+    "Lyricify for Spotify.exe",
+    "AutoHotkey64.exe",             ; AutoHotkey Message Window
+    "UninstallMonitor.exe",         ; Iobit Uninstaller Install Monitor Notification
+    "NVIDIA Overlay.exe",           ; NVIDIA GeForce Experience Overlay
+    "MSIAfterburner.exe",
+    "RTSS.exe"                      ; RivaTuner Statistics Server
+]
+
+/**
+ * List of mainstream chromium-based browser executable names
+ */
+chromiumBrowserList := [
+    "chrome.exe",
+    "msedge.exe",
+    "brave.exe",
+    "thorium.exe",
+    "opera.exe",
+    "vivaldi.exe",
+]
+
+/**
+ * List of mainstream gecko-based browsers executable names
+ */
+geckoBrowserList := [
+    "firefox.exe",
+    "mercury.exe"
+]
+
+/**
+ * Map of keyboard layouts and their corresponding IDs
+ */
+keyboardLayout := Map(
+    "en_us", 0x4090409,
+    "zh_cn", 0x8040804
+)
 
 /**
  * Rules for removing parameters from the URL
@@ -325,84 +425,3 @@ paramsRemovalRules := [
     "||aliexpress.*@terminal_id",
     "||aliexpress.*@aff_request_id",
 ]
-
-/**
- * List of programs (executable name) to exclude for AHK usage
- */
-excludedProgramList := [
-    ; Counter-Strike: Global Offensive
-    "cs2.exe",
-    "csgo_legacy_app.exe",
-    "csgo.exe",
-    ; Apex Legends
-    "r5apex.exe",
-    ; Call of Duty
-    "cod.exe",
-    ; Overwatch
-    "Overwatch.exe",
-    ; PUBG
-    "ExecPubg.exe",
-    ; Dota 2
-    "dota2.exe",
-    ; Red Dead Redemption 2
-    "RDR2.exe",
-    ; Grand Theft Auto V
-    "GTA5.exe",
-    ; Black Myth: Wukong
-    "b1.exe",
-    ; Forza Horizon 4
-    "ForzaHorizon4.exe",
-    ; Forza Horizon 5
-    "ForzaHorizon5.exe",
-    ; Civilization VI
-    "CivilizationVI.exe",
-    ; Stardew Valley
-    "Stardew Valley.exe",
-    ; Terraria
-    "Terraria.exe",
-    ; Real Pool 3D - Poolians
-    "Poolians.exe",
-    ; 3DMark
-    "3DMark.exe"
-]
-
-/**
- * List of applications (executable name) to exclude when searching topmost window
- */
-excludedWindowList := [
-    "StartMenuExperienceHost.exe",  ; Windows Start menu
-    "Lyricify for Spotify.exe",
-    "AutoHotkey64.exe",             ; AutoHotkey Message Window
-    "UninstallMonitor.exe",         ; Iobit Uninstaller Install Monitor Notification
-    "NVIDIA Overlay.exe",           ; NVIDIA GeForce Experience Overlay
-    "MSIAfterburner.exe",
-    "RTSS.exe"                      ; RivaTuner Statistics Server
-]
-
-/**
- * List of mainstream chromium-based browser executable names
- */
-chromiumBrowserList := [
-    "chrome.exe",
-    "msedge.exe",
-    "brave.exe",
-    "thorium.exe",
-    "opera.exe",
-    "vivaldi.exe",
-]
-
-/**
- * List of mainstream gecko-based browsers executable names
- */
-geckoBrowserList := [
-    "firefox.exe",
-    "mercury.exe"
-]
-
-/**
- * Map of keyboard layouts and their corresponding IDs
- */
-keyboardLayout := Map(
-    "en_us", 0x4090409,
-    "zh_cn", 0x8040804
-)

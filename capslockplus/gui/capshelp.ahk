@@ -16,21 +16,10 @@ WheelDown:: SwitchImage(-1)
 Esc:: ToggleCapsHelpGui()
 #HotIf
 
-; Draw the CapsLock help GUI
-DrawCapsHelpGui() {
-    capsHelpGui := Gui("+E0x02000000 +E0x00080000")
-    capsHelpGui.Opt("+AlwaysOnTop -Caption +ToolWindow +E0x20")  ; +E0x20 means enable click-through
-    capsHelpGui.BackColor := "EEAA99"  ; Choose a color that won't appear in your capsKeyboardHelpImages
-    capsHelpGui.Add("Picture", GetImgSizeOptions() . "vKeyboardImage", capsKeyboardHelpImages[currentImageIndex])
-    capsHelpGui.Show("Hide")
-    WinSetTransColor("EEAA99", capsHelpGui)
-    return capsHelpGui
-}
-
 ; Toggle GUI visibility
 ToggleCapsHelpGui() {
     global capsHelpGuiVisible, capsHelpGui
-    if capsHelpGuiVisible {
+    if WinExist("ahk_id " . capsHelpGui.Hwnd) {
         capsHelpGui.Hide()
         capsHelpGuiVisible := false
     } else {
@@ -40,6 +29,17 @@ ToggleCapsHelpGui() {
         capsHelpGui.Show("NoActivate")
         capsHelpGuiVisible := true
     }
+}
+
+; Draw the CapsLock help GUI
+DrawCapsHelpGui() {
+    capsHelpGui := Gui("+E0x02000000 +E0x00080000")
+    capsHelpGui.Opt("+AlwaysOnTop -Caption +ToolWindow +E0x20")  ; +E0x20 means enable click-through
+    capsHelpGui.BackColor := "EEAA99"  ; Choose a color that won't appear in your capsKeyboardHelpImages
+    capsHelpGui.Add("Picture", GetImgSizeOptions() . "vKeyboardImage", capsKeyboardHelpImages[currentImageIndex])
+    capsHelpGui.Show("Hide")
+    WinSetTransColor("EEAA99", capsHelpGui)
+    return capsHelpGui
 }
 
 ; Switch between keyboard help images

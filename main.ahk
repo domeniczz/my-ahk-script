@@ -8,36 +8,30 @@
 ;;;;;;;;;; https://www.autohotkey.com/docs/v2/Variables.htm#BuiltIn  ;;;;;;;;;;
 
 #Requires AutoHotkey v2.0
-
 #SingleInstance Force
-
 #WinActivateForce
+#UseHook true
+#MaxThreads 20
+#MaxThreadsPerHotkey 1
 
 ProcessSetPriority "High"
-
-A_MaxHotkeysPerInterval := 99999999
-A_HotkeyInterval := 99999999
-
 KeyHistory 0
 ListLines False
-
 SetKeyDelay -1, -1
 SetMouseDelay -1
 SetDefaultMouseSpeed 0
 SetWinDelay 0
 SetControlDelay 0
-
 SendMode "Input"
+SetWorkingDir A_ScriptDir
+InstallKeybdHook
+InstallMouseHook
+
+A_MaxHotkeysPerInterval := 99999999
+A_HotkeyInterval := 99999999
 
 ; Turn CapsLock off initially
 SetCapsLockState "AlwaysOff"
-
-; The keyboard hook will be used to implement all keyboard hotkeys
-; If this directive is unspecified in the script, it will behave as though set to False, meaning the windows API function RegisterHotkey() is used to implement a keyboard hotkey whenever possible.
-#UseHook true
-; Install keyboard hook and mouse hook unconditionally and immediately after the script starts
-InstallKeybdHook
-InstallMouseHook
 
 ; Store the CapsLock activation state (0 = Off, 1 = On)
 CapsLockState := 0
@@ -59,6 +53,7 @@ CapsLockState := 0
 #Include common\utils\windowutils.ahk
 #Include common\utils\fileutils.ahk
 #Include common\utils\systemutils.ahk
+#Include common\utils\imeutils.ahk
 #Include common\utils\commandutils.ahk
 #Include common\utils\timeutils.ahk
 #Include common\utils\textutils.ahk
@@ -95,7 +90,7 @@ OnError LogError
 
 #SuspendExempt False
 
-#HotIf !CapsLockState and !IsExcludedProgram()
+#HotIf !CapsLockState and !IsWindowExcludedProgram()
 
 ; `LAlt + 1` to toggle Cursor AI Editor
 <!1:: ToggleCursor()
@@ -168,20 +163,17 @@ OnError LogError
 ; `RAlt + P` to toggle Spotify
 >!p:: ToggleSpotify()
 
-; `LAlt + F` to toggle Follow
-<!f:: ToggleFollow()
-
 ; `LAlt + R` to toggle Telegram
 <!r:: ToggleTelegram()
 
 ; `LAlt + D` to toggle Discord
 <!t:: ToggleDiscord()
 
-; `LAlt + W` to toggle WeChat
-<!w:: ToggleWeChat()
+; `LAlt + W` to toggle Sandboxed WeChat
+<!w:: ToggleWechat()
 
-; `LAlt + Q` to toggle Tencent TIM
-<!q:: ToggleTencentTIM()
+; `LAlt + Q` to toggle Sandboxed Tencent TIM
+<!q:: ToggleSandboxedTIM()
 
 ; `LAlt + E` to toggle DingTalk
 <!e:: ToggleDingTalk()
@@ -205,7 +197,7 @@ OnError LogError
 >!>+-:: OpenBilibiliWeb2()
 
 ; `RAlt + 0` to open YouTube web interface
->!0:: OpenYouTubeWeb()
+>!0:: ToggleYouTube()
 
 ; `RAlt + 9` to open YouTube web interface in a firefox container
 >!9:: OpenYouTubeWeb2()
@@ -228,8 +220,8 @@ OnError LogError
 ; `RAlt + O` to open MSI Afterburner
 >!o:: ToggleMSIAfterburner()
 
-; `LAlt + LShift + C` to open Clash for Windows
-<!<+c:: ToggleClash()
+; `LAlt + LShift + C` to toggle Mihomo Party Proxy
+<!<+c:: ToggleMihomo()
 
 ; `RAlt + Enter` to toggle system proxy (Clash for Windows) on/off
 >!Enter:: ToggleProxyOnOff()
@@ -307,3 +299,23 @@ loop files, A_ScriptDir . "\log" . "\*", "D" {
         }
     }
 }
+
+/**
+ * Detect if Chinese input method is installed
+ */
+DetectKBL() {
+    ChineseKBL := false
+    loop reg, "HKEY_CURRENT_USER\Keyboard Layout\Preload" {
+        outputVar := RegRead()
+        outputVar := SubStr(outputVar, -4)
+        if outputVar == "0804" {
+            ChineseKBL := true
+            break
+        }
+    }
+    if !ChineseKBL {
+        MsgBox "Chinese input method is not installed!", , "T4"
+    }
+}
+
+DetectKBL()

@@ -1,12 +1,3 @@
-commonInstallationPaths := [
-    A_ProgramFiles,
-    C_ProgramFilesx86,
-    C_LocalAppData,
-    C_LocalAppData . "\Microsoft\WindowsApps",
-    A_WinDir . "\System32",
-    C_SystemDriveLetter . "\Programs"
-]
-
 /**
  * Validate and update application paths, if the application path is not found, search in common app installation paths
  * 
@@ -23,7 +14,7 @@ ValidateAndUpdatePath(&appPath) {
     if !FileExist(appPath) {
         startTime := A_TickCount
         for path in commonInstallationPaths {
-            if A_TickCount - startTime > 1500 {
+            if A_TickCount - startTime > 1000 {
                 LogError(Error('ValidateAndUpdatePath: Search "' . exeName . '" timeout after 1 second'))
                 break
             }

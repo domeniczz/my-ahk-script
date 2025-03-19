@@ -39,6 +39,8 @@ if not A_IsAdmin {
 }
 
 #Include ..\common\constants\custom.ahk
+#Include ..\common\constants\settings.ahk
+#Include ..\common\utils\datautils.ahk
 #Include ..\common\utils\controlutils.ahk
 #Include ..\common\utils\windowutils.ahk
 #Include ..\common\utils\systemutils.ahk
@@ -187,7 +189,7 @@ ToggleGameEnvAdmin() {
                 ; Alt + F4 to exit the app
                 Send "{LAlt down}{F4}{LAlt up}"
             }
-            SwitchIMEInputLanguageAdmin(C_IMEInputLanguage["zh_cn"])
+            SwitchKeyboardLayoutAdmin(C_KeyboardLayout["zh_cn"])
             Sleep 200
 
             ; Turn on proxy
@@ -228,7 +230,7 @@ ToggleGameEnvAdmin() {
             if ActivateWindowAndClick(leigodWinIdentifier, , , clickX, clickY, "雷神启动") {
                 ; Create a file to indicate that the game environment has been started
                 FileAppend("", "../game_env_started.tmp")
-                SwitchIMEInputLanguageAdmin(C_IMEInputLanguage["en_us"])
+                SwitchKeyboardLayoutAdmin(C_KeyboardLayout["en_us"])
                 Sleep 2000
             }
         }
@@ -264,7 +266,7 @@ ToggleGameEnvAdmin() {
                 ; Create a file to indicate that the game environment has been started
                 FileAppend("", "../game_env_started.tmp")
 
-                SwitchIMEInputLanguageAdmin(C_IMEInputLanguage["en_us"])
+                SwitchKeyboardLayoutAdmin(C_KeyboardLayout["en_us"])
 
                 ; Start MSI Afterburner
                 if !ProcessExist("MSIAfterburner.exe") {
@@ -346,7 +348,7 @@ ToggleMSIAfterburnerAdmin() {
  * 
  * @param {Integer} targetLayout - The target language keyboard ID
  */
-SwitchIMEInputLanguageAdmin(targetLayout) {
+SwitchKeyboardLayoutAdmin(targetLayout) {
     winId := WinGetID("A")
     if winId {
         threadId := DllCall("GetWindowThreadProcessId", "Ptr", winId, "Ptr", 0)

@@ -13,16 +13,17 @@
  */
 CalculateTimeInterval(startTime, endTime, result := "minutes") {
     ; Convert HHmm to minutes since midnight
-    if StrLen(startTime) = 4
+    if StrLen(startTime) == 4 {
         startMinutes := (SubStr(startTime, 1, 2) * 60) + SubStr(startTime, 3)
-    else if StrLen(startTime) = 3
+    } else if StrLen(startTime) == 3 {
         startMinutes := (SubStr(startTime, 1, 1) * 60) + SubStr(startTime, 2)
-    else
+    } else {
         throw ValueError("Invalid startTime format")
+    }
 
-    if StrLen(endTime) = 4
+    if StrLen(endTime) == 4
         endMinutes := (SubStr(endTime, 1, 2) * 60) + SubStr(endTime, 3)
-    else if StrLen(endTime) = 3
+    else if StrLen(endTime) == 3
         endMinutes := (SubStr(endTime, 1, 1) * 60) + SubStr(endTime, 2)
     else
         throw ValueError("Invalid endTime format")
@@ -123,7 +124,7 @@ CalculateSunriseSunsetTime(latitude, longitude, timezone) {
     DecimalToHHmm(decimalTime) {
         hours := Floor(decimalTime)
         minutes := Round((decimalTime - hours) * 60)
-        if minutes = 60 {
+        if minutes == 60 {
             hours += 1
             minutes := 0
         }

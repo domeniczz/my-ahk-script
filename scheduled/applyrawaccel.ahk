@@ -23,6 +23,8 @@ OnError LogError
 logfile := A_ScriptDir . "\logs\scheduled.log"
 
 #Include ..\common\constants\custom.ahk
+#Include ..\common\constants\settings.ahk
+#Include ..\common\utils\datautils.ahk
 #Include ..\common\utils\controlutils.ahk
 #Include ..\common\utils\applications.ahk
 #Include ..\common\utils\windowutils.ahk

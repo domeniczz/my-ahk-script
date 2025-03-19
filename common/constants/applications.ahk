@@ -62,9 +62,6 @@ ValidateAndUpdatePath(&spotify)
 lyricify := C_LocalAppData . "\Lyricify 4\Lyricify for Spotify.exe"
 ValidateAndUpdatePath(&lyricify)
 
-follow := C_LocalAppData . "\Follow\Follow.exe"
-ValidateAndUpdatePath(&follow)
-
 telegram := A_AppData . "\Telegram Desktop\Telegram.exe"
 ValidateAndUpdatePath(&telegram)
 
@@ -74,8 +71,8 @@ ValidateAndUpdatePath(&discord)
 wechat := A_ProgramFiles . "\Tencent\WeChat\WeChat.exe"
 ValidateAndUpdatePath(&wechat)
 
-tim := C_SystemDriveLetter . "\Programs\Tencent\TIM\Bin\TIM.exe"
-ValidateAndUpdatePath(&tim)
+; tim := C_SystemDriveLetter . "\Programs\Tencent\TIM\Bin\TIM.exe"
+; ValidateAndUpdatePath(&tim)
 
 dingtalk := C_ProgramFilesx86 . "\DingDing\DingtalkLauncher.exe"
 ValidateAndUpdatePath(&dingtalk)
@@ -83,8 +80,7 @@ ValidateAndUpdatePath(&dingtalk)
 bilibili := A_ProgramFiles . "\bilibili\哔哩哔哩.exe"
 ValidateAndUpdatePath(&bilibili)
 
-bilibiliSandboxed := C_SystemDriveLetter . "\Sandbox\" . A_UserName . "\MultiAccount\drive\C\Program Files\bilibili\哔哩哔哩.exe"
-ValidateAndUpdatePath(&bilibiliSandboxed)
+youtube := A_ProgramFiles . "\YouTube\YouTube.exe"
 
 eudic := A_ProgramFiles . "\eudic\eudic.exe"
 ValidateAndUpdatePath(&eudic)
@@ -98,8 +94,11 @@ ValidateAndUpdatePath(&ollama)
 steam := C_ProgramFilesx86 . "\Steam\steam.exe"
 ValidateAndUpdatePath(&steam)
 
-clash := A_ProgramFiles . "\Clash for Windows\Clash for Windows.exe"
-ValidateAndUpdatePath(&clash)
+; clash := A_ProgramFiles . "\Clash for Windows\Clash for Windows.exe"
+; ValidateAndUpdatePath(&clash)
+
+mihomo := A_ProgramFiles . "\Mihomo Party\Mihomo Party.exe"
+ValidateAndUpdatePath(&mihomo)
 
 onepassword := C_LocalAppData . "\1Password\app\8\1Password.exe"
 ValidateAndUpdatePath(&onepassword)
@@ -115,6 +114,20 @@ ValidateAndUpdatePath(&msiafterburner)
 
 hwinfo := A_ProgramFiles . "\HWiNFO64\HWiNFO64.EXE"
 ValidateAndUpdatePath(&hwinfo)
+
+; Sandboxied applications
+
+qqsandboxed := C_SystemDriveLetter . "\Sandbox\" . A_UserName . "\Tencent\drive\C\Program Files\Tencent\QQNT\QQ.exe"
+ValidateAndUpdatePath(&qqsandboxed)
+
+timsandboxed := C_SystemDriveLetter . "\Sandbox\" . A_UserName . "\Tencent\drive\C\Programs\Tencent\TIM\Bin\TIM.exe"
+ValidateAndUpdatePath(&qqsandboxed)
+
+wechatSandboxed := C_SystemDriveLetter . "\Sandbox\" . A_UserName . "\Tencent\drive\C\Program Files\Tencent\WeChat\WeChat.exe"
+ValidateAndUpdatePath(&wechatSandboxed)
+
+bilibiliSandboxed := C_SystemDriveLetter . "\Sandbox\" . A_UserName . "\MultiAccount\drive\C\Program Files\bilibili\哔哩哔哩.exe"
+ValidateAndUpdatePath(&bilibiliSandboxed)
 
 ;;;;;;;;;; APPLICATION WINDOW DIMENSIONS ;;;;;;;;;;
 
@@ -188,11 +201,6 @@ spotifyDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.765625)), h: Round(A
 spotifyDim.x := (A_ScreenWidth - spotifyDim.w) // 2
 spotifyDim.y := (A_ScreenHeight - spotifyDim.h) // 2
 
-followDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.765625)), h: Round(A_ScreenHeight * AdjustHeightCoeff(0.9074074))
-}
-followDim.x := (A_ScreenWidth - followDim.w) // 2
-followDim.y := (A_ScreenHeight - followDim.h) // 2
-
 telegramDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.6770833)), h: Round(A_ScreenHeight * AdjustHeightCoeff(0.87962962))
 }
 telegramDim.x := (A_ScreenWidth - telegramDim.w) // 2
@@ -208,10 +216,10 @@ wechatDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.583333)), h: Round(A_
 wechatDim.x := (A_ScreenWidth - wechatDim.w) // 2
 wechatDim.y := (A_ScreenHeight - wechatDim.h) // 2
 
-timDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.625)), h: Round(A_ScreenHeight * AdjustHeightCoeff(0.833333))
+qqDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.625)), h: Round(A_ScreenHeight * AdjustHeightCoeff(0.833333))
 }
-timDim.x := (A_ScreenWidth - timDim.w) // 2
-timDim.y := (A_ScreenHeight - timDim.h) // 2
+qqDim.x := (A_ScreenWidth - qqDim.w) // 2
+qqDim.y := (A_ScreenHeight - qqDim.h) // 2
 
 dingtalkDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.65104167)), h: Round(A_ScreenHeight * AdjustHeightCoeff(0.87962962))
 }
@@ -228,6 +236,11 @@ bilibiliVidDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.8125)), h: Round
 bilibiliVidDim.x := (A_ScreenWidth - bilibiliVidDim.w) // 2
 bilibiliVidDim.y := (A_ScreenHeight - bilibiliVidDim.h) // 2
 
+youtubeDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.91145833)), h: Round(A_ScreenHeight * AdjustHeightCoeff(0.949074))
+}
+youtubeDim.x := (A_ScreenWidth - youtubeDim.w) // 2
+youtubeDim.y := (A_ScreenHeight - youtubeDim.h) // 2 + 5
+
 eudicDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.55729166)), h: Round(A_ScreenHeight * AdjustHeightCoeff(0.8055555))
 }
 eudicDim.x := (A_ScreenWidth - eudicDim.w) // 2
@@ -238,7 +251,7 @@ onepasswordDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.53125)), h: Roun
 onepasswordDim.x := (A_ScreenWidth - onepasswordDim.w) // 2
 onepasswordDim.y := (A_ScreenHeight - onepasswordDim.h) // 2
 
-clashDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.5)), h: Round(A_ScreenHeight * AdjustHeightCoeff(0.6944444))
+mihomoDim := { w: Round(A_ScreenWidth * AdjustWidthCoeff(0.5)), h: Round(A_ScreenHeight * AdjustHeightCoeff(0.6944444))
 }
-clashDim.x := (A_ScreenWidth - clashDim.w) // 2
-clashDim.y := (A_ScreenHeight - clashDim.h) // 2
+mihomoDim.x := (A_ScreenWidth - mihomoDim.w) // 2
+mihomoDim.y := (A_ScreenHeight - mihomoDim.h) // 2

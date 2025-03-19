@@ -27,8 +27,7 @@ appData := Map(
         privateWinIdList: [],
         pid: "",
         lastActivatedWinId: ""
-    }
-)
+    })
 
 ;;;;;;;;;; TOGGLE FUNCTIONS ;;;;;;;;;;
 
@@ -54,7 +53,7 @@ ToggleNotepad2(newInstance := false) {
  * @param {Boolean} newInstance - Whether to open a new instance (default: false)
  */
 ToggleVSCode(newInstance := false) {
-    ToggleApplications(vscode, vscodeDim, , , newInstance)
+    ToggleApplications(vscode, vscodeDim, , , newInstance, , "English")
 }
 
 /**
@@ -63,7 +62,7 @@ ToggleVSCode(newInstance := false) {
  * @param {Boolean} newInstance - Whether to open a new instance (default: false)
  */
 ToggleCursor(newInstance := false) {
-    ToggleApplications(cursor, cursorDim, , , newInstance)
+    ToggleApplications(cursor, cursorDim, , , newInstance, , "English")
 }
 
 /**
@@ -101,10 +100,11 @@ ToggleWindowsTerminal(newInstance := false) {
         }
         if ActivateWindow("ahk_exe WindowsTerminal.exe") {
             SetWindow("ahk_exe WindowsTerminal.exe", terminalDim.x, terminalDim.y, terminalDim.w, terminalDim.h)
+            SwitchIMEMode("English")
         }
         return
     }
-    ToggleApplication(terminal, terminalDim, "WindowsTerminal.exe", "ahk_class CASCADIA_HOSTING_WINDOW_CLASS")
+    ToggleApplication(terminal, terminalDim, "WindowsTerminal.exe", "ahk_class CASCADIA_HOSTING_WINDOW_CLASS", , "English")
 }
 
 /**
@@ -157,10 +157,7 @@ ToggleGecko(browser := firefox, isPrivate := false, incognitoFlag := "--private-
     if ProcessExist(exe) {
         ; If pid of the window is different, that means the process has been completely restarted
         if appData[name].pid != WinGetPID("ahk_exe " . exe) {
-            ; Clear up
-            appData[name].allWinIdList := []
-            appData[name].nonprivatewinIdList := []
-            appData[name].privateWinIdList := []
+            AppDataClearup()
             appData[name].pid := WinGetPID("ahk_exe " . exe)
         }
 
@@ -232,39 +229,62 @@ ToggleGecko(browser := firefox, isPrivate := false, incognitoFlag := "--private-
             try {
                 Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
             }
+            IsNewInstanceStarted() {
+                list := WinGetList("ahk_exe " . exe)
+                if list.Length == allWinList.Length + 1 {
+                    return list
+                }
+                return false
+            }
+            list := LoopLogic(IsNewInstanceStarted, 100, 50)
+            if !list {
+                throw Error('New "' . (isPrivate ? "private" : "non-private") . ' window of "' . name . '" browser could not be found!')
+            }
+            newWinId := 0
             ; Get the new window's ahk_id
-            list := WinGetList("ahk_exe " . exe)
             for item in list {
-                for id in appData[name].allWinIdList {
-                    if item != id and A_Index == appData[name].allWinIdList.Length {
-                        winId := item
-                        break
-                    }
+                if !HasVal(appData[name].allWinIdList, item) {
+                    newWinId := item
+                    break
                 }
             }
             ; Store the window ahk_id
             if !isPrivate {
-                appData[name].nonprivatewinIdList := [winId
+                appData[name].nonprivatewinIdList := [newWinId
                 ]
             } else {
-                appData[name].privateWinIdList := [winId
+                appData[name].privateWinIdList := [newWinId
                 ]
             }
-            ActivateWindow("ahk_id " . winId)
-            appData[name].lastActivatedWinId := winId
+            if newWinId != 0 {
+                ActivateWindow("ahk_id " . newWinId)
+                appData[name].lastActivatedWinId := newWinId
+                appData[name].allWinIdList.Push(newWinId)
+            }
         }
         ; Only one expected window, toggle it
         else if winList.Length == 1 {
-            if WinActive("ahk_id " . winList[1]) {
-                MinimizeWindow("ahk_id " . winList[1])
+            winId := winList[1]
+            if !WinExist("ahk_id " . winId) {
+                throw Error('No "' . (isPrivate ? "private" : "non-private") . ' window of "' . name . '" browser could be found!')
+            }
+            if WinActive("ahk_id " . winId) {
+                MinimizeWindow("ahk_id " . winId)
             } else {
-                ActivateWindow("ahk_id " . winList[1])
-                appData[name].lastActivatedWinId := winList[1]
+                ActivateWindow("ahk_id " . winId)
+                appData[name].lastActivatedWinId := winId
             }
         }
         ; More than one expected window, cycle through them
         else if winList.Length > 1 {
             oldestWinId := winList[winList.Length]
+            winNum := winList.Length
+            while !WinExist("ahk_id " . oldestWinId) {
+                if winNum-- == 0 {
+                    throw Error('No "' . (isPrivate ? "private" : "non-private") . ' window of "' . name . '" browser could be found!')
+                }
+                oldestWinId := winList[winNum]
+            }
             ; The last window in the list will change, so we can cycle through all of them in this way
             if WinActive("ahk_exe " . exe) {
                 ActivateWindow("ahk_id " . oldestWinId)
@@ -277,8 +297,8 @@ ToggleGecko(browser := firefox, isPrivate := false, incognitoFlag := "--private-
                     appData[name].privateWinIdList.InsertAt(1, oldestWinId)
                 }
             } else {
-                if appData[name].lastActivatedWinId == "" and allWinList.Length > 0 {
-                    appData[name].lastActivatedWinId := allWinList[1]
+                if appData[name].lastActivatedWinId == "" or !HasVal(appData[name].allWinIdList, appData[name].lastActivatedWinId) {
+                    appData[name].lastActivatedWinId := winList[1]
                 }
                 ActivateWindow("ahk_id " . appData[name].lastActivatedWinId)
             }
@@ -296,21 +316,23 @@ ToggleGecko(browser := firefox, isPrivate := false, incognitoFlag := "--private-
         ActivateWindow("ahk_exe " . exe)
         winId := WinGetID("ahk_exe " . exe)
         if winId {
-            ; Clear up
-            appData[name].allWinIdList := []
-            appData[name].nonprivatewinIdList := []
-            appData[name].privateWinIdList := []
-
-            ; Store the window ahk_id
+            AppDataClearup()
             if !isPrivate {
                 appData[name].nonprivatewinIdList.Push(winId)
             } else {
                 appData[name].privateWinIdList.Push(winId)
             }
             appData[name].allWinIdList.Push(winId)
-
             appData[name].pid := WinGetPID("ahk_id " . winId)
         }
+    }
+
+    AppDataClearup() {
+        appData[name].allWinIdList := []
+        appData[name].nonprivatewinIdList := []
+        appData[name].privateWinIdList := []
+        appData[name].pid := ""
+        appData[name].lastActivatedWinId := ""
     }
 }
 
@@ -357,10 +379,7 @@ ToggleChromium(browser := chrome, isPrivate := false, incognitoFlag := "--incogn
     if ProcessExist(exe) {
         ; If pid of the window is different, that means the process has been completely restarted
         if appData[name].pid != WinGetPID("ahk_exe " . exe) {
-            ; Clear up
-            appData[name].allWinIdList := []
-            appData[name].nonprivatewinIdList := []
-            appData[name].privateWinIdList := []
+            AppDataClearup()
             appData[name].pid := WinGetPID("ahk_exe " . exe)
         }
 
@@ -424,46 +443,66 @@ ToggleChromium(browser := chrome, isPrivate := false, incognitoFlag := "--incogn
             try {
                 Run !isPrivate ? browser : Format('"{1}" {2}', browser, incognitoFlag)
             }
-            winId := 0
+            IsNewInstanceStarted() {
+                list := WinGetList("ahk_exe " . exe)
+                if list.Length == allWinList.Length + 1 {
+                    return list
+                }
+                return false
+            }
+            list := LoopLogic(IsNewInstanceStarted, 100, 50)
+            if !list {
+                throw Error('New "' . (isPrivate ? "private" : "non-private") . ' window of "' . name . '" browser could not be found!')
+            }
+            newWinId := 0
             ; Get the new window's ahk_id
-            list := WinGetList("ahk_exe " . exe)
             for item in list {
-                for id in appData[name].allWinIdList {
-                    if item != id and A_Index == appData[name].allWinIdList.Length {
-                        winId := item
-                        break
-                    }
+                if !HasVal(appData[name].allWinIdList, item) {
+                    newWinId := item
+                    break
                 }
             }
             ; Store the window ahk_id
             if !isPrivate {
-                appData[name].nonprivatewinIdList := [winId
+                appData[name].nonprivatewinIdList := [newWinId
                 ]
             } else {
-                appData[name].privateWinIdList := [winId
+                appData[name].privateWinIdList := [newWinId
                 ]
             }
-            if ActivateWindow("ahk_id " . winId) {
-                appData[name].lastActivatedWinId := winId
+            if newWinId != 0 and ActivateWindow("ahk_id " . newWinId) {
+                appData[name].lastActivatedWinId := newWinId
+                appData[name].allWinIdList.Push(newWinId)
                 try {
-                    SetWindow("ahk_id " . winId, %name%Dim.x, %name%Dim.y, %name%Dim.w, %name%Dim.h)
+                    SetWindow("ahk_id " . newWinId, %name%Dim.x, %name%Dim.y, %name%Dim.w, %name%Dim.h)
                 } catch {
-                    SetWindow("ahk_id " . winId, chromiumDim.x, chromiumDim.y, chromiumDim.w, chromiumDim.h)
+                    SetWindow("ahk_id " . newWinId, chromiumDim.x, chromiumDim.y, chromiumDim.w, chromiumDim.h)
                 }
             }
         }
         ; Only one expected window, toggle it
         else if winList.Length == 1 {
-            if WinActive("ahk_id " . winList[1]) {
-                MinimizeWindow("ahk_id " . winList[1])
+            winId := winList[1]
+            if !WinExist("ahk_id " . winId) {
+                throw Error('No "' . (isPrivate ? "private" : "non-private") . ' window of "' . name . '" browser could be found!')
+            }
+            if WinActive("ahk_id " . winId) {
+                MinimizeWindow("ahk_id " . winId)
             } else {
-                ActivateWindow("ahk_id " . winList[1])
+                ActivateWindow("ahk_id " . winId)
                 appData[name].lastActivatedWinId := winId
             }
         }
         ; More than one expected window, cycle through them
         else if winList.Length > 1 {
             oldestWinId := winList[winList.Length]
+            winNum := winList.Length
+            while !WinExist("ahk_id " . oldestWinId) {
+                if winNum-- == 0 {
+                    throw Error('No "' . (isPrivate ? "private" : "non-private") . ' window of "' . name . '" browser could be found!')
+                }
+                oldestWinId := winList[winNum]
+            }
             ; The last window in the list will change, so we can cycle through all of them in this way
             if WinActive("ahk_exe " . exe) {
                 ActivateWindow("ahk_id " . oldestWinId)
@@ -476,8 +515,8 @@ ToggleChromium(browser := chrome, isPrivate := false, incognitoFlag := "--incogn
                     appData[name].privateWinIdList.InsertAt(1, oldestWinId)
                 }
             } else {
-                if appData[name].lastActivatedWinId == "" and allWinList.Length > 0 {
-                    appData[name].lastActivatedWinId := allWinList[1]
+                if appData[name].lastActivatedWinId == "" or !HasVal(appData[name].allWinIdList, appData[name].lastActivatedWinId) {
+                    appData[name].lastActivatedWinId := winList[1]
                 }
                 ActivateWindow("ahk_id " . appData[name].lastActivatedWinId)
             }
@@ -501,21 +540,23 @@ ToggleChromium(browser := chrome, isPrivate := false, incognitoFlag := "--incogn
         }
         winId := WinGetID("ahk_exe " . exe)
         if winId {
-            ; Clear up
-            appData[name].allWinIdList := []
-            appData[name].nonprivatewinIdList := []
-            appData[name].privateWinIdList := []
-
-            ; Store the window ahk_id
+            AppDataClearup()
             if !isPrivate {
                 appData[name].nonprivatewinIdList.Push(winId)
             } else {
                 appData[name].privateWinIdList.Push(winId)
             }
             appData[name].allWinIdList.Push(winId)
-
             appData[name].pid := WinGetPID("ahk_id " . winId)
         }
+    }
+
+    AppDataClearup() {
+        appData[name].allWinIdList := []
+        appData[name].nonprivatewinIdList := []
+        appData[name].privateWinIdList := []
+        appData[name].pid := ""
+        appData[name].lastActivatedWinId := ""
     }
 }
 
@@ -523,21 +564,14 @@ ToggleChromium(browser := chrome, isPrivate := false, incognitoFlag := "--incogn
  * Toggle Spotify
  */
 ToggleSpotify() {
-    ToggleApplication(spotify, spotifyDim, , , true, 2)
-}
-
-/**
- * Toggle Follow
- */
-ToggleFollow() {
-    ToggleApplication(follow, followDim, , , true)
+    ToggleApplication(spotify, spotifyDim, , , true, , 2)
 }
 
 /**
  * Toggle Telegram
  */
 ToggleTelegram() {
-    ToggleApplication(telegram, telegramDim, , "ahk_class Qt51515QWindowIcon", true, 2)
+    ToggleApplication(telegram, telegramDim, , "ahk_class Qt51515QWindowIcon", true, , 2)
 }
 
 /**
@@ -627,6 +661,7 @@ ToggleWeChat() {
             }
             if ActivateWindow(mainWinIdentifier) {
                 SetWindow(mainWinIdentifier, wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
+                SwitchIMEMode("Chinese")
             }
         } else {
             try {
@@ -634,6 +669,7 @@ ToggleWeChat() {
             }
             if ActivateWindow(mainWinIdentifier) {
                 SetWindow(mainWinIdentifier, wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
+                SwitchIMEMode("Chinese")
             }
         }
     }
@@ -649,6 +685,7 @@ ToggleWeChat() {
         if WinWait(mainWinIdentifier, , 8) {
             if ActivateWindow(mainWinIdentifier) {
                 SetWindow(mainWinIdentifier, wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
+                SwitchIMEMode("Chinese")
             }
         } else {
             MsgBox "ERROR! WeChat.exe window could not be found!", , "T2"
@@ -657,27 +694,121 @@ ToggleWeChat() {
 }
 
 /**
- * Toggle Tencent TIM
+ * Toggle Sandboxed Wechat
  */
-ToggleTencentTIM() {
-    winIdentifier := "ahk_exe TIM.exe"
+ToggleSandboxedWechat() {
+    winIdentifier := "ahk_exe WeChat.exe"
+    mainWinIdentifier := winIdentifier . " ahk_class Sandbox:Tencent:WeChatMainWndForPC"
+    loginWinIdentifier := winIdentifier . " ahk_class Sandbox:Tencent:WeChatLoginWndForPC"
 
     ; If it is running, toggle the window
-    if ProcessExist("TIM.exe") {
-        if WinActive(winIdentifier) {
+    if ProcessExist("WeChat.exe") {
+        if WinActive(mainWinIdentifier) {
             ; Window is active, close to minimize it to the system tray
-            CloseWindow(winIdentifier)
+            CloseWindow(mainWinIdentifier)
+        } else if WinExist(winIdentifier) and !WinActive(winIdentifier) {
+            try {
+                Run wechatSandboxed
+            }
+            if ActivateWindow(mainWinIdentifier) {
+                SetWindow(mainWinIdentifier, wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
+                SwitchIMEMode("Chinese")
+            }
         } else {
-            Send "{LAlt down}q{LAlt up}"
-            if ActivateWindow(winIdentifier) {
-                SetWindow(winIdentifier, timDim.x, timDim.y, timDim.w, timDim.h)
+            try {
+                Run wechatSandboxed
+            }
+            if ActivateWindow(mainWinIdentifier) {
+                SetWindow(mainWinIdentifier, wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
+                SwitchIMEMode("Chinese")
             }
         }
     }
     ; If it is not running, run it
     else {
         try {
-            Run tim
+            Run wechatSandboxed
+        }
+        ActivateWindowAndClick(loginWinIdentifier, , , wechatLoginBtnX, wechatLoginBtnY)
+        ToolTip "WeChat Login"
+        SetTimer () => ToolTip(), -1000, -1
+
+        if WinWait(mainWinIdentifier, , 8) {
+            if ActivateWindow(mainWinIdentifier) {
+                SetWindow(mainWinIdentifier, wechatDim.x, wechatDim.y, wechatDim.w, wechatDim.h)
+                SwitchIMEMode("Chinese")
+            }
+        } else {
+            MsgBox "ERROR! Sandboxed WeChat.exe window could not be found!", , "T2"
+        }
+    }
+}
+
+; /**
+;  * Toggle Tencent TIM
+;  */
+; ToggleTIM() {
+;     winIdentifier := "ahk_exe TIM.exe"
+
+;     ; If it is running, toggle the window
+;     if ProcessExist("TIM.exe") {
+;         if WinActive(winIdentifier) {
+;             ; Window is active, close to minimize it to the system tray
+;             CloseWindow(winIdentifier)
+;         } else {
+;             Send "{LAlt down}q{LAlt up}"
+;             if ActivateWindow(winIdentifier) {
+;                 SetWindow(winIdentifier, qqDim.x, qqDim.y, qqDim.w, qqDim.h)
+;                 SwitchIMEMode("Chinese")
+;             }
+;         }
+;     }
+;     ; If it is not running, run it
+;     else {
+;         try {
+;             Run tim
+;         }
+;         ActivateWindow(winIdentifier)
+;         loginPageId := WinGetID(winIdentifier)
+
+;         TIMWinActivate() {
+;             if WinGetID(winIdentifier) != loginPageId {
+;                 if ActivateWindow(winIdentifier) {
+;                     SetWindow(winIdentifier, qqDim.x, qqDim.y, qqDim.w, qqDim.h)
+;                     SwitchIMEMode("Chinese")
+;                 }
+;                 return true
+;             }
+;             return false
+;         }
+;         if !LoopLogic(TIMWinActivate, 100, 100) {
+;             MsgBox "ERROR! TIM.exe main window could not be found!", , "T2"
+;         }
+;     }
+; }
+
+/**
+ * Toggle SandboxedTencent TIM
+ */
+ToggleSandboxedTIM() {
+    winIdentifier := "ahk_exe TIM.exe"
+
+    ; If it is running, toggle the window
+    if ProcessExist("TIM.exe") {
+        if WinActive(winIdentifier) {
+            ; Window is active, close to minimize it to the system tray
+            MinimizeWindow(winIdentifier)
+        } else {
+            if ActivateWindow(winIdentifier) {
+                SetWindow(winIdentifier, qqDim.x, qqDim.y, qqDim.w, qqDim.h)
+                SwitchIMEMode("Chinese")
+            }
+        }
+    }
+    ; If it is not running, run it
+    else {
+        try {
+            Run timsandboxed
         }
         ActivateWindow(winIdentifier)
         loginPageId := WinGetID(winIdentifier)
@@ -685,16 +816,24 @@ ToggleTencentTIM() {
         TIMWinActivate() {
             if WinGetID(winIdentifier) != loginPageId {
                 if ActivateWindow(winIdentifier) {
-                    SetWindow(winIdentifier, timDim.x, timDim.y, timDim.w, timDim.h)
+                    SetWindow(winIdentifier, qqDim.x, qqDim.y, qqDim.w, qqDim.h)
+                    SwitchIMEMode("Chinese")
                 }
                 return true
             }
             return false
         }
-        if !LoopLogic(TIMWinActivate, 40, 100) {
-            MsgBox "ERROR! TIM.exe main window could not be found!", , "T2"
+        if !LoopLogic(TIMWinActivate, 100, 100) {
+            MsgBox "ERROR! Sandboxed TIM.exe main window could not be found!", , "T2"
         }
     }
+}
+
+/**
+ * Toggle Sandboxed Tencent QQ
+ */
+ToggleSandboxedQQ() {
+    ToggleApplication(qqsandboxed, qqDim, , , true, "Chinese")
 }
 
 /**
@@ -711,11 +850,9 @@ ToggleDingTalk() {
             ; Window is active, close to minimize it to the system tray
             CloseWindow(mainWinIdentifier)
         } else if WinExist(mainWinIdentifier) and !WinActive(mainWinIdentifier) {
-            try {
-                Run dingtalk
-            }
             if ActivateWindow(mainWinIdentifier) {
                 SetWindow(mainWinIdentifier, dingtalkDim.x, dingtalkDim.y, dingtalkDim.w, dingtalkDim.h)
+                SwitchIMEMode("Chinese")
             }
         } else {
             try {
@@ -723,6 +860,7 @@ ToggleDingTalk() {
             }
             if ActivateWindow(mainWinIdentifier) {
                 SetWindow(mainWinIdentifier, dingtalkDim.x, dingtalkDim.y, dingtalkDim.w, dingtalkDim.h)
+                SwitchIMEMode("Chinese")
             }
         }
     }
@@ -735,6 +873,7 @@ ToggleDingTalk() {
             if WinExist(mainWinIdentifier) {
                 if ActivateWindow(mainWinIdentifier) {
                     SetWindow(mainWinIdentifier, dingtalkDim.x, dingtalkDim.y, dingtalkDim.w, dingtalkDim.h)
+                    SwitchIMEMode("Chinese")
                     return true
                 }
             }
@@ -742,16 +881,15 @@ ToggleDingTalk() {
         }
         DingtalkStartup() {
             if WinExist(loginWinIdentifier) {
-                if ActivateWindow(loginWinIdentifier) {
-                    return false
-                }
                 if LoopLogic(DingtalkMainWinActivate, 500) {
                     return true
                 }
+                return false
             }
             if WinExist(mainWinIdentifier) {
                 if ActivateWindow(mainWinIdentifier) {
                     SetWindow(mainWinIdentifier, dingtalkDim.x, dingtalkDim.y, dingtalkDim.w, dingtalkDim.h)
+                    SwitchIMEMode("Chinese")
                     return true
                 }
             }
@@ -767,14 +905,14 @@ ToggleDingTalk() {
  * Toggle Eudic
  */
 ToggleEudic() {
-    ToggleApplication(eudic, eudicDim, , , true, 2)
+    ToggleApplication(eudic, eudicDim, , , true, , 2)
 }
 
 /**
  * Toggle 1Password
  */
 Toggle1Password() {
-    ToggleApplication(onepassword, onepasswordDim, , , true, 2)
+    ToggleApplication(onepassword, onepasswordDim, , , true, , 2)
 }
 
 ; ahk_id of bilibili home page window
@@ -962,6 +1100,13 @@ OpenBilibiliWeb2() {
 }
 
 /**
+ * Toggle YouTube (Packed website into rust desktop app with Pake)
+ */
+ToggleYouTube() {
+    ToggleApplication(youtube, youtubeDim, , "ahk_class Window Class", true)
+}
+
+/**
  * Open YouTube with browser
  */
 OpenYouTubeWeb() {
@@ -1061,40 +1206,32 @@ StartOllamaAndWebUI() {
 }
 
 /**
- * Toggle Clash for Windows
+ * Toggle Mihomo Party Proxy
  */
-ToggleClash() {
-    winSpecifier := "ahk_exe Clash for Windows.exe"
-    if ProcessExist("Clash for Windows.exe") {
+ToggleMihomo() {
+    winSpecifier := "ahk_exe Mihomo Party.exe"
+    if ProcessExist("Mihomo Party.exe") {
         if WinActive(winSpecifier) {
             CloseWindow(winSpecifier)
         } else if WinExist(winSpecifier) and !WinActive(winSpecifier) {
-            if ActivateWindow(winSpecifier) {
-                SetWindow(winSpecifier, clashDim.x, clashDim.y, clashDim.w, clashDim.h)
-            }
+            ; if ActivateWindow(winSpecifier) {
+            ;     ; SetWindow(winSpecifier, mihomoDim.x, mihomoDim.y, mihomoDim.w, mihomoDim.h)
+            ; }
         } else {
-            Run clash
-            if ActivateWindow(winSpecifier) {
-                SetWindow(winSpecifier, clashDim.x, clashDim.y, clashDim.w, clashDim.h)
-            }
+            Run mihomo
+            ; if ActivateWindow(winSpecifier) {
+            ;     ; SetWindow(winSpecifier, mihomoDim.x, mihomoDim.y, mihomoDim.w, mihomoDim.h)
+            ; }
         }
     }
     ; If it is not running, run it
     else {
         try {
-            Run clash
+            Run mihomo
         }
-        if WinExist(winSpecifier) {
-            if ActivateWindow(winSpecifier) {
-                SetWindow(winSpecifier, clashDim.x, clashDim.y, clashDim.w, clashDim.h)
-            }
-            return
-        } else if ProcessWait("Clash for Windows.exe", 10) {
-            Run clash
-            if ActivateWindow(winSpecifier) {
-                SetWindow(winSpecifier, clashDim.x, clashDim.y, clashDim.w, clashDim.h)
-            }
-        }
+        ; if ActivateWindow(winSpecifier) {
+        ;     ; SetWindow(winSpecifier, mihomoDim.x, mihomoDim.y, mihomoDim.w, mihomoDim.h)
+        ; }
     }
 }
 
@@ -1232,10 +1369,11 @@ PutComputerToRestart() {
  * @param {String} winExeName The application window name (default: ""), in case the executable name is different from the application window name. For example, window name "WindowsTerminal.exe" for executable name "wt.exe"
  * @param {String} additionalWinSpecifier Additional window specifier (default: ""), e.g. "ahk_class Chrome_WidgetWin_1"
  * @param {Boolean} setWinAfterEveryActivation Whether to set the position and size every time after activating the existing window (default: false)
+ * @param {String} imeMode The IME mode to set after the application is activated (default: ""), accepted values: "English" or "Chinese"
  * @param {String} minimizeOrClose Whether to minimize the window to taskbar or close it to minimize to system tray (default: `1`), accepted values: `1` to minimize, `2` to close
  */
 ToggleApplication(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
-}, winExeName := "", additionalWinSpecifier := "", setWinAfterEveryActivation := false, minimizeOrClose := 1) {
+}, winExeName := "", additionalWinSpecifier := "", setWinAfterEveryActivation := false, imeMode := "", minimizeOrClose := 1) {
     if app == "" {
         MsgBox "ERROR while toggling! No application specified!", , "T2"
         return
@@ -1262,12 +1400,18 @@ ToggleApplication(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
                 if setWinAfterEveryActivation {
                     SetWindow(winSpecifier, appDim.x, appDim.y, appDim.w, appDim.h)
                 }
+                if imeMode != "" {
+                    SwitchIMEMode(imeMode)
+                }
             }
         } else {
             Run app
             if ActivateWindow(winSpecifier) {
                 if setWinAfterEveryActivation {
                     SetWindow(winSpecifier, appDim.x, appDim.y, appDim.w, appDim.h)
+                }
+                if imeMode != "" {
+                    SwitchIMEMode(imeMode)
                 }
             }
         }
@@ -1279,6 +1423,9 @@ ToggleApplication(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
         }
         if ActivateWindow(winSpecifier) {
             SetWindow(winSpecifier, appDim.x, appDim.y, appDim.w, appDim.h)
+            if imeMode != "" {
+                SwitchIMEMode(imeMode)
+            }
         }
     }
 }
@@ -1292,9 +1439,10 @@ ToggleApplication(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
  * @param {String} additionalWinSpecifier Additional window specifier (default: ""), e.g. "ahk_class Chrome_WidgetWin_1"
  * @param {Boolean} newInstance Whether to open a new instance of the application (default: false)
  * @param {Boolean} setWinAfterEveryActivation Whether to set the position and size every time after activating the existing window (default: false)
+ * @param {String} imeMode The IME mode to set after the application is activated (default: ""), accept integer or string (0: English, 1: Chinese)
  */
 ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
-}, winExeName := "", additionalWinSpecifier := "", newInstance := false, setWinAfterEveryActivation := false) {
+}, winExeName := "", additionalWinSpecifier := "", newInstance := false, setWinAfterEveryActivation := false, imeMode := "") {
     global appData
 
     if app == "" {
@@ -1353,11 +1501,9 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
         ; If a new instance is requested
         if newInstance {
             oldWinCount := winList.Length
-
             try {
                 Run app
             }
-
             IsNewInstanceStarted() {
                 winList := WinGetList(winSpecifier)
                 if winList.Length > oldWinCount {
@@ -1366,12 +1512,10 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
                 return false
             }
             winList := LoopLogic(IsNewInstanceStarted, 100, 200)
-
             if !winList {
                 MsgBox 'ERROR! New instance window of "' . name . '" could not be found!', , "T2"
                 return
             }
-
             ; Get window id of the new instance
             newWins := []
             for winId in winList {
@@ -1386,6 +1530,9 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
                     if ActivateWindow("ahk_id " . winId) {
                         appData[name].lastActivatedWinId := winId
                         SetWindow("ahk_id " . winId, appDim.x, appDim.y, appDim.w, appDim.h)
+                        if imeMode != "" {
+                            SwitchIMEMode(imeMode)
+                        }
                     }
                     return
                 }
@@ -1399,6 +1546,9 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
             }
             if ActivateWindow(winSpecifier) {
                 SetWindow(winSpecifier, appDim.x, appDim.y, appDim.w, appDim.h)
+                if imeMode != "" {
+                    SwitchIMEMode(imeMode)
+                }
             }
             winId := WinGetID(winSpecifier)
             appData[name].lastActivatedWinId := winId
@@ -1409,14 +1559,22 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
         }
         ; Only one expected window, toggle it
         else if winList.Length == 1 {
-            if WinActive("ahk_id " . winList[1]) {
+            winId := winList[1]
+            if !WinExist("ahk_id " . winId) {
+                appData[name].allWinIdList := []
+                throw Error('No window of "' . name . '" could be found!')
+            }
+            if WinActive("ahk_id " . winId) {
                 ; Window is active, minimize it to taskbar
-                MinimizeWindow("ahk_id " . winList[1])
+                MinimizeWindow("ahk_id " . winId)
             } else {
-                if ActivateWindow("ahk_id " . winList[1]) {
-                    appData[name].lastActivatedWinId := winList[1]
+                if ActivateWindow("ahk_id " . winId) {
+                    appData[name].lastActivatedWinId := winId
                     if setWinAfterEveryActivation {
-                        SetWindow("ahk_id " . winList[1], appDim.x, appDim.y, appDim.w, appDim.h)
+                        SetWindow("ahk_id " . winId, appDim.x, appDim.y, appDim.w, appDim.h)
+                    }
+                    if imeMode != "" {
+                        SwitchIMEMode(imeMode)
                     }
                 }
             }
@@ -1424,8 +1582,23 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
         ; More than one expected window, cycle through them
         else if winList.Length >= 1 {
             oldestWinId := winList[winList.Length]
+            winNum := winList.Length
+            while !WinExist("ahk_id " . oldestWinId) {
+                if winNum-- == 0 {
+                    appData[name].allWinIdList := []
+                    throw Error('No window of "' . name . '" could be found!')
+                }
+                oldestWinId := winList[winNum]
+            }
+            ; The last window in the list will change, so we can cycle through all of them in this way
             if WinActive("ahk_exe " . exe) {
                 ActivateWindow("ahk_id " . oldestWinId)
+                if setWinAfterEveryActivation {
+                    SetWindow("ahk_id " . oldestWinId, appDim.x, appDim.y, appDim.w, appDim.h)
+                }
+                if imeMode != "" {
+                    SwitchIMEMode(imeMode)
+                }
                 appData[name].lastActivatedWinId := oldestWinId
                 appData[name].allWinIdList.RemoveAt(appData[name].allWinIdList.Length)
                 appData[name].allWinIdList.InsertAt(1, oldestWinId)
@@ -1434,6 +1607,12 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
                     appData[name].lastActivatedWinId := winList[1]
                 }
                 ActivateWindow("ahk_id " . appData[name].lastActivatedWinId)
+                if setWinAfterEveryActivation {
+                    SetWindow("ahk_id " . appData[name].lastActivatedWinId, appDim.x, appDim.y, appDim.w, appDim.h)
+                }
+                if imeMode != "" {
+                    SwitchIMEMode(imeMode)
+                }
             }
         }
         ; Unexpected number of windows
@@ -1448,6 +1627,9 @@ ToggleApplications(app := "", appDim := { x: -1, y: -1, w: -1, h: -1
         }
         if ActivateWindow(winSpecifier) {
             SetWindow(winSpecifier, appDim.x, appDim.y, appDim.w, appDim.h)
+            if imeMode != "" {
+                SwitchIMEMode(imeMode)
+            }
         }
         winId := WinGetID(winSpecifier)
         if winId {

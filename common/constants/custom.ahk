@@ -10,7 +10,11 @@ C_ProgramFilesx86 := EnvGet("ProgramFiles(x86)")
 /**
  * Map of keyboard layouts (IME input languages) and their corresponding IDs
  */
-C_IMEInputLanguage := Map(
+C_KeyboardLayout := Map(
     "en_us", 0x4090409,
     "zh_cn", 0x8040804
 )
+
+C_MAX_INTEGER := 2147483648
+
+C_MIN_INTEGER := -2147483648

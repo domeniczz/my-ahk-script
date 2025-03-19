@@ -268,7 +268,7 @@ SearchOrOpenSelected(isPrivate := false) {
         if IsWebLink(text) {
             Run '"' . browserToUse . '"' . (isPrivate ? " " . incognitoFlag : "") . ' "' . TrimLinkParams(text) . '"'
         } else {
-            Run '"' . browserToUse . '"' . (isPrivate ? " " . incognitoFlag : "") . ' "https://kagi.com/search?q=' . text . (kagiSearchToken == "" ? "" : "&token=" . kagiSearchToken) . '"'
+            Run '"' . browserToUse . '"' . (isPrivate ? " " . incognitoFlag : "") . ' "https://www.google.com/search?q=' . text . '"'
         }
     }
 }
@@ -426,7 +426,7 @@ GetTopmostWindowInfo(withAhkPrefixs := true, excludeWindows := true) {
 
             if excludeWindows {
                 ; Skip explorer.exe windows except File Explorer
-                if winExe = "explorer.exe" && winClass != "CabinetWClass" {
+                if winExe == "explorer.exe" && winClass != "CabinetWClass" {
                     continue
                 }
                 ; Skip excluded windows in the list
@@ -464,13 +464,13 @@ GetTopmostWindowInfo(withAhkPrefixs := true, excludeWindows := true) {
  * Switch the Keyboard input language.
  */
 SwitchKeyboardInputLanguage() {
-    currentLanguage := GetCurrentIMEInputLanguage()
-    if currentLanguage == C_IMEInputLanguage["zh_cn"] {
-        SwitchIMEInputLanguage(C_IMEInputLanguage["en_us"])
+    currentLanguage := GetCurrentKeyboardLayout()
+    if currentLanguage == C_KeyboardLayout["zh_cn"] {
+        SwitchKeyboardLayout(C_KeyboardLayout["en_us"])
         ToolTip "IME: English"
         SetTimer () => ToolTip(), -1000, -1
-    } else if currentLanguage == C_IMEInputLanguage["en_us"] {
-        SwitchIMEInputLanguage(C_IMEInputLanguage["zh_cn"])
+    } else if currentLanguage == C_KeyboardLayout["en_us"] {
+        SwitchKeyboardLayout(C_KeyboardLayout["zh_cn"])
         ToolTip "IME: Chinese"
         SetTimer () => ToolTip(), -1000, -1
     }
@@ -518,7 +518,11 @@ TrimLinkParams(url) {
             if rule.urlPattern != "" and !CheckUrlPatternMatch([GetDomain(), base], rule.urlPattern) {
                 continue
             }
-            for i, param in params {
+            paramsNum := params.Length
+            loop paramsNum {
+                ; Iterate in reverse order
+                i := paramsNum - A_Index + 1
+                param := params[i]
                 if !param {
                     continue
                 }
@@ -526,9 +530,9 @@ TrimLinkParams(url) {
                 if RegExMatch(key, rule.pattern) {
                     params.RemoveAt(i)
                 }
-                if params.Length == 0 {
-                    return params
-                }
+            }
+            if params.Length == 0 {
+                return params
             }
         }
         return params

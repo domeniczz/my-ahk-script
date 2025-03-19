@@ -36,7 +36,7 @@ keybindings := [
     ],
     ["LAlt + W", "Toggle WeChat"
     ],
-    ["LAlt + Q", "Toggle TIM"
+    ["LAlt + Q", "Toggle QQ"
     ],
     ["LAlt + E", "Toggle DingTalk"
     ],

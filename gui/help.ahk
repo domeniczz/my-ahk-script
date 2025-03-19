@@ -45,28 +45,34 @@ DrawHelpWindow() {
     helpGui := Gui()
     helpGui.Opt("-Caption +AlwaysOnTop +ToolWindow +E0x20")  ; +E0x20 means enable click-through
 
-    ; Set font style size (pt) and bold
-    helpGui.SetFont("s16 bold")
+    ; Split keybindings into two columns
+    columns := SplitKeybindings(keybindings)
+    lLength := columns.left.Length
+    rLength := columns.right.Length
+    maxRows := Max(lLength, rLength)
 
-    windowWidth := A_ScreenWidth
-    windowHeight := A_ScreenHeight
+    maxKeyValLength := 0
+    for k, v in keybindings {
+        if StrLen(v[1]) + StrLen(v[2]) > maxKeyValLength {
+            maxKeyValLength := StrLen(v[1]) + StrLen(v[2])
+        }
+    }
+
     ; Calculate ListView dimensions and position
-    lvWidth := windowWidth * 0.5
-    lvHeight := windowHeight * 0.4
-    lvX := (windowWidth - lvWidth) / 2
-    lvY := (windowHeight - lvHeight) / 2
+    lvWidth := Min(maxKeyValLength * 20 * 2, A_ScreenWidth * 0.5)
+    lvHeight := Min(maxRows * 50, A_ScreenHeight * 0.6)
+    lvX := (A_ScreenWidth - lvWidth) / 2
+    lvY := (A_ScreenHeight - lvHeight) / 2
+
+    ; Set font style size (pt) and bold
+    fontSize := 16 - (3840 * 2160) / (A_ScreenWidth * A_ScreenHeight)
+    helpGui.SetFont("s" . fontSize . " bold")
 
     ; Add ListView to display keybindings
     lv := helpGui.Add("ListView", Format("x{} y{} w{} h{} -E0x200 -Hdr -LV0x20 +LV0x4000 +ReadOnly -TabStop", lvX, lvY, lvWidth, lvHeight), ["Content"
     ])
 
-    ; Split keybindings into two columns
-    columns := SplitKeybindings(keybindings)
-
     ; Add items to the ListView
-    lLength := columns.left.Length
-    rLength := columns.right.Length
-    maxRows := Max(lLength, rLength)
     loop maxRows {
         leftItem := A_Index <= lLength ? columns.left[A_Index] : ""
         rightItem := A_Index <= rLength ? columns.right[A_Index] : ""

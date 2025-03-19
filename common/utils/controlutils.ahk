@@ -28,3 +28,35 @@ LoopLogic(callbackFunc, maxAttempts := 50, sleepDuration := 200) {
     }
     return false
 }
+
+/**
+ * Loop to execute a given callback function indefinitely until it returns `true`.
+ * 
+ * The callback function should return `true` if the condition is met and want to break the loop, `false` otherwise.
+ * 
+ * @param {Function} callbackFunc - The function to be called on each iteration.
+ * @param {Integer} timeout - The timeout in milliseconds (default: MAX_INTEGER)
+ * @param {Integer} sleepDuration - The time in milliseconds to wait between attempts (default: 200)
+ * 
+ * @returns {Boolean} - Returns `true` if the callback function succeeds within given attempts, `false` otherwise.
+ * 
+ * @throws {Error} - If `callbackFunc` is not a function
+ */
+LoopLogicIndefinite(callbackFunc, timeout := C_MAX_INTEGER, sleepDuration := 200) {
+    if !(callbackFunc is Func) {
+        throw Error("Invalid callback function")
+    }
+    startTime := A_TickCount
+    loop {
+        res := callbackFunc()
+        if res {
+            return res
+        }
+        if sleepDuration > 0 {
+            Sleep sleepDuration
+        }
+        if A_TickCount - startTime > timeout {
+            return false
+        }
+    }
+}

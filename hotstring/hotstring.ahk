@@ -81,7 +81,7 @@
 
 :O:eta::η
 
-:O:gama::γ
+:O:gamma::γ
 
 :O:mu::μ
 
